@@ -1,0 +1,20 @@
+[
+  {
+    "doc_id": "ai_rmf_1_0",
+    "path": "/Users/pranitdhane/Documents/nist-rag/data/raw/NIST.AI.100-1.pdf",
+    "status": "already_present",
+    "pages": 48,
+    "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+    "sha256": "7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1",
+    "sha256_pinned": true
+  },
+  {
+    "doc_id": "genai_profile",
+    "path": "/Users/pranitdhane/Documents/nist-rag/data/raw/NIST.AI.600-1.pdf",
+    "status": "already_present",
+    "pages": 64,
+    "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
+    "sha256": "6e73620ab6b64e90ef2c04bf0e0d6246185a2f4b1b13cab0df494496cff89b6a",
+    "sha256_pinned": true
+  }
+]

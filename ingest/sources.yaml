@@ -1,0 +1,122 @@
+# Document manifest. Nothing else in the code may depend on filenames or URLs.
+# The `validation:` blocks are read ONLY by ingest/validate.py (and by the
+# Stage 2 acquisition checks for pages/title); pipeline stages must never use them.
+documents:
+  - doc_id: ai_rmf_1_0
+    display_name: "NIST AI 100-1 (AI RMF 1.0)"
+    url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
+    filename: NIST.AI.100-1.pdf
+    sha256: "7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1"
+    expected_pages: 48
+    expected_title: "Artificial Intelligence Risk Management Framework (AI RMF 1.0)"
+    page_number_strategy: page_label
+    validation:
+      page_types:
+        - {first: 1, last: 1, page_type: cover}
+        - {first: 2, last: 3, page_type: front_matter}
+        - {first: 4, last: 5, page_type: toc}
+        - {first: 6, last: 39, page_type: body}
+        - {first: 40, last: 47, page_type: appendix}
+        - {first: 48, last: 48, page_type: back_cover}
+      section_ids:
+        - Executive Summary
+        - Part 1
+        - "1"
+        - "1.1"
+        - "1.2"
+        - "1.2.1"
+        - "1.2.2"
+        - "1.2.3"
+        - "1.2.4"
+        - "2"
+        - "3"
+        - "3.1"
+        - "3.2"
+        - "3.3"
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7"
+        - "4"
+        - Part 2
+        - "5"
+        - "5.1"
+        - "5.2"
+        - "5.3"
+        - "5.4"
+        - "6"
+        - Appendix A
+        - Appendix B
+        - Appendix C
+        - Appendix D
+      printed_page_spot_checks:   # pdf_page: printed_page
+        4: "i"
+        5: "ii"
+        6: "1"
+        25: "20"
+        40: "35"
+      expected_figures: 5
+      expected_footnotes: 0
+      subcategory_tables: null
+      unique_action_ids: null
+      forbidden_lines: ["NIST AI 100-1", "AI RMF 1.0"]   # running header; must not survive as a line
+      forbidden_line_patterns: ["^Page [0-9ivx]+$"]      # running footer
+
+  - doc_id: genai_profile
+    display_name: "NIST AI 600-1 (Generative AI Profile)"
+    url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
+    filename: NIST.AI.600-1.pdf
+    sha256: "6e73620ab6b64e90ef2c04bf0e0d6246185a2f4b1b13cab0df494496cff89b6a"
+    expected_pages: 64
+    expected_title: "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile"
+    page_number_strategy: first_line_offset
+    offset: 4
+    validation:
+      page_types:
+        - {first: 1, last: 1, page_type: cover}
+        - {first: 2, last: 3, page_type: front_matter}
+        - {first: 4, last: 4, page_type: toc}
+        - {first: 5, last: 50, page_type: body}
+        - {first: 51, last: 57, page_type: appendix}
+        - {first: 58, last: 64, page_type: references}
+      section_ids:
+        - "1"
+        - "2"
+        - "2.1"
+        - "2.2"
+        - "2.3"
+        - "2.4"
+        - "2.5"
+        - "2.6"
+        - "2.7"
+        - "2.8"
+        - "2.9"
+        - "2.10"
+        - "2.11"
+        - "2.12"
+        - "3"
+        - Appendix A
+        - A.1
+        - A.1.1
+        - A.1.2
+        - A.1.3
+        - A.1.4
+        - A.1.5
+        - A.1.6
+        - A.1.7
+        - A.1.8
+        - Appendix B
+      printed_page_spot_checks:
+        1: null
+        4: null
+        5: "1"
+        9: "5"
+        31: "27"
+        58: "54"
+        64: "60"
+      expected_figures: null
+      expected_footnotes: null
+      subcategory_tables: 49
+      # 211, not the plan's 212: the plan's count included GV-1.1-002, which appears only as a prose
+      # example on PDF p.17 (GOVERN 1.1 has a single table row). Confirmed with the user.
+      unique_action_ids: 211

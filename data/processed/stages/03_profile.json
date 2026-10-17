@@ -1,0 +1,557 @@
+{
+  "tesseract": {
+    "available": true,
+    "version": "5.5.3"
+  },
+  "documents": [
+    {
+      "doc_id": "ai_rmf_1_0",
+      "pages": 48,
+      "title": "Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "pages_with_text": 48,
+      "text_layer_present": true,
+      "page_labels_present": true,
+      "page_number_strategy": "page_label",
+      "images": [
+        {
+          "pdf_page": 1,
+          "xref": 490,
+          "bbox": [
+            0.0,
+            182.5,
+            612.0,
+            403.7
+          ],
+          "transform": [
+            612.03,
+            0.0,
+            -0.0,
+            221.21,
+            0.0,
+            182.5
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 1,
+          "xref": 484,
+          "bbox": [
+            176.4,
+            587.7,
+            522.0,
+            669.9
+          ],
+          "transform": [
+            345.6,
+            0.0,
+            -0.0,
+            82.25,
+            176.4,
+            587.67
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 1,
+          "xref": 488,
+          "bbox": [
+            12.2,
+            15.8,
+            71.4,
+            75.0
+          ],
+          "transform": [
+            59.12,
+            0.0,
+            -0.0,
+            59.12,
+            12.24,
+            15.84
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 2,
+          "xref": 4,
+          "bbox": [
+            444.2,
+            467.9,
+            522.0,
+            545.7
+          ],
+          "transform": [
+            77.76,
+            0.0,
+            -0.0,
+            77.76,
+            444.24,
+            467.92
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 10,
+          "xref": 36,
+          "bbox": [
+            67.2,
+            25.2,
+            556.3,
+            285.3
+          ],
+          "transform": [
+            489.11,
+            0.0,
+            -0.0,
+            260.12,
+            67.16,
+            25.18
+          ],
+          "rotated": false,
+          "figure_number": 1,
+          "caption": "Fig. 1. Examples of potential harms related to AI systems. Trustworthy AI systems and their responsible use can mitigate negative risks and contribute to benefits for people, organizations, and ecosystems."
+        },
+        {
+          "pdf_page": 15,
+          "xref": 54,
+          "bbox": [
+            111.6,
+            70.9,
+            500.4,
+            371.2
+          ],
+          "transform": [
+            388.81,
+            0.0,
+            -0.0,
+            300.37,
+            111.6,
+            70.86
+          ],
+          "rotated": false,
+          "figure_number": 2,
+          "caption": "Fig. 2. Lifecycle and Key Dimensions of an AI System. Modified from OECD (2022) OECD Framework for the Classification of AI systems \u2014 OECD Digital Economy Papers. The two inner circles show AI systems\u2019 key dimensions and the outer circle shows AI lifecycle stages. Ideally, risk management efforts start with the Plan and Design function in the application context and are performed throughout the AI system lifecycle. See Figure 3 for representative AI actors."
+        },
+        {
+          "pdf_page": 16,
+          "xref": 59,
+          "bbox": [
+            67.2,
+            50.5,
+            556.1,
+            682.9
+          ],
+          "transform": [
+            0.0,
+            -632.41,
+            488.87,
+            0.0,
+            67.22,
+            682.87
+          ],
+          "rotated": true,
+          "figure_number": 3,
+          "caption": "Fig. 3. AI actors across AI lifecycle stages. See Appendix A for detailed descriptions of AI actor tasks, including details about testing,"
+        },
+        {
+          "pdf_page": 17,
+          "xref": 65,
+          "bbox": [
+            79.4,
+            256.6,
+            532.6,
+            379.9
+          ],
+          "transform": [
+            453.16,
+            0.0,
+            -0.0,
+            123.28,
+            79.42,
+            256.57
+          ],
+          "rotated": false,
+          "figure_number": 4,
+          "caption": "Fig. 4. Characteristics of trustworthy AI systems. Valid & Reliable is a necessary condition of trustworthiness and is shown as the base for other trustworthiness characteristics. Accountable & Transparent is shown as a vertical box because it relates to all other characteristics."
+        },
+        {
+          "pdf_page": 25,
+          "xref": 92,
+          "bbox": [
+            77.4,
+            185.5,
+            534.7,
+            550.1
+          ],
+          "transform": [
+            457.32,
+            0.0,
+            -0.0,
+            364.57,
+            77.35,
+            185.48
+          ],
+          "rotated": false,
+          "figure_number": 5,
+          "caption": "Fig. 5. Functions organize AI risk management activities at their highest level to govern, map, measure, and manage AI risks. Governance is designed to be a cross-cutting function to inform and be infused throughout the other three functions."
+        },
+        {
+          "pdf_page": 48,
+          "xref": 484,
+          "bbox": [
+            219.6,
+            597.9,
+            522.0,
+            669.9
+          ],
+          "transform": [
+            302.4,
+            0.0,
+            -0.0,
+            71.97,
+            219.6,
+            597.95
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        }
+      ],
+      "tiny_images_skipped": 0
+    },
+    {
+      "doc_id": "genai_profile",
+      "pages": 64,
+      "title": "Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile",
+      "pages_with_text": 64,
+      "text_layer_present": true,
+      "page_labels_present": false,
+      "page_number_strategy": "first_line_offset",
+      "images": [
+        {
+          "pdf_page": 1,
+          "xref": 4468,
+          "bbox": [
+            303.0,
+            709.5,
+            539.6,
+            747.0
+          ],
+          "transform": [
+            236.64,
+            0.0,
+            -0.0,
+            37.47,
+            303.0,
+            709.53
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 1,
+          "xref": 4488,
+          "bbox": [
+            12.2,
+            15.8,
+            71.4,
+            75.0
+          ],
+          "transform": [
+            59.12,
+            0.0,
+            -0.0,
+            59.12,
+            12.24,
+            15.84
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 2,
+          "xref": 3,
+          "bbox": [
+            468.0,
+            494.1,
+            544.1,
+            569.2
+          ],
+          "transform": [
+            76.08,
+            0.0,
+            -0.0,
+            75.1,
+            468.0,
+            494.08
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 50,
+          "bbox": [
+            83.0,
+            131.2,
+            532.4,
+            142.2
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.0,
+            83.0,
+            131.2
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 34,
+          "bbox": [
+            83.0,
+            150.0,
+            532.4,
+            158.8
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            8.8,
+            83.0,
+            150.0
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 44,
+          "bbox": [
+            83.0,
+            169.0,
+            532.4,
+            180.2
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            169.0
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 46,
+          "bbox": [
+            83.0,
+            188.2,
+            532.4,
+            199.0
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            10.8,
+            83.0,
+            188.2
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 50,
+          "bbox": [
+            83.0,
+            206.8,
+            532.4,
+            217.8
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.0,
+            83.0,
+            206.8
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 44,
+          "bbox": [
+            83.0,
+            225.8,
+            532.4,
+            237.0
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            225.8
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 44,
+          "bbox": [
+            83.0,
+            244.6,
+            532.4,
+            255.8
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            244.6
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 44,
+          "bbox": [
+            83.0,
+            263.6,
+            532.4,
+            274.8
+          ],
+          "transform": [
+            449.4,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            263.6
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 30,
+          "bbox": [
+            83.0,
+            282.4,
+            525.8,
+            293.4
+          ],
+          "transform": [
+            442.8,
+            0.0,
+            -0.0,
+            11.0,
+            83.0,
+            282.4
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 30,
+          "bbox": [
+            83.0,
+            301.4,
+            525.8,
+            312.4
+          ],
+          "transform": [
+            442.8,
+            0.0,
+            -0.0,
+            11.0,
+            83.0,
+            301.4
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 38,
+          "bbox": [
+            83.0,
+            320.4,
+            525.8,
+            331.6
+          ],
+          "transform": [
+            442.8,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            320.4
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        },
+        {
+          "pdf_page": 4,
+          "xref": 38,
+          "bbox": [
+            83.0,
+            339.2,
+            525.8,
+            350.4
+          ],
+          "transform": [
+            442.8,
+            0.0,
+            -0.0,
+            11.2,
+            83.0,
+            339.2
+          ],
+          "rotated": false,
+          "figure_number": null,
+          "caption": null
+        }
+      ],
+      "tiny_images_skipped": 12
+    }
+  ]
+}

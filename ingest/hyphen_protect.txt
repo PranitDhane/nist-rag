@@ -1,0 +1,13 @@
+# Words whose hyphen is REAL and must survive a line-wrap join (rule 6, fix_line_hyphenation).
+# One lowercase word per line, hyphen included. Approved by the user after a scan of every
+# letter-<br>letter / letter-newline-letter join in both documents (10 kept, 44 soft hyphens dropped).
+ai-generated
+context-relevant
+open-data
+pre-trained
+privacy-enhancing
+red-teaming
+retrieval-augmented
+sub-sampling
+tamper-proof
+third-party
