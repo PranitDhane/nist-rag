@@ -46,6 +46,7 @@ def _parse_validation(raw: dict) -> Validation:
         expected_footnotes=raw.get("expected_footnotes"),
         subcategory_tables=raw.get("subcategory_tables"),
         unique_action_ids=raw.get("unique_action_ids"),
+        chunk_action_ids=raw.get("chunk_action_ids"),
         forbidden_lines=[str(x) for x in raw.get("forbidden_lines") or []],
         forbidden_line_patterns=[str(x) for x in raw.get("forbidden_line_patterns") or []],
     )

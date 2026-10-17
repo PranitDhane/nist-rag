@@ -26,6 +26,7 @@ class Validation:
     expected_footnotes: int | None = None
     subcategory_tables: int | None = None
     unique_action_ids: int | None = None
+    chunk_action_ids: int | None = None   # read by chunking/validate.py only (includes the typo'd ID 'GV4.3--001')
     forbidden_lines: list[str] = field(default_factory=list)          # whole lines that must be gone (running headers)
     forbidden_line_patterns: list[str] = field(default_factory=list)  # regexes for lines that must be gone (footers)
 

@@ -24,7 +24,7 @@ def test_manifest_unknown_doc(manifest):
 
 
 def test_requirements_pinned():
-    lines = [l for l in (config.PROJECT_ROOT / "requirements.txt").read_text().splitlines() if l.strip()]
+    lines = [l for l in (config.PROJECT_ROOT / "requirements.txt").read_text().splitlines() if l.strip() and not l.lstrip().startswith("#")]
     assert lines and all("==" in l for l in lines)
 
 

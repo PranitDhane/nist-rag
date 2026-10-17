@@ -1,6 +1,10 @@
-# NIST AI RMF — ingestion pipeline
+# NIST AI RMF — ingestion, chunking and indexing pipeline
 
-Turns two official NIST PDFs (AI 100-1 *AI RMF 1.0* and AI 600-1 *Generative AI Profile*) into
+Three phases, each reading only the previous phase's output: **ingestion** (PDF → `pages.jsonl`),
+**chunking** (→ `chunks.jsonl`) and **embedding & indexing** (→ a Chroma vector index + a BM25 keyword index).
+Retrieval, the agent and the UI are later phases. The rest of this section describes ingestion.
+
+Ingestion turns two official NIST PDFs (AI 100-1 *AI RMF 1.0* and AI 600-1 *Generative AI Profile*) into
 validated, cleaned, **page-level** records in `data/processed/pages.jsonl` plus a run report
 `data/processed/ingest_report.json`. Chunking, embeddings, retrieval and the agent are later
 phases and read only `pages.jsonl`; they never open the PDFs.
@@ -67,5 +71,60 @@ The specification is `docs/INGESTION_PLAN.md`; `docs/PROGRESS.md` logs what was 
 - Footnote markers are no longer linked to their footnote text.
 - The References appendix is not retrievable; some bare reference URLs are garbled in the PDF itself (lost "fi" ligature) and cannot be repaired.
 - GenAI footnote 5 (p.7) stays inline: pymupdf4llm garbles its underlined text, so it cannot be matched (reported as a warning).
-- The action-ID total is 211 table rows, not the 212 first measured (GV-1.1-002 is only a prose example).
+- Ingestion counts 211 action IDs because its ID pattern skips `GV4.3--001` (PDF p.23 prints GV-4.3-001 with a typo). Chunking repairs it, so the real total of table-row action IDs is **212** (`chunk_action_ids` in `sources.yaml`).
 - Cleaning rules and expectations are tuned to these two documents; a new document needs its own manifest entry and possibly new rules.
+
+
+---
+
+# Chunking phase
+
+```bash
+python -m chunking --rebuild      # pages.jsonl -> chunks.jsonl + chunk_report.json; exit 0 only if all 9 hard checks pass
+python -m chunking --only-stage C2   # profile only (token-size measurements)
+python -m chunking --only-stage C9   # validate the existing chunks.jsonl
+```
+
+208 chunks: `prose` (250–350 token pieces, ~10 % overlap inside a section only, tiny sections merged forward),
+`genai_action_table` (one per GenAI subcategory, split only *between* action rows, header and "AI Actor Tasks"
+line repeated), `rmf_core_table` (one per AI RMF Core category), `figure` (OCR text, labelled) and `footnote`.
+Every chunk has exact page numbers (from a character-offset page map, never from text search), a citation label
+and URL, and an `embed_text` (breadcrumb + content) that is verified ≤ 512 tokens with the bge-small tokenizer.
+Specification: `CHUNKING_PLAN.md`; deviations are listed in `docs/PROGRESS.md`.
+
+# Embedding & indexing phase
+
+```bash
+python -m indexing --rebuild     # delete and rebuild both indexes, then validate (8 hard checks + smoke checks)
+python -m indexing               # full rebuild without deleting the directories first
+python -m indexing --only bm25   # rebuild one index (also: chroma); the ID-equality check still runs
+python -m indexing --validate    # Stage E6 only, against the existing indexes
+```
+
+Outputs (all git-ignored and rebuildable): `data/chroma/` (Chroma), `data/index/bm25_corpus.json`,
+`data/index/index_manifest.json`, `data/index/index_report.json`.
+
+- **First run needs the internet once** to download `BAAI/bge-small-en-v1.5` from Hugging Face (pinned to a commit);
+  later runs load it from the local cache and work offline.
+- **Install note:** `sentence-transformers` brings in PyTorch, a large download. This is a known cost of the chosen library.
+- Retrieval code must use `indexing.loaders.load_vector_store()`, `load_bm25()` and `load_chunk_lookup()` and the shared
+  `indexing.bm25_index.tokenize()`; never rebuild at query time. The loaders read the manifest first and raise a clear
+  error if the model, revision, normalization, distance or tokenizer version differ.
+
+Design decisions and reasons:
+
+| Decision | Why |
+|---|---|
+| `bge-small-en-v1.5`, 384-d, normalized vectors, **cosine** distance | model-card recommendation; Chroma's default is L2 and cannot be changed after creation, so the collection is created with `configuration={"hnsw": {"space": "cosine"}}` and the setting is read back and checked |
+| One Chroma collection, `doc_id` as a filter | simple; both documents are searched together or filtered by document |
+| Chroma document = `embed_text`, `display_text` in metadata | the stored document is exactly what was embedded |
+| Lists stored as JSON strings in metadata | exact round trip; Chroma metadata cannot hold `None` |
+| Full rebuild every run | corpus is small; guarantees no stale or duplicate IDs |
+| BM25 via `rank_bm25`, tokenized corpus saved as JSON (no pickle), rebuilt at load | safe, inspectable, identical scores after a round trip |
+| BM25 indexes `embed_text`; lowercase + snowball stemming; IDs like `GV-1.7-001`, `2.12`, `GOVERN 1.7` kept whole | exact-term search for IDs and rare terms; every split part keeps its section/subcategory words |
+| Device `auto` (MPS/CUDA if available, else CPU) | recorded in the manifest |
+| `langchain-huggingface` replaces `\n` with a space before embedding | library behaviour (does not change bge token counts); documented, not worked around |
+
+Known limitations: a dense query like "GV-1.7-001" does not find its chunk (embeddings are poor at identifiers); BM25
+does, which is why both indexes exist. Hybrid fusion, re-ranking and the optional bge *query* instruction prefix are
+retrieval-phase decisions (the manifest records `document_prefix: none`).

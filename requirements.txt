@@ -6,3 +6,17 @@ pyyaml==6.0.3
 python-dotenv==1.2.4
 requests==2.34.2
 pytest==9.1.1
+# chunking phase
+transformers==5.20.1
+tokenizers==0.23.3
+# embedding & indexing phase (sentence-transformers pulls in PyTorch: a large download)
+torch==2.14.1
+sentence-transformers==6.1.0
+huggingface_hub==1.33.0
+langchain-core==1.6.12
+langchain-huggingface==1.2.3
+langchain-chroma==1.1.0
+chromadb==1.5.9
+numpy==2.5.4
+rank-bm25==0.2.2
+snowballstemmer==3.1.1

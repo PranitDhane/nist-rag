@@ -1,0 +1,847 @@
+{
+  "profile": {
+    "ai_rmf_1_0": {
+      "pages_joined": 42,
+      "characters": 101424,
+      "sections": 30,
+      "units": {
+        "prose": 30,
+        "rmf_table": 4
+      },
+      "prose_per_section_tokens": {
+        "count": 30,
+        "min": 13,
+        "median": 474.5,
+        "max": 1586,
+        "histogram_50": {
+          "0-49": 3,
+          "50-99": 1,
+          "250-299": 4,
+          "300-349": 3,
+          "350-399": 1,
+          "400-449": 2,
+          "450-499": 4,
+          "500-549": 3,
+          "550-599": 1,
+          "700-749": 1,
+          "800-849": 2,
+          "850-899": 2,
+          "950-999": 1,
+          "1500-1549": 1,
+          "1550-1599": 1
+        },
+        "over": {
+          "350": 19,
+          "400": 18,
+          "450": 16,
+          "480": 14
+        }
+      },
+      "prose_unit_tokens": {
+        "count": 30,
+        "min": 13,
+        "median": 474.5,
+        "max": 1586,
+        "histogram_50": {
+          "0-49": 3,
+          "50-99": 1,
+          "250-299": 4,
+          "300-349": 3,
+          "350-399": 1,
+          "400-449": 2,
+          "450-499": 4,
+          "500-549": 3,
+          "550-599": 1,
+          "700-749": 1,
+          "800-849": 2,
+          "850-899": 2,
+          "950-999": 1,
+          "1500-1549": 1,
+          "1550-1599": 1
+        },
+        "over": {
+          "350": 19,
+          "400": 18,
+          "450": 16,
+          "480": 14
+        }
+      },
+      "sections_over_prose_max": 19,
+      "tiny_sections_under_60": [
+        {
+          "section_path": [
+            "Part 1"
+          ],
+          "tokens": 13,
+          "text": "# **Part 1: Foundational Information**"
+        },
+        {
+          "section_path": [
+            "Part 1",
+            "1 Framing Risk",
+            "1.2 Challenges for AI Risk Management"
+          ],
+          "tokens": 38,
+          "text": "# **1.2 Challenges for AI Risk Management**\n\nSeveral challenges are described below. They should be taken into account when managing risks in pursuit of AI trustworthiness."
+        },
+        {
+          "section_path": [
+            "Part 2"
+          ],
+          "tokens": 13,
+          "text": "# **Part 2: Core and Profiles**"
+        }
+      ],
+      "genai_tables": {
+        "count": 0,
+        "items": []
+      },
+      "rmf_categories": {
+        "count": 19,
+        "min": 133,
+        "median": 212,
+        "max": 638,
+        "histogram_50": {
+          "100-149": 2,
+          "150-199": 5,
+          "200-249": 6,
+          "250-299": 2,
+          "300-349": 2,
+          "400-449": 1,
+          "600-649": 1
+        },
+        "over": {
+          "350": 2,
+          "400": 2,
+          "450": 1,
+          "480": 1
+        },
+        "items": [
+          {
+            "table": "Table 1",
+            "category": "GOVERN 1",
+            "tokens": 420
+          },
+          {
+            "table": "Table 1",
+            "category": "GOVERN 2",
+            "tokens": 196
+          },
+          {
+            "table": "Table 1",
+            "category": "GOVERN 3",
+            "tokens": 169
+          },
+          {
+            "table": "Table 1",
+            "category": "GOVERN 4",
+            "tokens": 206
+          },
+          {
+            "table": "Table 1",
+            "category": "GOVERN 5",
+            "tokens": 152
+          },
+          {
+            "table": "Table 1",
+            "category": "GOVERN 6",
+            "tokens": 150
+          },
+          {
+            "table": "Table 2",
+            "category": "MAP 1",
+            "tokens": 332
+          },
+          {
+            "table": "Table 2",
+            "category": "MAP 2",
+            "tokens": 216
+          },
+          {
+            "table": "Table 2",
+            "category": "MAP 3",
+            "tokens": 270
+          },
+          {
+            "table": "Table 2",
+            "category": "MAP 4",
+            "tokens": 145
+          },
+          {
+            "table": "Table 2",
+            "category": "MAP 5",
+            "tokens": 193
+          },
+          {
+            "table": "Table 3",
+            "category": "MEASURE 1",
+            "tokens": 283
+          },
+          {
+            "table": "Table 3",
+            "category": "MEASURE 2",
+            "tokens": 638
+          },
+          {
+            "table": "Table 3",
+            "category": "MEASURE 3",
+            "tokens": 212
+          },
+          {
+            "table": "Table 3",
+            "category": "MEASURE 4",
+            "tokens": 202
+          },
+          {
+            "table": "Table 4",
+            "category": "MANAGE 1",
+            "tokens": 301
+          },
+          {
+            "table": "Table 4",
+            "category": "MANAGE 2",
+            "tokens": 240
+          },
+          {
+            "table": "Table 4",
+            "category": "MANAGE 3",
+            "tokens": 133
+          },
+          {
+            "table": "Table 4",
+            "category": "MANAGE 4",
+            "tokens": 219
+          }
+        ]
+      },
+      "figures": [
+        {
+          "figure": 1,
+          "has_ocr": true,
+          "tokens": 200,
+          "status": "ok"
+        },
+        {
+          "figure": 2,
+          "has_ocr": false,
+          "tokens": 0,
+          "status": "below_threshold"
+        },
+        {
+          "figure": 3,
+          "has_ocr": true,
+          "tokens": 589,
+          "status": "ok"
+        },
+        {
+          "figure": 4,
+          "has_ocr": true,
+          "tokens": 45,
+          "status": "ok"
+        },
+        {
+          "figure": 5,
+          "has_ocr": true,
+          "tokens": 110,
+          "status": "ok"
+        }
+      ],
+      "footnotes": {
+        "count": 0
+      },
+      "repeated_header_rows": [
+        {
+          "unit": "Table 1",
+          "pdf_page": 28,
+          "row": "|**Categories**|**Subcategories**|"
+        },
+        {
+          "unit": "Table 1",
+          "pdf_page": 29,
+          "row": "|**Categories**|**Subcategories**|"
+        },
+        {
+          "unit": "Table 2",
+          "pdf_page": 33,
+          "row": "|**Categories**|**Subcategories**|"
+        },
+        {
+          "unit": "Table 3",
+          "pdf_page": 35,
+          "row": "|**Categories**|**Subcategories**|"
+        },
+        {
+          "unit": "Table 3",
+          "pdf_page": 36,
+          "row": "|**Categories**|**Subcategories**|"
+        },
+        {
+          "unit": "Table 4",
+          "pdf_page": 38,
+          "row": "|**Categories**|**Subcategories**|"
+        }
+      ]
+    },
+    "genai_profile": {
+      "pages_joined": 53,
+      "characters": 138884,
+      "sections": 25,
+      "units": {
+        "prose": 25,
+        "genai_table": 49
+      },
+      "prose_per_section_tokens": {
+        "count": 25,
+        "min": 12,
+        "median": 408,
+        "max": 1865,
+        "histogram_50": {
+          "0-49": 1,
+          "100-149": 1,
+          "150-199": 2,
+          "200-249": 2,
+          "250-299": 3,
+          "300-349": 1,
+          "350-399": 1,
+          "400-449": 4,
+          "450-499": 2,
+          "500-549": 3,
+          "550-599": 1,
+          "600-649": 1,
+          "650-699": 1,
+          "1000-1049": 1,
+          "1850-1899": 1
+        },
+        "over": {
+          "350": 15,
+          "400": 14,
+          "450": 10,
+          "480": 8
+        }
+      },
+      "prose_unit_tokens": {
+        "count": 25,
+        "min": 12,
+        "median": 408,
+        "max": 1865,
+        "histogram_50": {
+          "0-49": 1,
+          "100-149": 1,
+          "150-199": 2,
+          "200-249": 2,
+          "250-299": 3,
+          "300-349": 1,
+          "350-399": 1,
+          "400-449": 4,
+          "450-499": 2,
+          "500-549": 3,
+          "550-599": 1,
+          "600-649": 1,
+          "650-699": 1,
+          "1000-1049": 1,
+          "1850-1899": 1
+        },
+        "over": {
+          "350": 15,
+          "400": 14,
+          "450": 10,
+          "480": 8
+        }
+      },
+      "sections_over_prose_max": 15,
+      "tiny_sections_under_60": [
+        {
+          "section_path": [
+            "Appendix A: Primary GAI Considerations",
+            "A.1 Governance"
+          ],
+          "tokens": 12,
+          "text": "# **A.1. Governance**"
+        }
+      ],
+      "genai_tables": {
+        "count": 49,
+        "min": 130,
+        "median": 375,
+        "max": 871,
+        "histogram_50": {
+          "100-149": 1,
+          "150-199": 1,
+          "200-249": 8,
+          "250-299": 8,
+          "300-349": 5,
+          "350-399": 6,
+          "400-449": 4,
+          "450-499": 2,
+          "550-599": 3,
+          "600-649": 1,
+          "650-699": 1,
+          "700-749": 3,
+          "750-799": 2,
+          "850-899": 4
+        },
+        "over": {
+          "350": 26,
+          "400": 20,
+          "450": 16,
+          "480": 15
+        },
+        "items": [
+          {
+            "marker": "GOVERN 1.1",
+            "tokens": 130
+          },
+          {
+            "marker": "GOVERN 1.2",
+            "tokens": 210
+          },
+          {
+            "marker": "GOVERN 1.3",
+            "tokens": 861
+          },
+          {
+            "marker": "GOVERN 1.4",
+            "tokens": 246
+          },
+          {
+            "marker": "GOVERN 1.5",
+            "tokens": 262
+          },
+          {
+            "marker": "GOVERN 1.6",
+            "tokens": 356
+          },
+          {
+            "marker": "GOVERN 1.7",
+            "tokens": 280
+          },
+          {
+            "marker": "GOVERN 2.1",
+            "tokens": 431
+          },
+          {
+            "marker": "GOVERN 3.2",
+            "tokens": 429
+          },
+          {
+            "marker": "GOVERN 4.1",
+            "tokens": 382
+          },
+          {
+            "marker": "GOVERN 4.2",
+            "tokens": 246
+          },
+          {
+            "marker": "GOVERN 4.3",
+            "tokens": 295
+          },
+          {
+            "marker": "GOVERN 5.1",
+            "tokens": 218
+          },
+          {
+            "marker": "GOVERN 6.1",
+            "tokens": 871
+          },
+          {
+            "marker": "GOVERN 6.2",
+            "tokens": 706
+          },
+          {
+            "marker": "MAP 1.1",
+            "tokens": 624
+          },
+          {
+            "marker": "MAP 1.2",
+            "tokens": 253
+          },
+          {
+            "marker": "MAP 2.1",
+            "tokens": 200
+          },
+          {
+            "marker": "MAP 2.2",
+            "tokens": 218
+          },
+          {
+            "marker": "MAP 2.3",
+            "tokens": 402
+          },
+          {
+            "marker": "MAP 3.4",
+            "tokens": 383
+          },
+          {
+            "marker": "MAP 4.1",
+            "tokens": 763
+          },
+          {
+            "marker": "MAP 5.1",
+            "tokens": 559
+          },
+          {
+            "marker": "MAP 5.2",
+            "tokens": 286
+          },
+          {
+            "marker": "MEASURE 1.1",
+            "tokens": 714
+          },
+          {
+            "marker": "MEASURE 1.3",
+            "tokens": 375
+          },
+          {
+            "marker": "MEASURE 2.2",
+            "tokens": 387
+          },
+          {
+            "marker": "MEASURE 2.3",
+            "tokens": 325
+          },
+          {
+            "marker": "MEASURE 2.5",
+            "tokens": 425
+          },
+          {
+            "marker": "MEASURE 2.6",
+            "tokens": 650
+          },
+          {
+            "marker": "MEASURE 2.7",
+            "tokens": 797
+          },
+          {
+            "marker": "MEASURE 2.8",
+            "tokens": 315
+          },
+          {
+            "marker": "MEASURE 2.9",
+            "tokens": 301
+          },
+          {
+            "marker": "MEASURE 2.10",
+            "tokens": 319
+          },
+          {
+            "marker": "MEASURE 2.11",
+            "tokens": 860
+          },
+          {
+            "marker": "MEASURE 2.12",
+            "tokens": 282
+          },
+          {
+            "marker": "MEASURE 2.13",
+            "tokens": 211
+          },
+          {
+            "marker": "MEASURE 3.2",
+            "tokens": 158
+          },
+          {
+            "marker": "MEASURE 3.3",
+            "tokens": 497
+          },
+          {
+            "marker": "MEASURE 4.2",
+            "tokens": 460
+          },
+          {
+            "marker": "MANAGE 1.3",
+            "tokens": 285
+          },
+          {
+            "marker": "MANAGE 2.2",
+            "tokens": 701
+          },
+          {
+            "marker": "MANAGE 2.3",
+            "tokens": 227
+          },
+          {
+            "marker": "MANAGE 2.4",
+            "tokens": 376
+          },
+          {
+            "marker": "MANAGE 3.1",
+            "tokens": 585
+          },
+          {
+            "marker": "MANAGE 3.2",
+            "tokens": 851
+          },
+          {
+            "marker": "MANAGE 4.1",
+            "tokens": 579
+          },
+          {
+            "marker": "MANAGE 4.2",
+            "tokens": 283
+          },
+          {
+            "marker": "MANAGE 4.3",
+            "tokens": 337
+          }
+        ]
+      },
+      "rmf_categories": {
+        "count": 0,
+        "items": []
+      },
+      "figures": [],
+      "footnotes": {
+        "count": 14,
+        "min": 34,
+        "median": 54.5,
+        "max": 142,
+        "histogram_50": {
+          "0-49": 6,
+          "50-99": 6,
+          "100-149": 2
+        },
+        "over": {
+          "350": 0,
+          "400": 0,
+          "450": 0,
+          "480": 0
+        }
+      },
+      "repeated_header_rows": []
+    }
+  },
+  "build_seconds": 8.9,
+  "counts": {
+    "ai_rmf_1_0": {
+      "figure": 5,
+      "prose": 61,
+      "rmf_core_table": 19
+    },
+    "genai_profile": {
+      "footnote": 14,
+      "genai_action_table": 63,
+      "prose": 46
+    }
+  },
+  "total_chunks": 208,
+  "token_histograms_embed": {
+    "figure": {
+      "count": 5,
+      "min": 144,
+      "median": 281,
+      "max": 462,
+      "histogram_50": {
+        "100-149": 1,
+        "200-249": 1,
+        "250-299": 2,
+        "450-499": 1
+      }
+    },
+    "footnote": {
+      "count": 14,
+      "min": 67,
+      "median": 86.5,
+      "max": 171,
+      "histogram_50": {
+        "50-99": 11,
+        "100-149": 1,
+        "150-199": 2
+      }
+    },
+    "genai_action_table": {
+      "count": 63,
+      "min": 108,
+      "median": 327,
+      "max": 436,
+      "histogram_50": {
+        "100-149": 2,
+        "150-199": 7,
+        "200-249": 6,
+        "250-299": 12,
+        "300-349": 9,
+        "350-399": 16,
+        "400-449": 11
+      }
+    },
+    "prose": {
+      "count": 107,
+      "min": 59,
+      "median": 325,
+      "max": 385,
+      "histogram_50": {
+        "50-99": 3,
+        "100-149": 7,
+        "150-199": 7,
+        "200-249": 6,
+        "250-299": 17,
+        "300-349": 33,
+        "350-399": 34
+      }
+    },
+    "rmf_core_table": {
+      "count": 19,
+      "min": 100,
+      "median": 175,
+      "max": 478,
+      "histogram_50": {
+        "100-149": 6,
+        "150-199": 7,
+        "200-249": 3,
+        "250-299": 1,
+        "300-349": 1,
+        "450-499": 1
+      }
+    }
+  },
+  "merges": {
+    "ai_rmf_1_0": [
+      {
+        "direction": "forward",
+        "merged": [
+          "Part 1"
+        ],
+        "into": "1 Framing Risk",
+        "tokens": 78,
+        "first_page_span_start": 8023
+      },
+      {
+        "direction": "forward",
+        "merged": [
+          "1.2 Challenges for AI Risk Management"
+        ],
+        "into": "1.2.1 Risk Measurement",
+        "tokens": 340,
+        "first_page_span_start": 10978
+      },
+      {
+        "direction": "forward",
+        "merged": [
+          "Part 2"
+        ],
+        "into": "5 AI RMF Core",
+        "tokens": 286,
+        "first_page_span_start": 47105
+      }
+    ],
+    "genai_profile": [
+      {
+        "direction": "forward",
+        "merged": [
+          "A.1 Governance"
+        ],
+        "into": "A.1.1 Overview",
+        "tokens": 123,
+        "first_page_span_start": 119151
+      }
+    ]
+  },
+  "splits": {
+    "table_pieces": {
+      "genai_profile:genai_action_table": 14
+    },
+    "prose_pieces": {
+      "ai_rmf_1_0": 19,
+      "genai_profile": 15
+    },
+    "figures": {
+      "ai_rmf_1_0": 1
+    }
+  },
+  "repairs": {
+    "ai_rmf_1_0": {
+      "table_repairs": [],
+      "rmf_notes": [
+        "MAP 1: category description not recoverable (interleaved PDF layout); label only",
+        "MAP 2: category description not recoverable (interleaved PDF layout); label only"
+      ],
+      "figure_notes": [
+        "Figure 1: caption not found on page; section taken at end of page",
+        "Figure 2 (p.15): no OCR text (below_threshold); no chunk",
+        "Figure 3: OCR text split into 2 pieces",
+        "Figure 4: caption not found on page; section taken at end of page",
+        "Figure 5: caption not found on page; section taken at end of page"
+      ]
+    },
+    "genai_profile": {
+      "table_repairs": [
+        "GOVERN 4.3: action ID repaired: 'GV4.3--001' -> 'GV-4.3-001'",
+        "GOVERN 4.3: AI actor line repaired: 'AI Actor Tasks: AI Impact Assessment, Affected Individuals and Communities, Governance anf d Oversight' -> ['AI Impact Assessment', 'Affected Individuals and Communities', 'Governance and Oversight']",
+        "GOVERN 6.1: AI actor line repaired: 'AI Actor Tasks: is: Operation and Monitoring, Procurement, Third-party entities' -> ['Operation and Monitoring', 'Procurement', 'Third-party entities']",
+        "MAP 2.1: wrapped row joined into MP-2.1-001",
+        "MAP 2.2: AI actor line repaired: 'AI Actor Tasks: End Users' -> ['End-Users']",
+        "MAP 4.1: wrapped row joined into MP-4.1-009",
+        "MAP 4.1: wrapped row joined into MP-4.1-010",
+        "MAP 5.1: AI actor line repaired: 'AI Actor Tasks: AI Deployment, AI Design, AI Development, AI Impact Assessment, Affected Individuals and Communities, EndUsers, Operation and Monitoring' -> ['AI Deployment', 'AI Design', 'AI Development', 'AI Impact Assessment', 'Affected Individuals and Communities', 'End-Users', 'Operation and Monitoring']",
+        "MAP 5.2: AI actor line repaired: 'AI Actor Tasks: <br>Users, Human: AI Deployment, AI Design, AI Impact Assessment, Affected Individuals and Comi<br>Factors, Operation and Monitoringf munities, Domain Experts, End-' -> ['AI Deployment', 'AI Design', 'AI Impact Assessment', 'Operation and Monitoring', 'Domain Experts']",
+        "MEASURE 2.8: AI actor line repaired: 'AI Actor Tasks: AI Deployment, AI Impact Assessment, Domain Experts, Operation and Monitori ing, TEVV' -> ['AI Deployment', 'AI Impact Assessment', 'Domain Experts', 'Operation and Monitoring', 'TEVV']",
+        "MEASURE 2.11: AI actor line repaired: 'AI Actor Tasks: <br>Operation andAI Deployment, AI Impact Assessment, Affected Individuals and Communities, Domain Experts, End-Users,<br>i Monitoring, TEVV' -> ['AI Deployment', 'AI Impact Assessment', 'Affected Individuals and Communities', 'Domain Experts', 'End-Users', 'TEVV']",
+        "MEASURE 2.12: AI actor line repaired: 'AI Actor Tasks: AI Deployment, AI Impact Assessment, Domain Experts, Operation and Monitori ing, TEVV' -> ['AI Deployment', 'AI Impact Assessment', 'Domain Experts', 'Operation and Monitoring', 'TEVV']",
+        "MEASURE 3.3: AI actor line repaired: 'AI Actor Tasks: AI Deployment, Affected Individuals and Communities, End-Users, Operation anf i d Monitoring, TEVV' -> ['AI Deployment', 'Affected Individuals and Communities', 'End-Users', 'Operation and Monitoring', 'TEVV']",
+        "MANAGE 2.2: AI actor line repaired: 'AI Actor Tasks: AI Deployment, AI Impact Assessment, Governance and Oversight, Operation ani d Monitoring' -> ['AI Deployment', 'AI Impact Assessment', 'Governance and Oversight', 'Operation and Monitoring']",
+        "MANAGE 4.1: AI actor line repaired: 'AI Actor Tasks: AI Deployment, Affected Individuals and Communities, Domain Experts, End-Usf ers, Human Factors, Operation andf<br>Monitoringff' -> ['AI Deployment', 'Affected Individuals and Communities', 'Domain Experts', 'End-Users', 'Human Factors', 'Operation and Monitoring']",
+        "MANAGE 4.3: wrapped row joined into MG-4.3-002",
+        "MANAGE 4.3: AI actor line repaired: 'AI Actor Tasks: AI Deployment, Affected Individuals and Communities, Domain Experts, End-Usef rs, Human Factors, Operation andMonitoring' -> ['AI Deployment', 'Affected Individuals and Communities', 'Domain Experts', 'End-Users', 'Human Factors', 'Operation and Monitoring']"
+      ],
+      "rmf_notes": [],
+      "figure_notes": []
+    }
+  },
+  "links_attached": 116,
+  "checks": [
+    {
+      "number": 1,
+      "name": "every embed_text <= 512 tokens",
+      "passed": true,
+      "detail": "all 208 chunks fit (max 478)"
+    },
+    {
+      "number": 2,
+      "name": "coverage: every non-whitespace character is in a prose/table chunk",
+      "passed": true,
+      "detail": "all index-eligible text covered"
+    },
+    {
+      "number": 3,
+      "name": "no prose chunk spans two sections; overlap only within a section",
+      "passed": true,
+      "detail": "sections respected"
+    },
+    {
+      "number": 4,
+      "name": "action IDs each in exactly one table chunk; every subcategory has a chunk",
+      "passed": true,
+      "detail": "212 action IDs, 49 subcategories"
+    },
+    {
+      "number": 5,
+      "name": "every table piece has its repeated header; no row split",
+      "passed": true,
+      "detail": "headers repeated, rows whole"
+    },
+    {
+      "number": 6,
+      "name": "every chunk has doc_id, section_path, pages, citation_url, display_text",
+      "passed": true,
+      "detail": "all fields present, IDs unique"
+    },
+    {
+      "number": 7,
+      "name": "no display_text contains the breadcrumb line",
+      "passed": true,
+      "detail": "display_text is clean"
+    },
+    {
+      "number": 8,
+      "name": "footnote chunks = footnotes; figure chunks only for figures with OCR text",
+      "passed": true,
+      "detail": "14 footnotes, 4 figures with OCR"
+    },
+    {
+      "number": 9,
+      "name": "determinism: two runs give identical chunks",
+      "passed": true,
+      "detail": "identical output"
+    }
+  ],
+  "warnings": []
+}

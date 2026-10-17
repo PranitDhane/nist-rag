@@ -59,6 +59,7 @@ documents:
       expected_footnotes: 0
       subcategory_tables: null
       unique_action_ids: null
+      chunk_action_ids: null
       forbidden_lines: ["NIST AI 100-1", "AI RMF 1.0"]   # running header; must not survive as a line
       forbidden_line_patterns: ["^Page [0-9ivx]+$"]      # running footer
 
@@ -120,3 +121,6 @@ documents:
       # 211, not the plan's 212: the plan's count included GV-1.1-002, which appears only as a prose
       # example on PDF p.17 (GOVERN 1.1 has a single table row). Confirmed with the user.
       unique_action_ids: 211
+      # Chunking's count: 212 table-row action IDs = the 211 above + 'GV4.3--001' on PDF p.23, which the PDF
+      # prints with a typo (it is GV-4.3-001) so ingestion's ID pattern skips it; chunking repairs it and logs it.
+      chunk_action_ids: 212

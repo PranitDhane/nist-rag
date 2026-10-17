@@ -79,17 +79,18 @@ def test_path_at_offset():
 def test_table_markers_genai_require_action_id_table_next():
     md = ("**GOVERN 1.7:** Processes and procedures.\n\n|**Action ID**|**Suggested Action**|**GAI Risks**|\n|---|---|---|\n"
           "|GV-1.7-001|x|y|\n\n**MAP 1.3:** a row rendered as a paragraph.\n\n|a|b|")
-    assert table_markers(md) == ["GOVERN 1.7"]
+    assert [m["id"] for m in table_markers(md)] == ["GOVERN 1.7"]
 
 
 def test_table_marker_when_header_rendered_as_one_cell_table():
     md = "|**MEASURE 3.2:**Risk tracking approaches.\n|---|\n\n|**Action ID**|**Suggested Action**|**GAI Risks**|\n|---|---|---|"
-    assert table_markers(md) == ["MEASURE 3.2"]
+    assert [m["id"] for m in table_markers(md)] == ["MEASURE 3.2"]
 
 
 def test_table_markers_ai_rmf_captions():
     md = "Table 1: Categories and subcategories for the **GOVERN** function.\n\nTable 1: Categories. (Continued)\n"
-    assert table_markers(md) == ["Table 1"]
+    assert [m["id"] for m in table_markers(md)] == ["Table 1"]
+    assert table_markers(md)[0]["kind"] == "rmf_table"
 
 
 @pytest.mark.parametrize("md,expected", [
@@ -155,5 +156,41 @@ def test_real_genai_tables_and_action_ids(structured):
 
 def test_real_ai_rmf_table_markers_are_the_four_tables(structured):
     _, recs = structured
-    markers = [m for r in recs if r["doc_id"] == "ai_rmf_1_0" for m in r["table_markers"]]
+    markers = [m["id"] for r in recs if r["doc_id"] == "ai_rmf_1_0" for m in r["table_markers"]]
     assert markers == ["Table 1", "Table 2", "Table 3", "Table 4"]
+
+
+# ---- chunking prerequisites (CHUNKING_PLAN Stage C0): char offsets and marker kinds
+def test_table_marker_offsets_and_kinds_on_fixture():
+    md = ("intro\n\n**GOVERN 1.7:** Processes.\n\n|**Action ID**|**Suggested Action**|\n|---|---|\n|GV-1.7-001|x|\n\n"
+          "Table 2: Categories.")
+    markers = table_markers(md)
+    assert [m["kind"] for m in markers] == ["genai_subcategory", "rmf_table"]
+    assert md[markers[0]["char_offset"]:].startswith("**GOVERN 1.7:**")
+    assert md[markers[1]["char_offset"]:].startswith("Table 2:")
+
+
+def test_heading_offsets_and_paths_on_fixture():
+    pages = [{"markdown": "x\n\n## **5 AI RMF Core**\n\ntext\n\n### 5.1 Govern\n\nmore", "pdf_page": 1}]
+    (rec,) = annotate_document(pages)
+    h1, h2 = rec["headings"]
+    assert pages[0]["markdown"][h1["char_offset"]:].lstrip("# *").startswith("5 AI RMF Core")
+    assert pages[0]["markdown"][h2["char_offset"]:].startswith("### 5.1 Govern")
+    assert h2["section_path"] == ["5 AI RMF Core", "5.1 Govern"]
+
+
+def test_real_offsets_point_at_headings_and_markers(structured):
+    from ingest.clean import plain
+    _, recs = structured
+    n_h = n_m = 0
+    for r in recs:
+        for h in r["headings"]:
+            line = r["markdown"][h["char_offset"]:].split("\n", 1)[0]
+            assert h["section_id"] in plain(line), (r["pdf_page"], h, line)
+            n_h += 1
+        for m in r["table_markers"]:
+            line = plain(r["markdown"][m["char_offset"]:].split("\n", 1)[0])
+            assert m["id"] in line, (r["pdf_page"], m, line)
+            assert m["kind"] in ("genai_subcategory", "rmf_table")
+            n_m += 1
+    assert n_h > 50 and n_m == 53

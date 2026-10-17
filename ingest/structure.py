@@ -103,19 +103,22 @@ def _action_table_follows(lines: list[str], i: int) -> bool:
     return False
 
 
-def table_markers(markdown: str) -> list[str]:
-    """Table starts. A subcategory header ('GOVERN 1.7') starts a table only when an
-    'Action ID' table follows it; in AI RMF the same bold text is just a table row that
-    pymupdf4llm rendered as a paragraph. AI RMF tables start at a 'Table N' caption
-    (captions ending '(Continued)' are repeats, not starts)."""
+def table_markers(markdown: str) -> list[dict]:
+    """Table starts, each {id, kind, char_offset}. A subcategory header ('GOVERN 1.7') starts a
+    table only when an 'Action ID' table follows it (kind 'genai_subcategory'); in AI RMF the
+    same bold text is just a table row that pymupdf4llm rendered as a paragraph. AI RMF tables
+    start at a 'Table N' caption (kind 'rmf_table'; captions ending '(Continued)' are repeats,
+    not starts). `char_offset` is the line's first character in `markdown`."""
     lines = markdown.split("\n")
     out = []
+    pos = 0
     for i, line in enumerate(lines):
+        offset, pos = pos, pos + len(line) + 1
         p = plain(line)
         if (m := SUBCATEGORY_LINE_RE.match(p)) and _action_table_follows(lines, i):
-            out.append(m.group(1))
+            out.append({"id": m.group(1), "kind": "genai_subcategory", "char_offset": offset})
         elif (m := TABLE_CAPTION_RE.match(p)) and not p.endswith("(Continued)"):
-            out.append(m.group(1))
+            out.append({"id": m.group(1), "kind": "rmf_table", "char_offset": offset})
     return out
 
 
@@ -173,7 +176,8 @@ def annotate_document(pages: list[dict]) -> list[dict]:
             heading_paths.append({"offset": h["offset"], "path": [path_label(s) for s in stack]})
         md = p["markdown"]
         out.append({**p, "section_path_start": start,
-                    "headings": [{k: h[k] for k in ("section_id", "title", "level")} for h in heads],
+                    "headings": [{**{k: h[k] for k in ("section_id", "title", "level")}, "char_offset": h["offset"],
+                                 "section_path": hp["path"]} for h, hp in zip(heads, heading_paths)],
                     "heading_paths": heading_paths,
                     "section_path_end": [path_label(s) for s in stack],
                     "table_markers": table_markers(md), "continues_table": continues_table(md),
