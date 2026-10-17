@@ -4,6 +4,7 @@
 documents:
   - doc_id: ai_rmf_1_0
     display_name: "NIST AI 100-1 (AI RMF 1.0)"
+    citation_name: "NIST AI 100-1"   # short name used in citation labels (attribution/format.py)
     url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
     filename: NIST.AI.100-1.pdf
     sha256: "7576edb531d9848825814ee88e28b1795d3a84b435b4b797d3670eafdc4a89f1"
@@ -65,6 +66,7 @@ documents:
 
   - doc_id: genai_profile
     display_name: "NIST AI 600-1 (Generative AI Profile)"
+    citation_name: "NIST AI 600-1"
     url: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
     filename: NIST.AI.600-1.pdf
     sha256: "6e73620ab6b64e90ef2c04bf0e0d6246185a2f4b1b13cab0df494496cff89b6a"

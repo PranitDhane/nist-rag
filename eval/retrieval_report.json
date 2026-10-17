@@ -1,0 +1,2668 @@
+{
+  "config_version": "a6665bdc7673",
+  "config": {
+    "vector_k": 10,
+    "bm25_k": 10,
+    "weights": [
+      0.6,
+      0.4
+    ],
+    "rrf_c": 60,
+    "id_key": "chunk_id",
+    "reranker_model": "BAAI/bge-reranker-base",
+    "reranker_revision": "2cfc18c9415c912f9d8155881c133215df768a70",
+    "reranker_max_length": 512,
+    "top_n": 5,
+    "rerank_text": "embed_text",
+    "rerank_score_scale": "sigmoid",
+    "query_prefix": "Represent this sentence for searching relevant passages: ",
+    "sibling_chunk_types": [
+      "genai_action_table",
+      "rmf_core_table"
+    ],
+    "sibling_placement": "group",
+    "siblings_count_toward_top_n": false,
+    "threshold": 0.15,
+    "gate_removes_chunks": false,
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "tokenizer_version": "1-ids-whole+snowball-english"
+  },
+  "cases": 43,
+  "answerable": 33,
+  "unanswerable": 10,
+  "summary": {
+    "vector_only": {
+      "hit_at_5": 0.8788,
+      "mrr": 0.8081,
+      "hits": 29,
+      "answerable_cases": 33
+    },
+    "bm25_only": {
+      "hit_at_5": 0.8788,
+      "mrr": 0.7232,
+      "hits": 29,
+      "answerable_cases": 33
+    },
+    "ensemble": {
+      "hit_at_5": 0.8788,
+      "mrr": 0.7813,
+      "hits": 29,
+      "answerable_cases": 33
+    },
+    "ensemble_rerank": {
+      "hit_at_5": 1.0,
+      "mrr": 0.899,
+      "hits": 33,
+      "answerable_cases": 33
+    },
+    "recall_at_20_fused": {
+      "found": 33,
+      "of": 33,
+      "pct": 100.0
+    }
+  },
+  "thresholds": {
+    "rows": [
+      {
+        "threshold": 0.0,
+        "answerable_kept_pct": 100.0,
+        "unanswerable_rejected_pct": 0.0
+      },
+      {
+        "threshold": 0.0526,
+        "answerable_kept_pct": 93.9,
+        "unanswerable_rejected_pct": 80.0
+      },
+      {
+        "threshold": 0.1052,
+        "answerable_kept_pct": 93.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.1579,
+        "answerable_kept_pct": 93.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.2105,
+        "answerable_kept_pct": 93.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.2631,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.3157,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.3683,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.421,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.4736,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.5262,
+        "answerable_kept_pct": 90.9,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.5788,
+        "answerable_kept_pct": 84.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.6315,
+        "answerable_kept_pct": 81.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.6841,
+        "answerable_kept_pct": 78.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.7367,
+        "answerable_kept_pct": 78.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.7893,
+        "answerable_kept_pct": 78.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.8419,
+        "answerable_kept_pct": 78.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.8946,
+        "answerable_kept_pct": 78.8,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.9472,
+        "answerable_kept_pct": 72.7,
+        "unanswerable_rejected_pct": 100.0
+      },
+      {
+        "threshold": 0.9998,
+        "answerable_kept_pct": 0.0,
+        "unanswerable_rejected_pct": 100.0
+      }
+    ],
+    "answerable_scores": {
+      "best": 0.9998,
+      "worst": 0.0054
+    },
+    "unanswerable_scores": {
+      "best": 0.0729,
+      "worst": 0.0
+    }
+  },
+  "latency_ms": {
+    "n": 43,
+    "p50": 755.1,
+    "p95": 934.5,
+    "max": 956.9,
+    "target_p95_ms": 1500,
+    "meets_target": true
+  },
+  "bm25_padding_cases": 1,
+  "truncated_pairs": {
+    "truncated": 27,
+    "pairs": 745,
+    "limit_tokens": 512
+  },
+  "failures": {
+    "vector_only": [
+      "c03",
+      "c06",
+      "c22",
+      "c29"
+    ],
+    "bm25_only": [
+      "c11",
+      "c16",
+      "c29",
+      "c33"
+    ],
+    "ensemble": [
+      "c03",
+      "c06",
+      "c22",
+      "c29"
+    ],
+    "ensemble_rerank": []
+  },
+  "per_case": [
+    {
+      "id": "c01",
+      "kind": "direct",
+      "query": "What are the four core functions of the NIST AI RMF?",
+      "answerable": true,
+      "best_score": 0.9997,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0020:1",
+          "score": 0.9997,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:5",
+          "score": 0.9981,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, Executive Summary, p. 3"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0035:2",
+          "score": 0.9804,
+          "fused_pos": 13,
+          "label": "NIST AI 100-1, §5.3 Measure, pp. 28–29"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0049:1",
+          "score": 0.9781,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:4",
+          "score": 0.9461,
+          "fused_pos": 5,
+          "label": "NIST AI 100-1, Executive Summary, pp. 2–3"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c02",
+      "kind": "direct",
+      "query": "Which of the four AI RMF functions is cross-cutting?",
+      "answerable": true,
+      "best_score": 0.9987,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0020:1",
+          "score": 0.9987,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0022:1",
+          "score": 0.9905,
+          "fused_pos": 11,
+          "label": "NIST AI 100-1, §5.1 Govern, pp. 21–22"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:5",
+          "score": 0.9656,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, Executive Summary, p. 3"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0021:1",
+          "score": 0.954,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §5 AI RMF Core, Fig. 5, p. 20"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:4",
+          "score": 0.8391,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c03",
+      "kind": "exact_id",
+      "query": "GV-1.7-001",
+      "answerable": true,
+      "best_score": 0.9968,
+      "candidate_count": 20,
+      "bm25_padding": 9,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0034:1",
+          "score": 0.9968,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:1",
+          "score": 0.9403,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0033:1",
+          "score": 0.8668,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.6, p. 16"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:2",
+          "score": 0.0688,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 15"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0041:1",
+          "score": 0.0509,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 6.1, pp. 20–21"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": null
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": null
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "bm25_only",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c04",
+      "kind": "exact_id",
+      "query": "GOVERN 1.7",
+      "answerable": true,
+      "best_score": 0.9988,
+      "candidate_count": 12,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0034:1",
+          "score": 0.9988,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0023:1",
+          "score": 0.9304,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §5.1 Govern, GOVERN 1, pp. 22–23"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0085:1",
+          "score": 0.0578,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, A.1.7 Enhancing Content Provenance through Structured Public Feedback, p. 52"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0022:1",
+          "score": 0.0481,
+          "fused_pos": 9,
+          "label": "NIST AI 100-1, §5.1 Govern, pp. 21–22"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0022:2",
+          "score": 0.0159,
+          "fused_pos": 7,
+          "label": "NIST AI 100-1, §5.1 Govern, p. 22"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c05",
+      "kind": "exact_id",
+      "query": "What does MAP 1.1 say?",
+      "answerable": true,
+      "best_score": 0.5886,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0043:1",
+          "score": 0.5886,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 1.1, pp. 22–23"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0043:2",
+          "score": 0.3955,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 1.1, p. 23"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0030:1",
+          "score": 0.023,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §5.2 Map, MAP 1, p. 26"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0023:1",
+          "score": 0.0004,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §5.1 Govern, GOVERN 1, pp. 22–23"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0029:2",
+          "score": 0.0002,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §5.2 Map, p. 25"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c06",
+      "kind": "exact_id",
+      "query": "What is suggested action MS-2.11-003?",
+      "answerable": true,
+      "best_score": 0.998,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:2",
+          "score": 0.998,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, pp. 36–37"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0064:1",
+          "score": 0.292,
+          "fused_pos": 7,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.12, p. 37"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0058:1",
+          "score": 0.2101,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, p. 33"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0054:1",
+          "score": 0.0235,
+          "fused_pos": 10,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.2, p. 30"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0067:1",
+          "score": 0.0111,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 3.3, pp. 38–39"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": null
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": null
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "bm25_only",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c07",
+      "kind": "direct",
+      "query": "What does it mean for an AI system to be valid and reliable?",
+      "answerable": true,
+      "best_score": 0.9776,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:1",
+          "score": 0.9776,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:2",
+          "score": 0.9167,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, p. 14"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:1",
+          "score": 0.9103,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0056:1",
+          "score": 0.8103,
+          "fused_pos": 8,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.5, p. 31"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0011:1",
+          "score": 0.6485,
+          "fused_pos": 5,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, Fig. 4, p. 12"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c08",
+      "kind": "direct",
+      "query": "What are the characteristics of trustworthy AI systems?",
+      "answerable": true,
+      "best_score": 0.9998,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:1",
+          "score": 0.9998,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0014:2",
+          "score": 0.9867,
+          "fused_pos": 9,
+          "label": "NIST AI 600-1, §2.4 Data Privacy, pp. 7–8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0011:1",
+          "score": 0.9834,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, Fig. 4, p. 12"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:3",
+          "score": 0.9832,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:4",
+          "score": 0.9814,
+          "fused_pos": 10,
+          "label": "NIST AI 100-1, Executive Summary, pp. 2–3"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c09",
+      "kind": "direct",
+      "query": "How do AI risks differ from traditional software risks?",
+      "answerable": true,
+      "best_score": 0.9998,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:1",
+          "score": 0.9998,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 38"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:2",
+          "score": 0.9975,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:3",
+          "score": 0.9972,
+          "fused_pos": 3,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 39"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:1",
+          "score": 0.9906,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 2"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.8606,
+          "fused_pos": 5,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c10",
+      "kind": "direct",
+      "query": "What is risk tolerance in the AI RMF?",
+      "answerable": true,
+      "best_score": 0.9979,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0005:1",
+          "score": 0.9979,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §1.2.2 Risk Tolerance, p. 7"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0005:2",
+          "score": 0.9589,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §1.2.2 Risk Tolerance, p. 7"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0002:1",
+          "score": 0.9142,
+          "fused_pos": 7,
+          "label": "NIST AI 100-1, §1.1 Understanding and Addressing Risks, Impacts, and Harms, p. 4"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0000:1",
+          "score": 0.8285,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §1 Introduction, p. 1"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:1",
+          "score": 0.7555,
+          "fused_pos": 9,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 2"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 2
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c11",
+      "kind": "direct",
+      "query": "What are AI RMF Profiles?",
+      "answerable": true,
+      "best_score": 0.9992,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0045:1",
+          "score": 0.9992,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §6 AI RMF Profiles, p. 33"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0000:1",
+          "score": 0.9974,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §1 Introduction, p. 1"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0045:2",
+          "score": 0.9966,
+          "fused_pos": 3,
+          "label": "NIST AI 100-1, §6 AI RMF Profiles, p. 34"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:4",
+          "score": 0.7261,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, Executive Summary, pp. 2–3"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0020:1",
+          "score": 0.6973,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": null
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c12",
+      "kind": "direct",
+      "query": "What does the Measure function do?",
+      "answerable": true,
+      "best_score": 0.9565,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0035:1",
+          "score": 0.9565,
+          "fused_pos": 7,
+          "label": "NIST AI 100-1, §5.3 Measure, p. 28"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0035:2",
+          "score": 0.1495,
+          "fused_pos": 6,
+          "label": "NIST AI 100-1, §5.3 Measure, pp. 28–29"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0020:1",
+          "score": 0.007,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0029:1",
+          "score": 0.0068,
+          "fused_pos": 3,
+          "label": "NIST AI 100-1, §5.2 Map, pp. 24–25"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0036:1",
+          "score": 0.0046,
+          "fused_pos": 9,
+          "label": "NIST AI 100-1, §5.3 Measure, MEASURE 1, p. 29"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 5
+        },
+        "ensemble": {
+          "first_hit_rank": 2
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c13",
+      "kind": "direct",
+      "query": "What is the purpose of the Manage function?",
+      "answerable": true,
+      "best_score": 0.5372,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0040:1",
+          "score": 0.5372,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, §5.4 Manage, pp. 31–32"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0029:1",
+          "score": 0.0169,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §5.2 Map, pp. 24–25"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0044:1",
+          "score": 0.0127,
+          "fused_pos": 10,
+          "label": "NIST AI 100-1, §5.4 Manage, MANAGE 4, p. 33"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0021:1",
+          "score": 0.0126,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §5 AI RMF Core, Fig. 5, p. 20"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0041:1",
+          "score": 0.007,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §5.4 Manage, MANAGE 1, p. 32"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 4
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c14",
+      "kind": "direct",
+      "query": "How should organizations prioritize AI risks?",
+      "answerable": true,
+      "best_score": 0.9752,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0006:1",
+          "score": 0.9752,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §1.2.3 Risk Prioritization, pp. 7–8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0005:1",
+          "score": 0.9648,
+          "fused_pos": 15,
+          "label": "NIST AI 100-1, §1.2.2 Risk Tolerance, p. 7"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0026:1",
+          "score": 0.9196,
+          "fused_pos": 10,
+          "label": "NIST AI 100-1, §5.1 Govern, GOVERN 4, pp. 23–24"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0041:1",
+          "score": 0.8958,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §5.4 Manage, MANAGE 1, p. 32"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:2",
+          "score": 0.8821,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, p. 14"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c15",
+      "kind": "direct",
+      "query": "What is confabulation?",
+      "answerable": true,
+      "best_score": 0.9979,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0010:1",
+          "score": 0.9979,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §2.2 Confabulation, p. 6"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:4",
+          "score": 0.5655,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4"
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0012:1",
+          "score": 0.5615,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, footnote 9, p. 6"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0010:2",
+          "score": 0.3874,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §2.2 Confabulation, p. 6"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0055:1",
+          "score": 0.2068,
+          "fused_pos": 14,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.3, pp. 30–31"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 3
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c16",
+      "kind": "direct",
+      "query": "What are the privacy risks of generative AI?",
+      "answerable": true,
+      "best_score": 0.9603,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0014:1",
+          "score": 0.9603,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2.4 Data Privacy, p. 7"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:5",
+          "score": 0.9327,
+          "fused_pos": 7,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 4"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0061:1",
+          "score": 0.9314,
+          "fused_pos": 9,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.10, p. 35"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0049:1",
+          "score": 0.8747,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 4.1, p. 26"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0017:1",
+          "score": 0.8244,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §3.6 Privacy-Enhanced, p. 17"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": null
+        },
+        "ensemble": {
+          "first_hit_rank": 4
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c17",
+      "kind": "direct",
+      "query": "What are the environmental impacts of generative AI?",
+      "answerable": true,
+      "best_score": 0.908,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0003:5",
+          "score": 0.908,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 4"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0064:1",
+          "score": 0.7835,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.12, p. 37"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0015:1",
+          "score": 0.7395,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.1784,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0016:2",
+          "score": 0.1103,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, pp. 8–9"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 3
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c18",
+      "kind": "direct",
+      "query": "How can generative AI affect cybersecurity?",
+      "answerable": true,
+      "best_score": 0.5312,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0020:1",
+          "score": 0.5312,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §2.9 Information Security, pp. 10–11"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0020:2",
+          "score": 0.4933,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §2.9 Information Security, p. 11"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.2573,
+          "fused_pos": 11,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:6",
+          "score": 0.209,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 4–5"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0018:2",
+          "score": 0.1749,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2.8 Information Integrity, p. 10"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 3
+        },
+        "bm25_only": {
+          "first_hit_rank": 2
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c19",
+      "kind": "direct",
+      "query": "What does the profile say about pre-deployment testing of GAI systems?",
+      "answerable": true,
+      "best_score": 0.9943,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0082:1",
+          "score": 0.9943,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, A.1.4 Pre-Deployment Testing, pp. 48–49"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0082:2",
+          "score": 0.9334,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, A.1.4 Pre-Deployment Testing, p. 49"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0085:1",
+          "score": 0.9187,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, A.1.7 Enhancing Content Provenance through Structured Public Feedback, p. 52"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0000:2",
+          "score": 0.7499,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, §1 Introduction, pp. 1–2"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0055:1",
+          "score": 0.6184,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.3, pp. 30–31"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c20",
+      "kind": "direct",
+      "query": "What is content provenance for generative AI?",
+      "answerable": true,
+      "best_score": 0.9856,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0084:1",
+          "score": 0.9856,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, A.1.6 Content Provenance, p. 51"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0084:2",
+          "score": 0.9839,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, A.1.6 Content Provenance, pp. 51–52"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0084:3",
+          "score": 0.8874,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, A.1.6 Content Provenance, p. 52"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0085:1",
+          "score": 0.7353,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, A.1.7 Enhancing Content Provenance through Structured Public Feedback, p. 52"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0067:1",
+          "score": 0.3943,
+          "fused_pos": 16,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 3.3, pp. 38–39"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 2
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c21",
+      "kind": "direct",
+      "query": "What are the CBRN information or capabilities risks?",
+      "answerable": true,
+      "best_score": 0.9895,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0003:4",
+          "score": 0.9895,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0035:1",
+          "score": 0.9574,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 2.1, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0009:1",
+          "score": 0.9515,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §2.1 CBRN Information or Capabilities, p. 5"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:2",
+          "score": 0.951,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 15"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:1",
+          "score": 0.9499,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 2
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 2
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 3
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c22",
+      "kind": "table",
+      "query": "What are the suggested actions for MEASURE 2.11?",
+      "answerable": true,
+      "best_score": 0.9989,
+      "candidate_count": 18,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:1",
+          "score": 0.9989,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, p. 36"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:2",
+          "score": 0.9979,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, pp. 36–37"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0037:1",
+          "score": 0.3151,
+          "fused_pos": 13,
+          "label": "NIST AI 100-1, §5.3 Measure, MEASURE 2, pp. 29–30"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0058:1",
+          "score": 0.1918,
+          "fused_pos": 10,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, p. 33"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0064:1",
+          "score": 0.127,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.12, p. 37"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": null
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": null
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "bm25_only",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c23",
+      "kind": "table",
+      "query": "decommissioning GAI systems",
+      "answerable": true,
+      "best_score": 0.9937,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0034:1",
+          "score": 0.9937,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0075:2",
+          "score": 0.9427,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, pp. 44–45"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0075:1",
+          "score": 0.942,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, p. 44"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0083:1",
+          "score": 0.9017,
+          "fused_pos": 15,
+          "label": "NIST AI 600-1, A.1.5 Structured Public Feedback, p. 49"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0037:1",
+          "score": 0.9007,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 4.1, pp. 18–19"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c24",
+      "kind": "table",
+      "query": "Which suggested actions mention red-teaming?",
+      "answerable": true,
+      "best_score": 0.8947,
+      "candidate_count": 15,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0061:1",
+          "score": 0.8947,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.10, p. 35"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0069:1",
+          "score": 0.8361,
+          "fused_pos": 15,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 1.3, p. 40"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0052:2",
+          "score": 0.7993,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 1.1, p. 29"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0058:2",
+          "score": 0.7971,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, pp. 33–34"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0050:2",
+          "score": 0.7457,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 5.1, p. 27"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 3
+        },
+        "bm25_only": {
+          "first_hit_rank": 3
+        },
+        "ensemble": {
+          "first_hit_rank": 3
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c25",
+      "kind": "figure",
+      "query": "What does Figure 1 show about potential harms from AI systems?",
+      "answerable": true,
+      "best_score": 0.996,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0002:2",
+          "score": 0.996,
+          "fused_pos": 3,
+          "label": "NIST AI 100-1, §1.1 Understanding and Addressing Risks, Impacts, and Harms, pp. 4–5"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0004:1",
+          "score": 0.9922,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §1.2.1 Risk Measurement, Fig. 1, p. 5"
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0008:1",
+          "score": 0.2641,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.1904,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0008:1",
+          "score": 0.184,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §2 Audience, p. 9"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 4
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 2
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c26",
+      "kind": "figure",
+      "query": "What does the figure of trustworthy AI characteristics show about the base characteristic?",
+      "answerable": true,
+      "best_score": 0.9982,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:1",
+          "score": 0.9982,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0011:1",
+          "score": 0.9932,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, Fig. 4, p. 12"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0018:2",
+          "score": 0.8966,
+          "fused_pos": 8,
+          "label": "NIST AI 600-1, §2.8 Information Integrity, p. 10"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0014:2",
+          "score": 0.6789,
+          "fused_pos": 7,
+          "label": "NIST AI 600-1, §2.4 Data Privacy, pp. 7–8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0023:1",
+          "score": 0.641,
+          "fused_pos": 14,
+          "label": "NIST AI 100-1, §5.1 Govern, GOVERN 1, pp. 22–23"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c27",
+      "kind": "footnote",
+      "query": "What is the Winogender Schemas dataset?",
+      "answerable": true,
+      "best_score": 0.9911,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:footnote:0063:1",
+          "score": 0.9911,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, footnote 15, p. 36"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:1",
+          "score": 0.3982,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, p. 36"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0018:1",
+          "score": 0.0028,
+          "fused_pos": 18,
+          "label": "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0020:2",
+          "score": 0.0026,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §2.9 Information Security, p. 11"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0024:1",
+          "score": 0.0005,
+          "fused_pos": 17,
+          "label": "NIST AI 600-1, §2.12 Value Chain and Component Integration, p. 12"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c28",
+      "kind": "footnote",
+      "query": "What are algorithmic monocultures?",
+      "answerable": true,
+      "best_score": 0.9995,
+      "candidate_count": 18,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:footnote:0004:1",
+          "score": 0.9995,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 3, p. 2"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:1",
+          "score": 0.2783,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 2"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:2",
+          "score": 0.0112,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 15"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0018:1",
+          "score": 0.0019,
+          "fused_pos": 6,
+          "label": "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.0017,
+          "fused_pos": 4,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c29",
+      "kind": "paraphrase",
+      "query": "How can an organization safely retire a generative model it no longer needs?",
+      "answerable": true,
+      "best_score": 0.0054,
+      "candidate_count": 20,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0079:1",
+          "score": 0.0054,
+          "fused_pos": 19,
+          "label": "NIST AI 600-1, A.1.1 Overview, p. 47"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0034:1",
+          "score": 0.0054,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0018:2",
+          "score": 0.0012,
+          "fused_pos": 8,
+          "label": "NIST AI 600-1, §2.8 Information Integrity, p. 10"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0049:2",
+          "score": 0.0009,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 4.1, pp. 26–27"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0000:1",
+          "score": 0.0008,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §1 Introduction, p. 1"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": null
+        },
+        "bm25_only": {
+          "first_hit_rank": null
+        },
+        "ensemble": {
+          "first_hit_rank": null
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 2
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c30",
+      "kind": "paraphrase",
+      "query": "Why might a chatbot confidently state things that are false?",
+      "answerable": true,
+      "best_score": 0.2398,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0003:4",
+          "score": 0.2398,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0010:1",
+          "score": 0.0741,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §2.2 Confabulation, p. 6"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0011:1",
+          "score": 0.0098,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, pp. 6–7"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0010:2",
+          "score": 0.0015,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §2.2 Confabulation, p. 6"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0011:2",
+          "score": 0.0005,
+          "fused_pos": 9,
+          "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, p. 7"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 2
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 5
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 2
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c31",
+      "kind": "paraphrase",
+      "query": "How should we check that a language model treats different demographic groups fairly?",
+      "answerable": true,
+      "best_score": 0.02,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0016:1",
+          "score": 0.02,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, p. 8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0018:1",
+          "score": 0.0036,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:2",
+          "score": 0.0021,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, pp. 36–37"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:1",
+          "score": 0.0012,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, p. 36"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0059:1",
+          "score": 0.001,
+          "fused_pos": 16,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.8, p. 34"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c32",
+      "kind": "both_docs",
+      "query": "How should fairness and bias be evaluated in GAI systems?",
+      "answerable": true,
+      "best_score": 0.9867,
+      "candidate_count": 16,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:1",
+          "score": 0.9867,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, p. 36"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0062:2",
+          "score": 0.9061,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.11, pp. 36–37"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0016:1",
+          "score": 0.6238,
+          "fused_pos": 4,
+          "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, p. 8"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0018:1",
+          "score": 0.3771,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0017:1",
+          "score": 0.3025,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, §2.7 Human-AI Configuration, p. 9"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": 1
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 1
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "bm25_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "c33",
+      "kind": "both_docs",
+      "query": "What is the Govern function and what GAI actions support it?",
+      "answerable": true,
+      "best_score": 0.6549,
+      "candidate_count": 20,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0025:2",
+          "score": 0.6549,
+          "fused_pos": 2,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, p. 13"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0027:1",
+          "score": 0.5773,
+          "fused_pos": 1,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.1, p. 13"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:1",
+          "score": 0.5498,
+          "fused_pos": 10,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0034:1",
+          "score": 0.4318,
+          "fused_pos": 8,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0037:1",
+          "score": 0.3174,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 4.1, pp. 18–19"
+        }
+      ],
+      "configs": {
+        "vector_only": {
+          "first_hit_rank": 1
+        },
+        "bm25_only": {
+          "first_hit_rank": null
+        },
+        "ensemble": {
+          "first_hit_rank": 1
+        },
+        "ensemble_rerank": {
+          "first_hit_rank": 2
+        }
+      },
+      "recall_at_20_fused": true,
+      "found_by": [
+        "vector_only",
+        "ensemble",
+        "ensemble_rerank"
+      ]
+    },
+    {
+      "id": "u01",
+      "kind": "near_scope",
+      "query": "What penalties does the EU AI Act set for non-compliance?",
+      "answerable": false,
+      "best_score": 0.0008,
+      "candidate_count": 20,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0028:1",
+          "score": 0.0008,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §5.1 Govern, GOVERN 6, p. 24"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0015:2",
+          "score": 0.0005,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §3.4 Accountable and Transparent, p. 16"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0086:1",
+          "score": 0.0005,
+          "fused_pos": 5,
+          "label": "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:3",
+          "score": 0.0004,
+          "fused_pos": 18,
+          "label": "NIST AI 100-1, Executive Summary, p. 2"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0006:2",
+          "score": 0.0004,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u02",
+      "kind": "near_scope",
+      "query": "What does NIST say about quantum computing risks?",
+      "answerable": false,
+      "best_score": 0.0729,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:2",
+          "score": 0.0729,
+          "fused_pos": 1,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0014:1",
+          "score": 0.0317,
+          "fused_pos": 6,
+          "label": "NIST AI 100-1, §3.3 Secure and Resilient, p. 15"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:1",
+          "score": 0.0306,
+          "fused_pos": 17,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0018:1",
+          "score": 0.0179,
+          "fused_pos": 14,
+          "label": "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.0179,
+          "fused_pos": 5,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u03",
+      "kind": "near_scope",
+      "query": "What are the steps to get ISO/IEC 42001 certification?",
+      "answerable": false,
+      "best_score": 0.0008,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:2",
+          "score": 0.0008,
+          "fused_pos": 15,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, p. 14"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0012:1",
+          "score": 0.0006,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0013:1",
+          "score": 0.0004,
+          "fused_pos": 16,
+          "label": "NIST AI 100-1, §3.2 Safe, pp. 14–15"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.0003,
+          "fused_pos": 14,
+          "label": "NIST AI 100-1, Executive Summary, p. 1"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0014:1",
+          "score": 0.0002,
+          "fused_pos": 13,
+          "label": "NIST AI 100-1, §3.3 Secure and Resilient, p. 15"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u04",
+      "kind": "near_scope",
+      "query": "What fines does the GDPR impose on companies using AI?",
+      "answerable": false,
+      "best_score": 0.0012,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0003:6",
+          "score": 0.0012,
+          "fused_pos": 10,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 4–5"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0074:1",
+          "score": 0.0011,
+          "fused_pos": 16,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:5",
+          "score": 0.0008,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 4"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0017:1",
+          "score": 0.0007,
+          "fused_pos": 9,
+          "label": "NIST AI 100-1, §3.6 Privacy-Enhanced, p. 17"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0058:2",
+          "score": 0.0006,
+          "fused_pos": 19,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, pp. 33–34"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u05",
+      "kind": "near_scope",
+      "query": "How many parameters does GPT-4 have?",
+      "answerable": false,
+      "best_score": 0.0013,
+      "candidate_count": 20,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:footnote:0001:1",
+          "score": 0.0013,
+          "fused_pos": 18,
+          "label": "NIST AI 600-1, §1 Introduction, footnote 1, p. 1"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:3",
+          "score": 0.0007,
+          "fused_pos": 14,
+          "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0074:1",
+          "score": 0.0005,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0024:1",
+          "score": 0.0002,
+          "fused_pos": 17,
+          "label": "NIST AI 600-1, §2.12 Value Chain and Component Integration, p. 12"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0030:1",
+          "score": 0.0001,
+          "fused_pos": 3,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u06",
+      "kind": "near_scope",
+      "query": "What is the context window size of Claude?",
+      "answerable": false,
+      "best_score": 0.0,
+      "candidate_count": 20,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0009:1",
+          "score": 0.0,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, §2 Audience, Fig. 3, p. 11"
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0008:1",
+          "score": 0.0,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0078:1",
+          "score": 0.0,
+          "fused_pos": 10,
+          "label": "NIST AI 600-1, Appendix A: Primary GAI Considerations, p. 47"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0086:1",
+          "score": 0.0,
+          "fused_pos": 18,
+          "label": "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0015:1",
+          "score": 0.0,
+          "fused_pos": 19,
+          "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u07",
+      "kind": "near_scope",
+      "query": "How much budget should a company allocate to an AI governance team?",
+      "answerable": false,
+      "best_score": 0.0097,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:prose:0083:3",
+          "score": 0.0097,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, A.1.5 Structured Public Feedback, p. 50"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0080:1",
+          "score": 0.0069,
+          "fused_pos": 6,
+          "label": "NIST AI 600-1, A.1.2 Organizational Governance, pp. 47–48"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0046:4",
+          "score": 0.0065,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, pp. 36–37"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0022:1",
+          "score": 0.0038,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §5.1 Govern, pp. 21–22"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0079:1",
+          "score": 0.0036,
+          "fused_pos": 7,
+          "label": "NIST AI 600-1, A.1.1 Overview, p. 47"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u08",
+      "kind": "near_scope",
+      "query": "How can blockchain be used to audit AI models?",
+      "answerable": false,
+      "best_score": 0.004,
+      "candidate_count": 19,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0015:1",
+          "score": 0.004,
+          "fused_pos": 7,
+          "label": "NIST AI 100-1, §3.4 Accountable and Transparent, pp. 15–16"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0080:1",
+          "score": 0.0004,
+          "fused_pos": 12,
+          "label": "NIST AI 600-1, A.1.2 Organizational Governance, pp. 47–48"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0016:1",
+          "score": 0.0004,
+          "fused_pos": 11,
+          "label": "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0009:2",
+          "score": 0.0004,
+          "fused_pos": 10,
+          "label": "NIST AI 100-1, §2 Audience, Fig. 3, p. 11"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:1",
+          "score": 0.0003,
+          "fused_pos": 13,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 38"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u09",
+      "kind": "near_scope",
+      "query": "Write Python code to fine-tune Llama 3 for sentiment classification.",
+      "answerable": false,
+      "best_score": 0.0001,
+      "candidate_count": 18,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0075:1",
+          "score": 0.0001,
+          "fused_pos": 13,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, p. 44"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0016:2",
+          "score": 0.0,
+          "fused_pos": 9,
+          "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, pp. 8–9"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0056:1",
+          "score": 0.0,
+          "fused_pos": 18,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.5, p. 31"
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0070:1",
+          "score": 0.0,
+          "fused_pos": 8,
+          "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 2.2, p. 40"
+        },
+        {
+          "chunk_id": "genai_profile:prose:0015:1",
+          "score": 0.0,
+          "fused_pos": 11,
+          "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8"
+        }
+      ],
+      "configs": {}
+    },
+    {
+      "id": "u10",
+      "kind": "near_scope",
+      "query": "What does the NIST Cybersecurity Framework 2.0 require under its Identify function?",
+      "answerable": false,
+      "best_score": 0.0654,
+      "candidate_count": 17,
+      "bm25_padding": 0,
+      "top5_rerank": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0047:2",
+          "score": 0.0654,
+          "fused_pos": 2,
+          "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0037:1",
+          "score": 0.03,
+          "fused_pos": 12,
+          "label": "NIST AI 100-1, §5.3 Measure, MEASURE 2, pp. 29–30"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0014:1",
+          "score": 0.0212,
+          "fused_pos": 15,
+          "label": "NIST AI 100-1, §3.3 Secure and Resilient, p. 15"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0007:1",
+          "score": 0.0042,
+          "fused_pos": 13,
+          "label": "NIST AI 100-1, §1.2.4 Organizational Integration and Management of Risk, pp. 8–9"
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0008:1",
+          "score": 0.0037,
+          "fused_pos": 8,
+          "label": "NIST AI 100-1, §2 Audience, p. 9"
+        }
+      ],
+      "configs": {}
+    }
+  ]
+}

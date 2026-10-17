@@ -44,6 +44,7 @@ class DocumentSpec:
     page_number_strategy: str  # "page_label" | "first_line_offset"
     validation: Validation
     offset: int | None = None  # only for first_line_offset
+    citation_name: str = ""    # short name for citation labels, e.g. 'NIST AI 100-1'
 
 
 @dataclass(frozen=True)

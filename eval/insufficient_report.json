@@ -1,0 +1,345 @@
+{
+  "unanswerable": {
+    "cases": 10,
+    "insufficient": 10,
+    "via_gate": 10,
+    "via_model": 0,
+    "answered": 0,
+    "flagged_unrelated": 8
+  },
+  "answerable": {
+    "cases": 3,
+    "answered": 3,
+    "insufficient": 0
+  },
+  "live_generation_calls": 3,
+  "rows": [
+    {
+      "id": "u01",
+      "kind": "near_scope",
+      "query": "What penalties does the EU AI Act set for non-compliance?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0008,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, §5.1 Govern, GOVERN 6, p. 24",
+        "NIST AI 100-1, §3.4 Accountable and Transparent, p. 16",
+        "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53",
+        "NIST AI 100-1, Executive Summary, p. 2",
+        "NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u02",
+      "kind": "near_scope",
+      "query": "What does NIST say about quantum computing risks?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0729,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+        "NIST AI 100-1, §3.3 Secure and Resilient, p. 15",
+        "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14",
+        "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18",
+        "NIST AI 100-1, Executive Summary, p. 1"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": []
+    },
+    {
+      "id": "u03",
+      "kind": "near_scope",
+      "query": "What are the steps to get ISO/IEC 42001 certification?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0008,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, §3.1 Valid and Reliable, p. 14",
+        "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14",
+        "NIST AI 100-1, §3.2 Safe, pp. 14–15",
+        "NIST AI 100-1, Executive Summary, p. 1",
+        "NIST AI 100-1, §3.3 Secure and Resilient, p. 15"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u04",
+      "kind": "near_scope",
+      "query": "What fines does the GDPR impose on companies using AI?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0012,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 4–5",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43",
+        "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, p. 4",
+        "NIST AI 100-1, §3.6 Privacy-Enhanced, p. 17",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, pp. 33–34"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u05",
+      "kind": "near_scope",
+      "query": "How many parameters does GPT-4 have?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0013,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 600-1, §1 Introduction, footnote 1, p. 1",
+        "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43",
+        "NIST AI 600-1, §2.12 Value Chain and Component Integration, p. 12",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u06",
+      "kind": "near_scope",
+      "query": "What is the context window size of Claude?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, §2 Audience, Fig. 3, p. 11",
+        "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4",
+        "NIST AI 600-1, Appendix A: Primary GAI Considerations, p. 47",
+        "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53",
+        "NIST AI 600-1, §2.5 Environmental Impacts, p. 8"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u07",
+      "kind": "near_scope",
+      "query": "How much budget should a company allocate to an AI governance team?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0097,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 600-1, A.1.5 Structured Public Feedback, p. 50",
+        "NIST AI 600-1, A.1.2 Organizational Governance, pp. 47–48",
+        "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, pp. 36–37",
+        "NIST AI 100-1, §5.1 Govern, pp. 21–22",
+        "NIST AI 600-1, A.1.1 Overview, p. 47"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": []
+    },
+    {
+      "id": "u08",
+      "kind": "near_scope",
+      "query": "How can blockchain be used to audit AI models?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.004,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, §3.4 Accountable and Transparent, pp. 15–16",
+        "NIST AI 600-1, A.1.2 Organizational Governance, pp. 47–48",
+        "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17",
+        "NIST AI 100-1, §2 Audience, Fig. 3, p. 11",
+        "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 38"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u09",
+      "kind": "near_scope",
+      "query": "Write Python code to fine-tune Llama 3 for sentiment classification.",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0001,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, p. 44",
+        "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, pp. 8–9",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.5, p. 31",
+        "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 2.2, p. 40",
+        "NIST AI 600-1, §2.5 Environmental Impacts, p. 8"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "u10",
+      "kind": "near_scope",
+      "query": "What does the NIST Cybersecurity Framework 2.0 require under its Identify function?",
+      "expected_answerable": false,
+      "path": "gate",
+      "outcome": "insufficient",
+      "reason": "gate_low_score",
+      "best_score": 0.0654,
+      "threshold": 0.15,
+      "relevant": false,
+      "related_labels": [
+        "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+        "NIST AI 100-1, §5.3 Measure, MEASURE 2, pp. 29–30",
+        "NIST AI 100-1, §3.3 Secure and Resilient, p. 15",
+        "NIST AI 100-1, §1.2.4 Organizational Integration and Management of Risk, pp. 8–9",
+        "NIST AI 100-1, §2 Audience, p. 9"
+      ],
+      "generation": null,
+      "answer": null,
+      "error": null,
+      "flags": [
+        "related sections share no query term (look unrelated)"
+      ]
+    },
+    {
+      "id": "c02",
+      "kind": "direct",
+      "query": "Which of the four AI RMF functions is cross-cutting?",
+      "expected_answerable": true,
+      "path": "model",
+      "outcome": "answered",
+      "reason": null,
+      "best_score": 0.9987,
+      "threshold": 0.15,
+      "relevant": true,
+      "related_labels": [],
+      "generation": {
+        "outcome": "ANSWERED",
+        "fixes": [],
+        "usage": {
+          "prompt": 2640,
+          "completion": 109,
+          "reasoning": 57,
+          "total": 2749
+        },
+        "finish_reason": "stop"
+      },
+      "answer": "The cross‑cutting AI RMF function is **GOVERN**. It is designed to be infused throughout the other three functions and to inform all stages of AI risk management [C1][C2].",
+      "error": null,
+      "flags": []
+    },
+    {
+      "id": "c06",
+      "kind": "exact_id",
+      "query": "What is suggested action MS-2.11-003?",
+      "expected_answerable": true,
+      "path": "model",
+      "outcome": "answered",
+      "reason": null,
+      "best_score": 0.998,
+      "threshold": 0.15,
+      "relevant": true,
+      "related_labels": [],
+      "generation": {
+        "outcome": "ANSWERED",
+        "fixes": [],
+        "usage": {
+          "prompt": 3775,
+          "completion": 191,
+          "reasoning": 151,
+          "total": 3966
+        },
+        "finish_reason": "stop"
+      },
+      "answer": "Identify the classes of individuals, groups, or environmental ecosystems which might be impacted by GAI systems through direct engagement with potentially impacted communities. [C2]",
+      "error": null,
+      "flags": []
+    },
+    {
+      "id": "c09",
+      "kind": "direct",
+      "query": "How do AI risks differ from traditional software risks?",
+      "expected_answerable": true,
+      "path": "model",
+      "outcome": "answered",
+      "reason": null,
+      "best_score": 0.9998,
+      "threshold": 0.15,
+      "relevant": true,
+      "related_labels": [],
+      "generation": {
+        "outcome": "ANSWERED",
+        "fixes": [],
+        "usage": {
+          "prompt": 2885,
+          "completion": 677,
+          "reasoning": 489,
+          "total": 3562
+        },
+        "finish_reason": "stop"
+      },
+      "answer": "AI risks differ from traditional software risks in several ways. First, AI systems rely on data that may not represent the intended context, leading to bias and data quality issues that can undermine trustworthiness [C1]. Second, AI systems depend on large, complex datasets and may experience training changes or concept drift, requiring more frequent maintenance and presenting challenges for testing and reproducibility [C2]. Third, the scale and complexity of AI models, especially large pre‑trained models, introduce emergent properties and statistical uncertainty that are difficult to predict or detect [C1][C2]. Fourth, privacy and cybersecurity risks are amplified by AI’s data aggregation capabilities and the lack of established testing standards [C2]. Finally, existing risk frameworks do not adequately address harmful bias, generative AI risks, advanced machine‑learning attacks, or third‑party AI technologies, highlighting gaps unique to AI [C3].",
+      "error": null,
+      "flags": []
+    }
+  ]
+}

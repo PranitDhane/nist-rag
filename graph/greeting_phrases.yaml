@@ -1,0 +1,46 @@
+# Approved pure greeting / thanks / goodbye phrases (API_ROUTING_PLAN Q4).
+# The rule fires only when the WHOLE message is one or two of these (optionally followed by a name word).
+greetings:
+  - hi
+  - hello
+  - hey
+  - hiya
+  - howdy
+  - yo
+  - greetings
+  - good morning
+  - good afternoon
+  - good evening
+  - good day
+  - hi there
+  - hello there
+  - hey there
+thanks:
+  - thanks
+  - thank you
+  - thank you so much
+  - thank you very much
+  - thanks a lot
+  - thanks so much
+  - many thanks
+  - thx
+  - ty
+  - cheers
+goodbyes:
+  - bye
+  - bye bye
+  - goodbye
+  - see you
+  - see you later
+  - see ya
+  - take care
+  - good night
+name_words:
+  - claude
+  - bot
+  - assistant
+  - there
+  - again
+  - everyone
+  - team
+  - friend

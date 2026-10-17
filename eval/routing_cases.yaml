@@ -1,0 +1,82 @@
+# Labelled routing cases (API_ROUTING_PLAN Stage R8). Run with: python -m eval.routing
+# history: up to 2 turns [{user, assistant}], oldest first. query_terms: every term must appear (case-insensitive)
+# in the standalone query of a nist_question. expect_source (optional): the router layer that must decide.
+- {id: pure-1, category: pure_greeting, message: "Hi", expect_route: greeting, expect_source: rule}
+- {id: pure-2, category: pure_greeting, message: "Thanks!", expect_route: greeting, expect_source: rule}
+- {id: pure-3, category: pure_greeting, message: "Goodbye", expect_route: greeting, expect_source: rule}
+
+- {id: llmgreet-1, category: greeting_llm, message: "Good morning, hope you're doing well", expect_route: greeting}
+- {id: llmgreet-2, category: greeting_llm, message: "Hey! How's it going?", expect_route: greeting}
+- {id: llmgreet-3, category: greeting_llm, message: "Thanks a lot for the help earlier, much appreciated", expect_route: greeting}
+
+- {id: nist-1, category: nist_direct, message: "What are the four core functions of the AI RMF?", expect_route: nist_question, query_terms: [function]}
+- {id: nist-2, category: nist_direct, message: "What is confabulation according to the Generative AI Profile?", expect_route: nist_question, query_terms: [confabulation]}
+- {id: nist-3, category: nist_direct, message: "what does GV-1.7-001 recommend?", expect_route: nist_question, query_terms: [GV-1.7-001]}
+- {id: nist-4, category: nist_direct, message: "List the characteristics of trustworthy AI systems", expect_route: nist_question, query_terms: [trustworthy]}
+- {id: nist-5, category: nist_direct, message: "What are the suggested actions for GOVERN 1.7?", expect_route: nist_question, query_terms: [GOVERN 1.7]}
+- {id: nist-6, category: nist_direct, message: "How do AI risks differ from traditional software risks?", expect_route: nist_question, query_terms: [risk, software]}
+- {id: nist-7, category: nist_direct, message: "What is the difference between the AI RMF and the Generative AI Profile?", expect_route: nist_question, query_terms: [profile]}
+- {id: nist-8, category: nist_direct, message: "Which risks are unique to or exacerbated by generative AI?", expect_route: nist_question, query_terms: [generative]}
+- {id: nist-9, category: nist_direct, message: "Who are the AI actors described in the framework?", expect_route: nist_question, query_terms: [actor]}
+
+- id: follow-1
+  category: follow_up
+  history: [{user: "What are the four core functions of the AI RMF?", assistant: "The AI RMF Core has four functions: GOVERN, MAP, MEASURE and MANAGE."}]
+  message: "Which one is cross-cutting?"
+  expect_route: nist_question
+  query_terms: [function]
+- id: follow-2
+  category: follow_up
+  history: [{user: "What are the four core functions of the AI RMF?", assistant: "The AI RMF Core has four functions: GOVERN, MAP, MEASURE and MANAGE."}]
+  message: "What about MAP?"
+  expect_route: nist_question
+  query_terms: [MAP]
+- id: follow-3
+  category: follow_up
+  history: [{user: "Which risks does the Generative AI Profile list?", assistant: "It lists risks such as CBRN information, confabulation, dangerous content, data privacy and information integrity."}]
+  message: "Tell me more about the second risk"
+  expect_route: nist_question
+  query_terms: [confabulation]
+- id: follow-4
+  category: follow_up
+  history: [{user: "What does GV-1.7-001 recommend?", assistant: "It recommends protocols so GAI systems can be deactivated when necessary."}]
+  message: "And what are the other actions in that subcategory?"
+  expect_route: nist_question
+  query_terms: [GOVERN 1.7]
+- id: follow-5
+  category: follow_up
+  history: [{user: "Explain the MEASURE function", assistant: "MEASURE employs quantitative, qualitative or mixed methods to analyze, assess, benchmark and monitor AI risk."}]
+  message: "Why is it important?"
+  expect_route: nist_question
+  query_terms: [MEASURE]
+- id: follow-6
+  category: follow_up
+  history: [{user: "Hello!", assistant: "Hello! I can answer questions about the NIST AI Risk Management Framework and its Generative AI Profile. What would you like to know?"}, {user: "What is the GOVERN function?", assistant: "GOVERN is a cross-cutting function that cultivates a culture of risk management."}]
+  message: "Does it apply to generative AI too?"
+  expect_route: nist_question
+  query_terms: [GOVERN]
+
+- {id: mixed-1, category: mixed, message: "Hi! What is the GOVERN function?", expect_route: nist_question, query_terms: [GOVERN]}
+- {id: mixed-2, category: mixed, message: "Thanks, and what is the MANAGE function?", expect_route: nist_question, query_terms: [MANAGE]}
+- id: mixed-3
+  category: mixed
+  history: [{user: "What are the four core functions of the AI RMF?", assistant: "The AI RMF Core has four functions: GOVERN, MAP, MEASURE and MANAGE."}]
+  message: "Hi again! Which one is cross-cutting?"
+  expect_route: nist_question
+  query_terms: [function]
+
+- {id: oos-1, category: out_of_scope, message: "What's the capital of France?", expect_route: out_of_scope}
+- {id: oos-2, category: out_of_scope, message: "Write a Python function that reverses a string", expect_route: out_of_scope}
+- {id: oos-3, category: out_of_scope, message: "What is 17 times 23?", expect_route: out_of_scope}
+- {id: oos-4, category: out_of_scope, message: "Tell me a joke", expect_route: out_of_scope}
+- {id: oos-5, category: assistant_itself, message: "Who are you and which model do you use?", expect_route: out_of_scope}
+- {id: oos-6, category: assistant_itself, message: "How do you work? Can you browse the internet?", expect_route: out_of_scope}
+- {id: near-1, category: near_scope, message: "What is the EU AI Act?", expect_route: out_of_scope}
+- {id: near-2, category: near_scope, message: "What does ISO/IEC 42001 require from organisations?", expect_route: out_of_scope}
+- {id: near-3, category: near_scope, message: "Summarize the NIST Cybersecurity Framework", expect_route: out_of_scope}
+- {id: near-4, category: near_scope, message: "How do transformer neural networks work?", expect_route: out_of_scope}
+- id: oos-hist-1
+  category: out_of_scope_after_nist
+  history: [{user: "What are the four core functions of the AI RMF?", assistant: "The AI RMF Core has four functions: GOVERN, MAP, MEASURE and MANAGE."}]
+  message: "What's the weather like in London today?"
+  expect_route: out_of_scope

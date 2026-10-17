@@ -1,0 +1,997 @@
+{
+  "memory": {
+    "production": {
+      "durability": "exit",
+      "turns": 20,
+      "rss_before_mb": 119.8,
+      "rss_after_mb": 134.2,
+      "total_checkpoint_bytes": 1274301,
+      "avg_bytes_per_turn": 63715,
+      "avg_bytes_per_nist_turn": 86927,
+      "max_bytes_per_turn": 116276,
+      "checkpoints_total": 20,
+      "per_turn": [
+        {
+          "turn": 1,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 1,
+          "bytes_added": 88666,
+          "bytes_total": 88666,
+          "state_json_bytes": 90791,
+          "rss_mb": 208.4
+        },
+        {
+          "turn": 2,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 2,
+          "bytes_added": 79267,
+          "bytes_total": 167933,
+          "state_json_bytes": 80843,
+          "rss_mb": 273.7
+        },
+        {
+          "turn": 3,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 3,
+          "bytes_added": 109739,
+          "bytes_total": 277672,
+          "state_json_bytes": 112055,
+          "rss_mb": 151.3
+        },
+        {
+          "turn": 4,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 4,
+          "bytes_added": 5194,
+          "bytes_total": 282866,
+          "state_json_bytes": 696,
+          "rss_mb": 151.8
+        },
+        {
+          "turn": 5,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 5,
+          "bytes_added": 67166,
+          "bytes_total": 350032,
+          "state_json_bytes": 66482,
+          "rss_mb": 132.0
+        },
+        {
+          "turn": 6,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 6,
+          "bytes_added": 6406,
+          "bytes_total": 356438,
+          "state_json_bytes": 726,
+          "rss_mb": 132.9
+        },
+        {
+          "turn": 7,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 7,
+          "bytes_added": 85245,
+          "bytes_total": 441683,
+          "state_json_bytes": 83813,
+          "rss_mb": 82.0
+        },
+        {
+          "turn": 8,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 8,
+          "bytes_added": 116276,
+          "bytes_total": 557959,
+          "state_json_bytes": 115946,
+          "rss_mb": 170.0
+        },
+        {
+          "turn": 9,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 9,
+          "bytes_added": 87529,
+          "bytes_total": 645488,
+          "state_json_bytes": 85059,
+          "rss_mb": 184.1
+        },
+        {
+          "turn": 10,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 10,
+          "bytes_added": 84167,
+          "bytes_total": 729655,
+          "state_json_bytes": 80850,
+          "rss_mb": 161.4
+        },
+        {
+          "turn": 11,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 11,
+          "bytes_added": 9096,
+          "bytes_total": 738751,
+          "state_json_bytes": 696,
+          "rss_mb": 161.4
+        },
+        {
+          "turn": 12,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 12,
+          "bytes_added": 99142,
+          "bytes_total": 837893,
+          "state_json_bytes": 94785,
+          "rss_mb": 168.5
+        },
+        {
+          "turn": 13,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 13,
+          "bytes_added": 10123,
+          "bytes_total": 848016,
+          "state_json_bytes": 713,
+          "rss_mb": 168.5
+        },
+        {
+          "turn": 14,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 14,
+          "bytes_added": 90935,
+          "bytes_total": 938951,
+          "state_json_bytes": 85583,
+          "rss_mb": 177.5
+        },
+        {
+          "turn": 15,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 15,
+          "bytes_added": 91866,
+          "bytes_total": 1030817,
+          "state_json_bytes": 86068,
+          "rss_mb": 125.0
+        },
+        {
+          "turn": 16,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 16,
+          "bytes_added": 69068,
+          "bytes_total": 1099885,
+          "state_json_bytes": 61583,
+          "rss_mb": 169.8
+        },
+        {
+          "turn": 17,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 17,
+          "bytes_added": 74353,
+          "bytes_total": 1174238,
+          "state_json_bytes": 66251,
+          "rss_mb": 147.5
+        },
+        {
+          "turn": 18,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 18,
+          "bytes_added": 12749,
+          "bytes_total": 1186987,
+          "state_json_bytes": 693,
+          "rss_mb": 143.0
+        },
+        {
+          "turn": 19,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 19,
+          "bytes_added": 73565,
+          "bytes_total": 1260552,
+          "state_json_bytes": 64591,
+          "rss_mb": 134.2
+        },
+        {
+          "turn": 20,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 20,
+          "bytes_added": 13749,
+          "bytes_total": 1274301,
+          "state_json_bytes": 724,
+          "rss_mb": 134.2
+        }
+      ]
+    },
+    "per_step_default": {
+      "durability": "per-step (LangGraph default)",
+      "turns": 20,
+      "rss_before_mb": 139.7,
+      "rss_after_mb": 144.5,
+      "total_checkpoint_bytes": 8752809,
+      "avg_bytes_per_turn": 437640,
+      "avg_bytes_per_nist_turn": 611065,
+      "max_bytes_per_turn": 798788,
+      "checkpoints_total": 243,
+      "per_turn": [
+        {
+          "turn": 1,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 15,
+          "bytes_added": 654832,
+          "bytes_total": 654832,
+          "state_json_bytes": 90785,
+          "rss_mb": 138.3
+        },
+        {
+          "turn": 2,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 30,
+          "bytes_added": 584308,
+          "bytes_total": 1239140,
+          "state_json_bytes": 80843,
+          "rss_mb": 113.9
+        },
+        {
+          "turn": 3,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 45,
+          "bytes_added": 794347,
+          "bytes_total": 2033487,
+          "state_json_bytes": 112054,
+          "rss_mb": 115.1
+        },
+        {
+          "turn": 4,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 51,
+          "bytes_added": 21675,
+          "bytes_total": 2055162,
+          "state_json_bytes": 696,
+          "rss_mb": 116.2
+        },
+        {
+          "turn": 5,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 66,
+          "bytes_added": 461689,
+          "bytes_total": 2516851,
+          "state_json_bytes": 66482,
+          "rss_mb": 150.4
+        },
+        {
+          "turn": 6,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 73,
+          "bytes_added": 27813,
+          "bytes_total": 2544664,
+          "state_json_bytes": 726,
+          "rss_mb": 150.4
+        },
+        {
+          "turn": 7,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 88,
+          "bytes_added": 593278,
+          "bytes_total": 3137942,
+          "state_json_bytes": 83812,
+          "rss_mb": 140.2
+        },
+        {
+          "turn": 8,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 103,
+          "bytes_added": 798788,
+          "bytes_total": 3936730,
+          "state_json_bytes": 115948,
+          "rss_mb": 141.8
+        },
+        {
+          "turn": 9,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 118,
+          "bytes_added": 632161,
+          "bytes_total": 4568891,
+          "state_json_bytes": 85059,
+          "rss_mb": 149.6
+        },
+        {
+          "turn": 10,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 133,
+          "bytes_added": 609857,
+          "bytes_total": 5178748,
+          "state_json_bytes": 80849,
+          "rss_mb": 108.6
+        },
+        {
+          "turn": 11,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 139,
+          "bytes_added": 30781,
+          "bytes_total": 5209529,
+          "state_json_bytes": 696,
+          "rss_mb": 110.0
+        },
+        {
+          "turn": 12,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 154,
+          "bytes_added": 697563,
+          "bytes_total": 5907092,
+          "state_json_bytes": 94786,
+          "rss_mb": 123.6
+        },
+        {
+          "turn": 13,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 161,
+          "bytes_added": 36143,
+          "bytes_total": 5943235,
+          "state_json_bytes": 713,
+          "rss_mb": 123.8
+        },
+        {
+          "turn": 14,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 176,
+          "bytes_added": 649975,
+          "bytes_total": 6593210,
+          "state_json_bytes": 85582,
+          "rss_mb": 147.6
+        },
+        {
+          "turn": 15,
+          "outcome": "answered",
+          "route": "nist_question",
+          "checkpoints_total": 191,
+          "bytes_added": 658106,
+          "bytes_total": 7251316,
+          "state_json_bytes": 86069,
+          "rss_mb": 120.2
+        },
+        {
+          "turn": 16,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 204,
+          "bytes_added": 457208,
+          "bytes_total": 7708524,
+          "state_json_bytes": 61582,
+          "rss_mb": 151.4
+        },
+        {
+          "turn": 17,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 217,
+          "bytes_added": 483873,
+          "bytes_total": 8192397,
+          "state_json_bytes": 66250,
+          "rss_mb": 143.9
+        },
+        {
+          "turn": 18,
+          "outcome": "greeting",
+          "route": "greeting",
+          "checkpoints_total": 223,
+          "bytes_added": 38005,
+          "bytes_total": 8230402,
+          "state_json_bytes": 693,
+          "rss_mb": 146.3
+        },
+        {
+          "turn": 19,
+          "outcome": "insufficient",
+          "route": "nist_question",
+          "checkpoints_total": 236,
+          "bytes_added": 478926,
+          "bytes_total": 8709328,
+          "state_json_bytes": 64591,
+          "rss_mb": 151.8
+        },
+        {
+          "turn": 20,
+          "outcome": "out_of_scope",
+          "route": "out_of_scope",
+          "checkpoints_total": 243,
+          "bytes_added": 43481,
+          "bytes_total": 8752809,
+          "state_json_bytes": 724,
+          "rss_mb": 144.5
+        }
+      ]
+    }
+  },
+  "live": {
+    "startup_seconds": 7.51,
+    "paths": [
+      {
+        "path_name": "greeting_by_rule",
+        "message": "Hello!",
+        "status": 200,
+        "wall_ms": 19,
+        "route": "greeting",
+        "outcome": "greeting",
+        "insufficient_reason": null,
+        "llm_calls": 0,
+        "latency_ms": 8,
+        "usage": {
+          "router": 0,
+          "generation": 0,
+          "total": 0
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "greeting_reply",
+          "finalize"
+        ],
+        "answer": "Hello! I can answer questions about the NIST AI Risk Management Framework and its Generative AI Profile. What would you like to know?",
+        "sources": [],
+        "related": [],
+        "fixes": null,
+        "warnings": null,
+        "timings_ms": {
+          "reset_turn": 0.1,
+          "rule_greeting_check": 2.4,
+          "greeting_reply": 0.0,
+          "finalize": 0.1
+        },
+        "best_score": null
+      },
+      {
+        "path_name": "out_of_scope",
+        "message": "What's the capital of France?",
+        "status": 200,
+        "wall_ms": 766,
+        "route": "out_of_scope",
+        "outcome": "out_of_scope",
+        "insufficient_reason": null,
+        "llm_calls": 1,
+        "latency_ms": 762,
+        "usage": {
+          "router": 1165,
+          "generation": 0,
+          "total": 1165
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "answer": "Sorry, we don't have this answer.",
+        "sources": [],
+        "related": [],
+        "fixes": null,
+        "warnings": null,
+        "timings_ms": {
+          "reset_turn": 0.2,
+          "rule_greeting_check": 0.1,
+          "classify_and_rewrite": 754.3,
+          "out_of_scope_reply": 0.0,
+          "finalize": 0.0
+        },
+        "best_score": null
+      },
+      {
+        "path_name": "answered",
+        "message": "Which of the four AI RMF functions is cross-cutting?",
+        "status": 200,
+        "wall_ms": 3384,
+        "route": "nist_question",
+        "outcome": "answered",
+        "insufficient_reason": null,
+        "llm_calls": 2,
+        "latency_ms": 3376,
+        "usage": {
+          "router": 1197,
+          "generation": 2815,
+          "total": 4012
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "attribute",
+          "finalize"
+        ],
+        "answer": "The cross‑cutting function is **GOVERN**. It is described as a cross‑cutting function that is infused throughout the other three functions of the AI RMF [C1][C2].",
+        "sources": [
+          "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+          "NIST AI 100-1, §5.1 Govern, pp. 21–22"
+        ],
+        "related": [],
+        "fixes": [],
+        "warnings": [
+          "UNCITED_SENTENCE"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.2,
+          "rule_greeting_check": 0.1,
+          "classify_and_rewrite": 750.9,
+          "hybrid_search": 659.4,
+          "rerank": 1238.4,
+          "gate": 0.0,
+          "expand_context": 0.2,
+          "generate": 701.5,
+          "attribute": 0.2,
+          "finalize": 0.1
+        },
+        "best_score": 0.9986666440963745
+      },
+      {
+        "path_name": "gate_failure",
+        "message": "What penalties does the EU AI Act set for non-compliance?",
+        "status": 200,
+        "wall_ms": 665,
+        "route": "out_of_scope",
+        "outcome": "out_of_scope",
+        "insufficient_reason": null,
+        "llm_calls": 1,
+        "latency_ms": 653,
+        "usage": {
+          "router": 1178,
+          "generation": 0,
+          "total": 1178
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "answer": "Sorry, we don't have this answer.",
+        "sources": [],
+        "related": [],
+        "fixes": null,
+        "warnings": null,
+        "timings_ms": {
+          "reset_turn": 0.3,
+          "rule_greeting_check": 0.2,
+          "classify_and_rewrite": 641.7,
+          "out_of_scope_reply": 0.0,
+          "finalize": 0.1
+        },
+        "best_score": null
+      },
+      {
+        "path_name": "model_refusal_known_case_d",
+        "message": "What are the four core functions of the AI RMF and what penalties does NIST impose for not following them?",
+        "status": 200,
+        "wall_ms": 4288,
+        "route": "nist_question",
+        "outcome": "answered",
+        "insufficient_reason": null,
+        "llm_calls": 2,
+        "latency_ms": 4284,
+        "usage": {
+          "router": 1405,
+          "generation": 3689,
+          "total": 5094
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "attribute",
+          "finalize"
+        ],
+        "answer": "The AI RMF Core comprises four functions: GOVERN, MAP, MEASURE, and MANAGE [C1][C2]. The provided sources do not contain any information about penalties that NIST imposes for not following these functions [C1][C2][C3][C4][C5].",
+        "sources": [
+          "NIST AI 100-1, Executive Summary, p. 3",
+          "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+          "NIST AI 100-1, §5.2 Map, p. 25",
+          "NIST AI 100-1, §5.4 Manage, pp. 31–32",
+          "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 39"
+        ],
+        "related": [],
+        "fixes": [],
+        "warnings": [],
+        "timings_ms": {
+          "reset_turn": 0.2,
+          "rule_greeting_check": 0.1,
+          "classify_and_rewrite": 1281.6,
+          "hybrid_search": 378.7,
+          "rerank": 993.0,
+          "gate": 0.0,
+          "expand_context": 0.5,
+          "generate": 1614.4,
+          "attribute": 0.2,
+          "finalize": 0.0
+        },
+        "best_score": 0.9989939332008362
+      }
+    ],
+    "stream": {
+      "events": [
+        "meta",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "token",
+        "sources",
+        "done"
+      ],
+      "tokens": 36,
+      "first_token_ms": 2911,
+      "total_ms": 2911,
+      "done": {
+        "llm_calls": 2,
+        "latency_ms": 2885,
+        "outcome": "answered",
+        "insufficient_reason": null,
+        "usage": {
+          "router": 1183,
+          "generation": 2782,
+          "total": 3965
+        },
+        "model": "openai/gpt-oss-20b",
+        "prompt_version": "v1",
+        "fixes": [],
+        "warnings": []
+      }
+    },
+    "extra_paths": [
+      {
+        "message": "What does NIST say about quantum computing risks?",
+        "route": "out_of_scope",
+        "outcome": "out_of_scope",
+        "insufficient_reason": null,
+        "llm_calls": 1,
+        "latency_ms": 1260,
+        "usage": {
+          "router": 1191,
+          "generation": 0,
+          "total": 1191
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "best_score": null,
+        "answer": "Sorry, we don't have this answer.",
+        "related": []
+      },
+      {
+        "message": "Does the AI RMF 1.0 itself list confabulation as a risk?",
+        "route": "nist_question",
+        "outcome": "insufficient",
+        "insufficient_reason": "model_case_d",
+        "llm_calls": 2,
+        "latency_ms": 3910,
+        "usage": {
+          "router": 1264,
+          "generation": 2825,
+          "total": 4089
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "best_score": 0.8618175387382507,
+        "answer": "The NIST documents provided do not contain this information.",
+        "related": [
+          "NIST AI 100-1, §1.1 Understanding and Addressing Risks, Impacts, and Harms, p. 4",
+          "NIST AI 100-1, §1.1 Understanding and Addressing Risks, Impacts, and Harms, pp. 4–5",
+          "NIST AI 100-1, §1.2.1 Risk Measurement, pp. 5–6",
+          "NIST AI 600-1, §1 Introduction, p. 1",
+          "NIST AI 100-1, §1 Framing Risk, p. 4"
+        ]
+      },
+      {
+        "message": "What is the maximum fine for violating the AI RMF?",
+        "route": "out_of_scope",
+        "outcome": "out_of_scope",
+        "insufficient_reason": null,
+        "llm_calls": 1,
+        "latency_ms": 786,
+        "usage": {
+          "router": 1187,
+          "generation": 0,
+          "total": 1187
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "best_score": null,
+        "answer": "Sorry, we don't have this answer.",
+        "related": []
+      },
+      {
+        "message": "How many organizations have adopted the AI RMF?",
+        "route": "out_of_scope",
+        "outcome": "out_of_scope",
+        "insufficient_reason": null,
+        "llm_calls": 1,
+        "latency_ms": 854,
+        "usage": {
+          "router": 1182,
+          "generation": 0,
+          "total": 1182
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "best_score": null,
+        "answer": "Sorry, we don't have this answer.",
+        "related": []
+      },
+      {
+        "message": "What does the AI RMF Playbook recommend for auditing third-party vendors?",
+        "route": "nist_question",
+        "outcome": "insufficient",
+        "insufficient_reason": "model_case_d",
+        "llm_calls": 2,
+        "latency_ms": 6404,
+        "usage": {
+          "router": 1259,
+          "generation": 3202,
+          "total": 4461
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "best_score": 0.7901473641395569,
+        "answer": "The NIST documents provided do not contain this information.",
+        "related": [
+          "NIST AI 100-1, §5 AI RMF Core, p. 21",
+          "NIST AI 100-1, Executive Summary, p. 3",
+          "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, p. 37",
+          "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, pp. 36–37",
+          "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17"
+        ]
+      },
+      {
+        "message": "What does NIST AI 600-1 say about quantum computing?",
+        "route": "nist_question",
+        "outcome": "insufficient",
+        "insufficient_reason": "model_case_d",
+        "llm_calls": 2,
+        "latency_ms": 3461,
+        "usage": {
+          "router": 1292,
+          "generation": 2997,
+          "total": 4289
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "best_score": 0.7261368036270142,
+        "answer": "The NIST documents provided do not contain this information.",
+        "related": [
+          "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 3.3, pp. 38–39",
+          "NIST AI 600-1, §2.9 Information Security, p. 11",
+          "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53",
+          "NIST AI 600-1, §1 Introduction, p. 1",
+          "NIST AI 600-1, §1 Introduction, pp. 1–2"
+        ]
+      },
+      {
+        "message": "What does Appendix F of the AI RMF 1.0 describe?",
+        "route": "nist_question",
+        "outcome": "insufficient",
+        "insufficient_reason": "model_case_d",
+        "llm_calls": 2,
+        "latency_ms": 3087,
+        "usage": {
+          "router": 1244,
+          "generation": 2796,
+          "total": 4040
+        },
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "best_score": 0.7470515370368958,
+        "answer": "The NIST documents provided do not contain this information.",
+        "related": [
+          "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+          "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+          "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 40",
+          "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 39"
+        ]
+      }
+    ],
+    "gate_failure_real_subgraph_no_llm": [
+      {
+        "query": "What penalties does the EU AI Act set for non-compliance?",
+        "path": [
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "gate_failure_reply"
+        ],
+        "outcome": "insufficient",
+        "insufficient_reason": "gate_low_score",
+        "best_score": 0.0007839712197892368,
+        "threshold": 0.15,
+        "llm_calls": 1,
+        "generation_ran": false,
+        "related": [
+          "NIST AI 100-1, §5.1 Govern, GOVERN 6, p. 24",
+          "NIST AI 100-1, §3.4 Accountable and Transparent, p. 16",
+          "NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53",
+          "NIST AI 100-1, Executive Summary, p. 2",
+          "NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8"
+        ],
+        "timings_ms": {
+          "hybrid_search": 493.5,
+          "rerank": 1175.1,
+          "gate": 0.0,
+          "gate_failure_reply": 0.5
+        }
+      },
+      {
+        "query": "What does NIST say about quantum computing risks?",
+        "path": [
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "gate_failure_reply"
+        ],
+        "outcome": "insufficient",
+        "insufficient_reason": "gate_low_score",
+        "best_score": 0.0728665366768837,
+        "threshold": 0.15,
+        "llm_calls": 1,
+        "generation_ran": false,
+        "related": [
+          "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+          "NIST AI 100-1, §3.3 Secure and Resilient, p. 15",
+          "NIST AI 100-1, §3.1 Valid and Reliable, pp. 13–14",
+          "NIST AI 100-1, §3.7 Fair – with Harmful Bias Managed, pp. 17–18",
+          "NIST AI 100-1, Executive Summary, p. 1"
+        ],
+        "timings_ms": {
+          "hybrid_search": 35.6,
+          "rerank": 813.6,
+          "gate": 0.0,
+          "gate_failure_reply": 0.2
+        }
+      },
+      {
+        "query": "How many parameters does GPT-4 have?",
+        "path": [
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "gate_failure_reply"
+        ],
+        "outcome": "insufficient",
+        "insufficient_reason": "gate_low_score",
+        "best_score": 0.0013051298446953297,
+        "threshold": 0.15,
+        "llm_calls": 1,
+        "generation_ran": false,
+        "related": [
+          "NIST AI 600-1, §1 Introduction, footnote 1, p. 1",
+          "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13",
+          "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43",
+          "NIST AI 600-1, §2.12 Value Chain and Component Integration, p. 12",
+          "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.3, p. 14"
+        ],
+        "timings_ms": {
+          "hybrid_search": 22.1,
+          "rerank": 922.6,
+          "gate": 0.1,
+          "gate_failure_reply": 0.5
+        }
+      }
+    ]
+  }
+}

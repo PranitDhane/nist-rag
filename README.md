@@ -128,3 +128,226 @@ Design decisions and reasons:
 Known limitations: a dense query like "GV-1.7-001" does not find its chunk (embeddings are poor at identifiers); BM25
 does, which is why both indexes exist. Hybrid fusion, re-ranking and the optional bge *query* instruction prefix are
 retrieval-phase decisions (the manifest records `document_prefix: none`).
+
+
+---
+
+# API & routing phase
+
+Takes a user message, decides what it is, and either replies with a fixed template or hands it to the RAG pipeline
+(since the graph-integration phase: the real RAG subgraph; see the last section). Conversation history lives in memory,
+so follow-up questions work. Specification: `docs/API_ROUTING_PLAN.md`.
+
+## Start the server
+
+```bash
+# 1. put your key in .env (never committed):  GROQ_API_KEY=...      (see .env.example for the other settings)
+# 2. start (127.0.0.1:8000 by default; override with APP_HOST / APP_PORT in .env)
+python -m app.main                                   # or: uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+The server refuses to start without `GROQ_API_KEY` and says so. The graph is built once at startup.
+
+## Calls (curl / Postman)
+
+```bash
+# first message: no thread_id; the server creates one and returns it
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
+     -d '{"message": "What are the four core functions of the AI RMF?"}'
+# -> {"thread_id": "98d3...", "route": "nist_question", "answer": "...", "sources": [], "standalone_query": "...",
+#     "meta": {"llm_calls": 1, "route_source": "llm", "latency_ms": 900}}
+
+# follow-up: send the thread_id back
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
+     -d '{"message": "Which one is cross-cutting?", "thread_id": "98d3..."}'
+
+# streaming (Server-Sent Events): events meta -> token -> sources -> done   (error ends the stream)
+curl -N -X POST localhost:8000/chat/stream -H 'Content-Type: application/json' -d '{"message": "hello!"}'
+
+curl localhost:8000/health                          # {"status", "model", "key_configured"}
+curl localhost:8000/threads/<thread_id>             # stored conversation (with the route of each reply)
+curl -X DELETE localhost:8000/threads/<thread_id>   # forget a conversation (204)
+```
+
+Errors: `422` validation (FastAPI format; message must be non-empty and at most 2000 characters), `404 thread_not_found`
+(unknown or expired `thread_id`, e.g. after a restart: omit it to start fresh), `409 thread_busy` (two simultaneous
+requests on one conversation), `503 llm_unavailable` with a `Retry-After` header, `500` generic (details only in the log).
+Error bodies look like `{"error": {"code": "...", "message": "..."}}`. For `/chat/stream`, 422/404/409 are plain HTTP
+errors sent before the stream starts; an LLM outage is an `error` event.
+
+## Design notes
+
+- **Three routes:** `greeting`, `nist_question` (includes follow-ups), `out_of_scope`. Out of scope is never answered: the
+  reply is the fixed text "Sorry, we don't have this answer." Questions about the assistant itself are out of scope.
+- **Routing, and why:** (1) a rule catches messages that are *entirely* a greeting/thanks/goodbye (list in
+  `graph/greeting_phrases.yaml`) with **zero LLM calls**; mixed messages like "Hi again! Which one is cross-cutting?" are
+  never caught by it. (2) Everything else gets **one** structured-output Groq call that returns the route and a standalone
+  rewrite of the question, using the last **2 turns** of history (any kind of turn counts). One call per message keeps
+  latency low and respects the free tier's limits. Template replies make no LLM call.
+- **If the router's output is invalid twice** the route falls back to `out_of_scope` (never reaches retrieval/generation);
+  **if Groq is unavailable** after 4 attempts (exponential backoff, `retry-after` honoured) the request fails with 503. A
+  route is never guessed on an outage, and the unanswered message is removed from the history.
+- **History is in memory** (LangGraph `InMemorySaver`): lost on restart. Every reply, templates included, is stored.
+- **Streaming:** only text meant for the user is streamed. The router's JSON is internal and never appears in the stream
+  (tested). Template replies and gate-failure replies arrive as ONE `token` event; real model tokens stream only from LLM
+  calls tagged `answer_generation` (`STREAM_TAG` in `app/api.py`), through the RAG subgraph.
+- **Free-tier reality:** the router prompt costs ~1,200 tokens, and the key's limit is 8,000 tokens/minute and 1,000
+  requests/day, i.e. roughly **6 routed messages per minute**. Pure greetings cost nothing. The evaluation paces itself.
+- Logging: one structured line per request (thread, route, source, llm calls, latency). Message text is only logged at DEBUG.
+
+## Tests and the routing evaluation
+
+```bash
+pytest -q                      # unit + API tests use a mocked LLM; the live tests skip without GROQ_API_KEY
+python -m eval.routing         # 35 labelled cases with REAL Groq calls (~1.5 min); writes eval/routing_report.json
+```
+
+Misses in the evaluation never fail anything; they are for you to review and decide whether to adjust the prompt
+(`graph/prompts.py`).
+
+## Retrieval (hybrid search + reranking)
+
+```python
+from retrieval.pipeline import retrieve, warmup
+warmup()                                   # load models and indexes once, at startup
+res = retrieve("Which of the four AI RMF functions is cross-cutting?")
+res.relevant, res.best_score               # relevance gate (threshold 0.15, sigmoid scale)
+[(c.chunk_id, c.rerank_score, c.added_as_sibling) for c in res.chunks]   # best first
+```
+
+`python -m eval.retrieval_eval` reruns the retrieval evaluation (no LLM calls) and rewrites `eval/retrieval_report.json`; the summary is in `docs/RETRIEVAL_RESULTS.md`. `retrieval.diagnostics.diagnose(get_components(), query)` shows per-retriever ranks next to the fused order.
+
+Design notes:
+- **Why hybrid:** vector search finds meaning (paraphrases), BM25 finds exact terms (`GV-1.7-001`, `GOVERN 1.7`). On the evaluation set each alone finds 29/33 answerable cases and they miss different ones.
+- **Why RRF:** it fuses ranks, so no score calibration between cosine similarity and BM25 is needed (weights 0.6 vector / 0.4 BM25, 10 candidates each).
+- **Why a cross-encoder:** it reads the query and the chunk together. Reranking all fused candidates takes Hit@5 from 0.879 to 1.000 (MRR 0.899); the exact-ID chunk for `GV-1.7-001` sits at fused position 11 before reranking.
+- **Best-first order, sibling expansion:** the strongest evidence comes first; when one part of a split table is selected its other part is added (group kept together at its best part's position) so the LLM never sees half a table.
+- **Threshold:** `relevant = best rerank score >= 0.15`, chosen by the user from the table in `docs/RETRIEVAL_RESULTS.md` (plateau 0.073-0.240; tuned on 10 unanswerable cases only).
+- **Limitations:** the reranker cuts inputs at 512 tokens (27 of 745 evaluation pairs); `EnsembleRetriever` hides fusion scores (diagnostic mode exists); `BM25Retriever` pads with zero-score chunks when few chunks match.
+
+## Generation (Groq `openai/gpt-oss-20b`)
+
+```python
+from generation.generate import generate, generate_stream      # async; both take (standalone_query, RetrievalResult)
+from generation.node import make_generate_node                  # LangGraph node, see its docstring for the state fields
+```
+
+- **Model:** a smaller, faster reasoning model; the free tier's 8,000 tokens per minute is the binding limit (a typical request is ~3,000 tokens, the largest measured 4,939). Numbers in `docs/GENERATION_RESULTS.md`.
+- **Reasoning:** medium effort, hidden at the API (`reasoning_format="hidden"`) and filtered again in the stream. Reasoning tokens still count, and the output limit (`MAX_COMPLETION_TOKENS = 3500`, raised from 2500 during graph integration because reasoning varied from ~1.6k to 2.5k+ tokens on broad questions; the budget pre-check's safety margin went from 1.2 to 1.0 for the same reason: at 1.2 it rejected 14% of real prompts) includes them; if it is hit the request fails (`finish_reason = length` becomes an error) instead of showing a cut-off answer.
+- **Streaming with a correction:** answer tokens stream live; when the full text is validated (`parse_answer`) and `apply_fixes` changes it, a `correction` event `{text, reasons}` follows the last `token`. The client replaces everything it showed with `text`. A failure after the first token sends `error` and the client discards the partial text.
+- **Violation policy** (code only removes or normalizes markup, or replaces the whole answer with the Case D sentence): malformed citations are normalized, invented ones removed, a sources list, URLs, headings and code fences removed, and an answer left with no citations becomes Case D. **Uncited sentences and over-length answers are kept with a logged warning** (measured: see results doc).
+- **No retries after the first token and no fallback model:** retries (router settings) only cover failures before the first content token; the free-tier token budget makes a second model call costly and one model keeps behaviour consistent. The user sees an error and the turn is rolled back.
+
+---
+
+# Insufficient-context path
+
+When a question routed as `nist_question` cannot be answered from the documents, the user gets the exact sentence
+`The NIST documents provided do not contain this information.`, a list of the **closest sections searched**
+(`related_sections`, never answer content), and the **reason** in `meta.insufficient_reason`. Specification:
+`docs/INSUFFICIENT_CONTEXT_PLAN.md`; code in `insufficient/` and `attribution/format.py`.
+
+**Two failure sources, and no retries.** (1) *Gate failure*: retrieval's best rerank score is below the threshold, so we
+reply straight away, with **no generation call** (1 LLM call in total: routing). (2) *Model refusal*: generation ended
+`INSUFFICIENT` (the model wrote the sentence, or the fixer forced it), which is final (2 LLM calls). There is no query
+rewriting, second retrieval or second generation: the free tier allows about 6 routed messages per minute, and a truly
+unanswerable question wastes any retry.
+
+**Reason codes** (`meta.insufficient_reason`): `gate_low_score`, `no_candidates` (retrieval returned nothing);
+`model_case_d` (the model refused by itself); `fix_partial_answer` (the model mixed the sentence with an answer, so the
+whole reply was refused), `fix_no_citations` (nothing cited after removing invented citations), `fix_empty_output`;
+`fix_truncated` (only if the generation layer's `LENGTH_POLICY` is `"insufficient"`; it is `"error"` today, so this code
+cannot occur yet). If several apply, the first in that order wins.
+
+**Why show closest sections, and why separately from `sources`.** A bare refusal is a dead end; the list tells the user
+where the search looked so they can verify. They are kept in their own field (`related_sections`, SSE event `related`)
+because `sources` means "evidence for the answer", and these do not support one. Entries carry doc, section, pages, label,
+URL and kind only: no text, no summary, no score. They are not stored in the conversation history.
+
+**Honest consequence of "top 5, always".** There is no score floor, so an unanswerable question still lists 5 sections,
+and some are only loosely related. In the real check (`python -m eval.insufficient`, 10 unanswerable cases) every case
+was stopped at the gate, but for questions such as "How many parameters does GPT-4 have?" the list is just generic AI-risk
+sections. The `note` sent with the list says so: "These were the closest sections found. They do not answer the question,
+but you may want to check them."
+
+**API / SSE contract.** `/chat` NIST responses always include `related_sections` (empty when answered), `meta.outcome`
+(`answered` | `insufficient`) and `meta.insufficient_reason`; greeting and out-of-scope responses are unchanged. When
+insufficient, `sources` is `[]`. `/chat/stream` order: `meta, token(s), [correction], sources ([]), related, done`; `done`
+carries `outcome` and `insufficient_reason`. A `correction` event (the exact sentence) follows streamed tokens when the
+validated final text differs from what was streamed (e.g. the fixer forced Case D).
+
+**For whoever wires the graph** (item 5): when `retrieval_result.relevant` is false call
+`insufficient.reply.gate_failure_reply(retrieval_result)` instead of generating; when the generation outcome is
+`INSUFFICIENT` call `finalize_model_refusal(state["generation"], state["retrieval_result"])`. Put `reply.answer` in
+`answer`, `reply.sources` (`[]`) in `sources`, `reply.outcome` in `outcome` and `reply.to_dict()` in `insufficient`
+(add `outcome` and `insufficient` to `GraphState` and reset them every message); answered replies set `outcome="answered"`.
+`app/api.py` already reads exactly those keys. Call `log_insufficient(reply, thread_id, llm_calls)` once per outcome.
+
+# Source attribution
+
+An answered NIST question carries `[C1]`, `[C2]`... markers in the text and a `sources` list; each entry shows which markers point to it:
+
+```json
+{"keys": ["C1", "C3"], "label": "NIST AI 100-1, §5.1 Govern, pp. 22–23", "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=27", "kind": "prose"}
+```
+
+- **Keys are kept as written** (no renumbering). Renumbering would change the text the user already watched stream, so almost every answer would need a correction event. Entries with the same label are merged (`[C1][C3]`), sorted document then page. Only cited chunks are listed.
+- **The label shows the printed page, the link uses the PDF page index**: AI RMF printed `p. 21` is PDF page 26, so its link ends in `#page=26`. Both are correct.
+- `kind` is `prose`, `table`, `figure-ocr` or `footnote`; figure and footnote labels say `Fig. 3` / `footnote 1`, never "OCR".
+- `/chat` returns `sources`; `/chat/stream` sends the same list as `event: sources` after the last token/correction. It is `[]` for insufficient, greeting and out-of-scope replies (related sections are a separate field).
+- Conversation history stores the answer **without** the `[C#]` markers (keys are local to one answer); the response keeps them.
+- **Link check** (`python -m eval.link_check`, local PDFs only): all 208 chunks link to the right page, 0 failures. 171 match the chunk's first and last 60 characters exactly; 37 do not match exactly because of table cell order in the PDF text layer or a synthetic `Footnote N:` line, and each of those still has the linked page as its best match (details in `eval/link_check_report.json`).
+
+
+## Graph integration (the full workflow)
+
+Everything built so far runs as one LangGraph workflow behind `/chat` and `/chat/stream`. Diagrams (exported from the real
+graphs, kept in sync by a test) and a walk through every path: **`docs/graph.md`**. Specification:
+`docs/GRAPH_INTEGRATION_PLAN.md`.
+
+- **Two graphs.** The *main graph* handles the conversation (reset, greeting rule, router, template replies, history,
+  one error exit). The *RAG subgraph* answers: `hybrid_search -> rerank -> gate -> expand_context -> generate -> attribute`,
+  with `gate_failure_reply` (no LLM) and `finalize_model_refusal` as the insufficient-context exits. Each can be tested alone
+  (`build_rag_subgraph(components).ainvoke({"standalone_query": "..."})`). Retrieval is split into nodes so the graph shows
+  the retrieval strategy. There are **no loops and no retries**: the graph is a decision tree.
+- **State** holds the full retrieval and generation results (reasoning text never exists in it), as plain dicts so the
+  checkpointer serializes them safely. Every per-message field is reset at the start of each message. `finalize` stores one
+  assistant message per turn (text with `[C#]` markers stripped); sources, related sections and retrieval data are never in
+  `messages`. A failed turn is rolled back, so the next follow-up never sees an unanswered question.
+- **Errors:** every node catches its own failure into `error = {code, message, node}` (logged with the stack trace) and
+  the graph exits through `error_finalize`. The API answers with a generic body: `llm_unavailable` 503 + `Retry-After`
+  (Groq retries exhausted, or no first token in 20 s / no answer in 60 s), `retrieval_failed` / `rerank_failed` /
+  `generation_failed` / `internal_error` 500. In the stream the same code arrives as an `error` event and nothing follows it.
+- **Streaming:** `meta -> token* -> [correction] -> sources -> [related] -> done` (or `error`). Only tokens of the call tagged
+  `answer_generation` are forwarded; the router's JSON, reasoning text, chunk texts and rerank internals never appear
+  (marker-string tests, plus a mutation check that the tests fail without the filter).
+- **`meta` on every response:** `outcome` (`answered` / `insufficient` / `greeting` / `out_of_scope`), `insufficient_reason`,
+  `llm_calls`, `latency_ms`, `usage` (tokens: router, generation, total); `model`, `prompt_version`, `fixes`, `warnings`
+  when generation ran. **`"debug": true`** in the request adds `meta.debug` (also on the stream's `done` event): node path and
+  timings, route, standalone query, retrieval candidates (id, label, rerank score; max 20), gate result, generation
+  settings and usage, config versions. It never contains chunk, prompt or reasoning text.
+- **Memory:** history is kept in memory and lost on restart. The API persists **one checkpoint per request**
+  (`durability="exit"`); per-step checkpoints would keep ~15 per NIST turn. Measured over a 20-message conversation with real
+  retrieval: **1.27 MB** (87 KB per NIST turn) versus 8.75 MB per-step. Growth is still linear per conversation; the
+  library's in-memory saver cannot prune old checkpoints (`aprune` raises `NotImplementedError` in this version).
+- **LangSmith (optional, off by default).** Set `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY` and `LANGSMITH_PROJECT=nist-rag`
+  in `.env`. **Enabling it sends every prompt, every retrieved NIST passage and every answer to LangSmith's servers.** Runs
+  are tagged `nist-rag` and `prompt:<version>` with `thread_id`, prompt version, retrieval config hash and index version as
+  metadata. With no variables set, no LangSmith client is created and no network call is made (tested).
+- **Components** (vector store, BM25, reranker, embedding model, Groq clients) load once at startup (~7.5 s here) and reach
+  the nodes as closures, never through state. CPU-heavy steps run in worker threads so the event loop stays free; the
+  reranker call is serialized by a lock (one device), searches overlap across requests.
+
+Live check through the real app (real Groq, real indexes), one message per path, from `eval/integration_report.json`:
+
+| Path | Outcome | LLM calls | Latency | Tokens |
+|---|---|---|---|---|
+| Greeting by rule | `greeting` | 0 | 8 ms | 0 |
+| Out of scope | `out_of_scope` | 1 | 762 ms | 1,165 |
+| NIST question, answered | `answered` | 2 | 3.4 s | 4,012 |
+| NIST question, model refusal | `insufficient` (`model_case_d`) | 2 | 3.9 s | 4,089 |
+| Gate failure (real subgraph, no LLM) | `insufficient` (`gate_low_score`, best score 0.0008 < 0.15) | 1 (router only) | n/a | n/a |
+
+Streaming an answered question: first token after 2.9 s. In real use the gate rarely fires through the router: questions
+unrelated to NIST are routed `out_of_scope` first, and in-scope-sounding questions about content that is not indexed
+(e.g. "What does Appendix F of the AI RMF 1.0 describe?") score 0.7+ with the reranker and are refused by the model instead.

@@ -62,6 +62,7 @@ def load_manifest(path: Path = MANIFEST_PATH) -> Manifest:
             docs.append(DocumentSpec(
                 doc_id=entry["doc_id"],
                 display_name=entry["display_name"],
+                citation_name=entry["citation_name"],
                 url=entry["url"],
                 filename=entry["filename"],
                 sha256=entry.get("sha256") or "",

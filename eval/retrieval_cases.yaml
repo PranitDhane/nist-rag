@@ -1,0 +1,216 @@
+# Retrieval evaluation set (RETRIEVAL_PLAN Stage T6). Gold targets are STRUCTURAL, never chunk IDs.
+# A retrieved chunk "hits" if it satisfies ALL keys of ANY one target. Target keys:
+#   doc_id (required): ai_rmf_1_0 | genai_profile
+#   section:      a section_path element STARTS WITH this text (so a parent section also matches its subsections)
+#   subcategory:  chunk.subcategory equals it, or it is in chunk.subcategories (AI RMF Core tables)
+#   action_id:    in chunk.action_ids          function: chunk.function equals it
+#   figure:       figure_number                footnote: footnote_number
+#   chunk_type:   optional extra filter        text_contains: optional case-insensitive substring of embed_text
+# answerable: false => no gold; used for threshold tuning (best rerank score should be LOW).
+# kind: free-text tag used in the report (exact_id | table | figure | footnote | paraphrase | both_docs | direct | near_scope).
+
+cases:
+  # ---- assignment examples -------------------------------------------------------------------
+  - id: c01
+    kind: direct
+    query: What are the four core functions of the NIST AI RMF?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "5 AI RMF Core"}
+      - {doc_id: ai_rmf_1_0, section: "Executive Summary"}
+  - id: c02
+    kind: direct
+    query: Which of the four AI RMF functions is cross-cutting?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "5.1 Govern"}
+      - {doc_id: ai_rmf_1_0, section: "5 AI RMF Core", figure: 5}
+      - {doc_id: ai_rmf_1_0, section: "5 AI RMF Core", text_contains: "cross-cutting"}
+
+  # ---- exact identifiers ---------------------------------------------------------------------
+  - id: c03
+    kind: exact_id
+    query: GV-1.7-001
+    gold:
+      - {doc_id: genai_profile, action_id: "GV-1.7-001"}
+  - id: c04
+    kind: exact_id
+    query: GOVERN 1.7
+    gold:
+      - {doc_id: genai_profile, subcategory: "GOVERN 1.7"}
+      - {doc_id: ai_rmf_1_0, subcategory: "GOVERN 1.7"}
+  - id: c05
+    kind: exact_id
+    query: What does MAP 1.1 say?
+    gold:
+      - {doc_id: genai_profile, subcategory: "MAP 1.1"}
+      - {doc_id: ai_rmf_1_0, subcategory: "MAP 1.1"}
+  - id: c06
+    kind: exact_id
+    query: What is suggested action MS-2.11-003?
+    gold:
+      - {doc_id: genai_profile, action_id: "MS-2.11-003"}
+
+  # ---- AI RMF 1.0 direct questions -----------------------------------------------------------
+  - id: c07
+    kind: direct
+    query: What does it mean for an AI system to be valid and reliable?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "3.1 Valid and Reliable"}
+  - id: c08
+    kind: direct
+    query: What are the characteristics of trustworthy AI systems?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "3 AI Risks and Trustworthiness"}
+  - id: c09
+    kind: direct
+    query: How do AI risks differ from traditional software risks?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "Appendix B"}
+  - id: c10
+    kind: direct
+    query: What is risk tolerance in the AI RMF?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "1.2.2 Risk Tolerance"}
+  - id: c11
+    kind: direct
+    query: What are AI RMF Profiles?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "6 AI RMF Profiles"}
+  - id: c12
+    kind: direct
+    query: What does the Measure function do?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "5.3 Measure"}
+  - id: c13
+    kind: direct
+    query: What is the purpose of the Manage function?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "5.4 Manage"}
+  - id: c14
+    kind: direct
+    query: How should organizations prioritize AI risks?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "1.2.3 Risk Prioritization"}
+
+  # ---- GenAI Profile direct questions --------------------------------------------------------
+  - id: c15
+    kind: direct
+    query: What is confabulation?
+    gold:
+      - {doc_id: genai_profile, section: "2.2 Confabulation"}
+  - id: c16
+    kind: direct
+    query: What are the privacy risks of generative AI?
+    gold:
+      - {doc_id: genai_profile, section: "2.4 Data Privacy"}
+  - id: c17
+    kind: direct
+    query: What are the environmental impacts of generative AI?
+    gold:
+      - {doc_id: genai_profile, section: "2.5 Environmental Impacts"}
+  - id: c18
+    kind: direct
+    query: How can generative AI affect cybersecurity?
+    gold:
+      - {doc_id: genai_profile, section: "2.9 Information Security"}
+  - id: c19
+    kind: direct
+    query: What does the profile say about pre-deployment testing of GAI systems?
+    gold:
+      - {doc_id: genai_profile, section: "A.1.4 Pre-Deployment Testing"}
+      - {doc_id: genai_profile, section: "A.1", text_contains: "pre-deployment"}
+  - id: c20
+    kind: direct
+    query: What is content provenance for generative AI?
+    gold:
+      - {doc_id: genai_profile, section: "A.1.6 Content Provenance"}
+      - {doc_id: genai_profile, section: "A.1.7 Enhancing Content Provenance"}
+  - id: c21
+    kind: direct
+    query: What are the CBRN information or capabilities risks?
+    gold:
+      - {doc_id: genai_profile, section: "2.1 CBRN"}
+
+  # ---- tables (action tables), figures (OCR), footnotes ---------------------------------------
+  - id: c22
+    kind: table
+    query: What are the suggested actions for MEASURE 2.11?
+    gold:
+      - {doc_id: genai_profile, subcategory: "MEASURE 2.11"}
+  - id: c23
+    kind: table
+    query: decommissioning GAI systems
+    gold:
+      - {doc_id: genai_profile, subcategory: "GOVERN 1.7"}
+  - id: c24
+    kind: table
+    query: Which suggested actions mention red-teaming?
+    gold:
+      - {doc_id: genai_profile, chunk_type: genai_action_table, text_contains: "red-team"}
+  - id: c25
+    kind: figure
+    query: What does Figure 1 show about potential harms from AI systems?
+    gold:
+      - {doc_id: ai_rmf_1_0, figure: 1}
+  - id: c26
+    kind: figure
+    query: What does the figure of trustworthy AI characteristics show about the base characteristic?
+    gold:
+      - {doc_id: ai_rmf_1_0, figure: 4}
+      - {doc_id: ai_rmf_1_0, section: "3 AI Risks and Trustworthiness"}
+  - id: c27
+    kind: footnote
+    query: What is the Winogender Schemas dataset?
+    gold:
+      - {doc_id: genai_profile, footnote: 15}
+  - id: c28
+    kind: footnote
+    query: What are algorithmic monocultures?
+    gold:
+      - {doc_id: genai_profile, footnote: 3}
+      - {doc_id: genai_profile, text_contains: "monocultures"}
+
+  # ---- paraphrases (little word overlap with the text; vector side) --------------------------
+  - id: c29
+    kind: paraphrase
+    query: How can an organization safely retire a generative model it no longer needs?
+    gold:
+      - {doc_id: genai_profile, subcategory: "GOVERN 1.7"}
+  - id: c30
+    kind: paraphrase
+    query: Why might a chatbot confidently state things that are false?
+    gold:
+      - {doc_id: genai_profile, section: "2.2 Confabulation"}
+  - id: c31
+    kind: paraphrase
+    query: How should we check that a language model treats different demographic groups fairly?
+    gold:
+      - {doc_id: genai_profile, subcategory: "MEASURE 2.11"}
+      - {doc_id: genai_profile, section: "2.6 Harmful Bias and Homogenization"}
+      - {doc_id: ai_rmf_1_0, section: "3.7 Fair"}
+
+  # ---- answered in both documents ------------------------------------------------------------
+  - id: c32
+    kind: both_docs
+    query: How should fairness and bias be evaluated in GAI systems?
+    gold:
+      - {doc_id: genai_profile, subcategory: "MEASURE 2.11"}
+      - {doc_id: genai_profile, section: "2.6 Harmful Bias and Homogenization"}
+      - {doc_id: ai_rmf_1_0, section: "3.7 Fair"}
+  - id: c33
+    kind: both_docs
+    query: What is the Govern function and what GAI actions support it?
+    gold:
+      - {doc_id: ai_rmf_1_0, section: "5.1 Govern"}
+      - {doc_id: genai_profile, function: "GOVERN", chunk_type: genai_action_table}
+
+  # ---- unanswerable but near scope (answerable: false) ---------------------------------------
+  - {id: u01, kind: near_scope, answerable: false, query: "What penalties does the EU AI Act set for non-compliance?"}
+  - {id: u02, kind: near_scope, answerable: false, query: "What does NIST say about quantum computing risks?"}
+  - {id: u03, kind: near_scope, answerable: false, query: "What are the steps to get ISO/IEC 42001 certification?"}
+  - {id: u04, kind: near_scope, answerable: false, query: "What fines does the GDPR impose on companies using AI?"}
+  - {id: u05, kind: near_scope, answerable: false, query: "How many parameters does GPT-4 have?"}
+  - {id: u06, kind: near_scope, answerable: false, query: "What is the context window size of Claude?"}
+  - {id: u07, kind: near_scope, answerable: false, query: "How much budget should a company allocate to an AI governance team?"}
+  - {id: u08, kind: near_scope, answerable: false, query: "How can blockchain be used to audit AI models?"}
+  - {id: u09, kind: near_scope, answerable: false, query: "Write Python code to fine-tune Llama 3 for sentiment classification."}
+  - {id: u10, kind: near_scope, answerable: false, query: "What does the NIST Cybersecurity Framework 2.0 require under its Identify function?"}
