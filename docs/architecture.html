@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIST AI RMF Agentic RAG — Architecture</title>
+<style>
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --ink:#1b2033; --muted:#5b6478; --line:#d5d9e6;
+  --blue:#2f5bea; --blue-bg:#e6ecff; --green:#157f4a; --green-bg:#def5e8;
+  --amber:#a55b00; --amber-bg:#fff0d4; --red:#b3261e; --red-bg:#fde4e2;
+  --violet:#6b3fd1; --violet-bg:#eee6ff; --code:#eef0f7;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1220; --panel:#181c2f; --ink:#e7eaf5; --muted:#9aa3bd; --line:#2d3354;
+    --blue:#7d9bff; --blue-bg:#1c2850; --green:#5ed39a; --green-bg:#12342a;
+    --amber:#ffbf5e; --amber-bg:#3a2a10; --red:#ff8a80; --red-bg:#3d1b1a;
+    --violet:#b79bff; --violet-bg:#2a2050; --code:#10142a;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{padding:32px 16px 8px;max-width:1100px;margin:0 auto}
+h1{margin:0 0 6px;font-size:28px}
+h2{margin:0 0 4px;font-size:22px}
+h3{margin:18px 0 6px;font-size:16px}
+.sub{color:var(--muted);margin:0}
+main{max-width:1100px;margin:0 auto;padding:0 16px 64px}
+nav{max-width:1100px;margin:12px auto 0;padding:0 16px;display:flex;flex-wrap:wrap;gap:8px}
+nav a{font-size:13px;color:var(--blue);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:3px 10px;border-radius:999px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin-top:20px}
+section>p.lead{color:var(--muted);margin:4px 0 14px}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:10px 12px;border-radius:8px;overflow:auto;margin:6px 0;white-space:pre-wrap;word-break:break-word}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+.scroll{overflow-x:auto}
+/* flow blocks */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:10px 0}
+.node{border:1.5px solid var(--line);border-radius:10px;padding:8px 11px;background:var(--panel);min-width:130px;max-width:210px;font-size:13px}
+.node b{display:block;font-size:13.5px}
+.node small{color:var(--muted);display:block;margin-top:2px;font-size:12px}
+.node.blue{background:var(--blue-bg);border-color:var(--blue)}
+.node.green{background:var(--green-bg);border-color:var(--green)}
+.node.amber{background:var(--amber-bg);border-color:var(--amber)}
+.node.red{background:var(--red-bg);border-color:var(--red)}
+.node.violet{background:var(--violet-bg);border-color:var(--violet)}
+.arrow{align-self:center;padding:0 6px;color:var(--muted);font-size:18px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin:6px 0 2px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1.5px solid}
+.i-blue{background:var(--blue-bg);border-color:var(--blue)}.i-green{background:var(--green-bg);border-color:var(--green)}
+.i-amber{background:var(--amber-bg);border-color:var(--amber)}.i-red{background:var(--red-bg);border-color:var(--red)}
+.i-violet{background:var(--violet-bg);border-color:var(--violet)}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font:12.5px -apple-system,Segoe UI,Roboto,sans-serif}
+svg .t-small{fill:var(--muted);font-size:11px}
+svg .box{stroke-width:1.5}
+svg .b-blue{fill:var(--blue-bg);stroke:var(--blue)}.b-green{fill:var(--green-bg);stroke:var(--green)}
+svg .b-amber{fill:var(--amber-bg);stroke:var(--amber)}.b-red{fill:var(--red-bg);stroke:var(--red)}
+svg .b-violet{fill:var(--violet-bg);stroke:var(--violet)}.b-plain{fill:var(--panel);stroke:var(--line)}
+svg .edge{stroke:var(--muted);stroke-width:1.5;fill:none}
+svg .dash{stroke-dasharray:5 4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg)}
+.card h3{margin-top:0}
+/* examples */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.tabs button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.ex{display:none}.ex.on{display:block}
+.steps{list-style:none;margin:0;padding:0;border-left:3px solid var(--line)}
+.steps li{margin:0 0 10px 12px;padding:8px 12px;background:var(--bg);border-radius:8px;position:relative}
+.steps li::before{content:"";position:absolute;left:-21px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--blue)}
+.steps li.skip::before{background:var(--line)}
+.steps li.stop::before{background:var(--red)}
+.steps li.done::before{background:var(--green)}
+.steps .n{font-weight:600}
+.steps .tag{font-size:11.5px;color:var(--muted);margin-left:6px}
+.kv{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.kv span{background:var(--code);border-radius:6px;padding:3px 9px;font-size:12.5px}
+.note{border-left:4px solid var(--amber);background:var(--amber-bg);padding:8px 12px;border-radius:6px;font-size:13.5px;margin:10px 0}
+.ok{color:var(--green)}.bad{color:var(--red)}
+</style>
+</head>
+<body>
+<header>
+  <h1>NIST AI RMF Agentic RAG — Architecture</h1>
+  <p class="sub">Question answering over <b>NIST AI 100-1 (AI RMF 1.0)</b> and <b>NIST AI 600-1 (Generative AI Profile)</b> · LangGraph + FastAPI + Groq · every number below comes from this repo's reports (<code>data/</code>, <code>eval/*.json</code>, <code>docs/PROGRESS.md</code>) or its config files.</p>
+</header>
+<nav>
+  <a href="#overview">1 Overview</a><a href="#offline">2 Offline pipeline</a><a href="#runtime">3 Runtime map</a>
+  <a href="#main">4 Main graph</a><a href="#rag">5 RAG subgraph</a><a href="#retrieval">6 Retrieval</a>
+  <a href="#generation">7 Prompt → answer</a><a href="#stream">8 Streaming</a><a href="#examples">9 Worked examples</a>
+  <a href="#rules">10 Invariants</a><a href="#status">11 Status</a>
+</nav>
+<main>
+
+<!-- 1 -->
+<section id="overview">
+  <h2>1 · System overview</h2>
+  <p class="lead">One HTTP API, one LangGraph app, two LLMs, two indexes, one reranker. Answers are plain text with <code>[C#]</code> markers; sources are built in code, never by the LLM.</p>
+  <div class="legend">
+    <span><i class="i-blue"></i>data / indexes</span><span><i class="i-green"></i>LLM call</span>
+    <span><i class="i-amber"></i>local ML model</span><span><i class="i-violet"></i>pure code (no model)</span><span><i class="i-red"></i>stop / failure path</span>
+  </div>
+  <div class="scroll">
+  <svg viewBox="0 0 1000 250" role="img" aria-label="System overview">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor" style="color:var(--muted)"/></marker></defs>
+    <rect class="box b-plain" x="10" y="95" width="120" height="56" rx="10"/><text x="70" y="118" text-anchor="middle">Client</text><text class="t-small" x="70" y="136" text-anchor="middle">curl / UI (SSE)</text>
+    <rect class="box b-violet" x="170" y="95" width="150" height="56" rx="10"/><text x="245" y="118" text-anchor="middle">FastAPI  app/</text><text class="t-small" x="245" y="136" text-anchor="middle">/chat  /chat/stream</text>
+    <rect class="box b-violet" x="360" y="60" width="230" height="130" rx="10"/><text x="475" y="82" text-anchor="middle">LangGraph  graph/</text>
+    <text class="t-small" x="475" y="104" text-anchor="middle">main graph: route + converse</text>
+    <text class="t-small" x="475" y="122" text-anchor="middle">RAG subgraph: retrieve → generate</text>
+    <text class="t-small" x="475" y="140" text-anchor="middle">InMemorySaver (thread_id = memory)</text>
+    <text class="t-small" x="475" y="158" text-anchor="middle">Components loaded once at startup</text>
+    <rect class="box b-green" x="650" y="10" width="170" height="52" rx="10"/><text x="735" y="32" text-anchor="middle">Router LLM</text><text class="t-small" x="735" y="48" text-anchor="middle">openai/gpt-oss-120b</text>
+    <rect class="box b-green" x="650" y="188" width="170" height="52" rx="10"/><text x="735" y="210" text-anchor="middle">Generation LLM</text><text class="t-small" x="735" y="226" text-anchor="middle">openai/gpt-oss-20b</text>
+    <rect class="box b-amber" x="650" y="80" width="170" height="90" rx="10"/><text x="735" y="100" text-anchor="middle">Local models</text>
+    <text class="t-small" x="735" y="118" text-anchor="middle">bge-small-en-v1.5 (embed)</text><text class="t-small" x="735" y="134" text-anchor="middle">bge-reranker-base</text><text class="t-small" x="735" y="150" text-anchor="middle">(CPU work in worker threads)</text>
+    <rect class="box b-blue" x="860" y="80" width="130" height="90" rx="10"/><text x="925" y="102" text-anchor="middle">Indexes</text>
+    <text class="t-small" x="925" y="120" text-anchor="middle">Chroma (vector)</text><text class="t-small" x="925" y="136" text-anchor="middle">BM25 corpus JSON</text><text class="t-small" x="925" y="152" text-anchor="middle">208 chunks</text>
+    <path class="edge" d="M130 123H168" marker-end="url(#ar)"/><path class="edge" d="M320 123H358" marker-end="url(#ar)"/>
+    <path class="edge" d="M590 85L648 40" marker-end="url(#ar)"/><path class="edge" d="M590 160L648 205" marker-end="url(#ar)"/>
+    <path class="edge" d="M590 125H648" marker-end="url(#ar)"/><path class="edge" d="M820 125H858" marker-end="url(#ar)"/>
+  </svg>
+  </div>
+  <table>
+    <tr><th>Concern</th><th>Choice</th><th>Why (from the plans)</th></tr>
+    <tr><td>Orchestration</td><td>LangGraph main graph + RAG subgraph</td><td>explicit routes, per-thread memory, one error exit</td></tr>
+    <tr><td>Retrieval</td><td>vector (k=10) + BM25 (k=10), weights 0.6 / 0.4, rerank all candidates, keep top 5</td><td>identifiers like <code>GV-1.7-001</code> need BM25; paraphrases need vectors; the reranker fixes the order</td></tr>
+    <tr><td>Grounding</td><td>citations built in code from <code>key_map</code>; only cited chunks listed</td><td>the LLM can never invent a URL or page number</td></tr>
+    <tr><td>Honesty</td><td>relevance gate (threshold 0.15) + prompt-level refusal</td><td>no confident answer with hidden gaps</td></tr>
+    <tr><td>Rate limit</td><td>Groq free tier: 8,000 tokens/min is the binding limit</td><td>no retry calls for content problems, no fallback model</td></tr>
+  </table>
+</section>
+
+<!-- 2 -->
+<section id="offline">
+  <h2>2 · Offline pipeline (phases 1–3)</h2>
+  <p class="lead">Run once with <code>python -m ingest</code>, <code>python -m chunking</code>, <code>python -m indexing</code>. The PDFs are the source of truth; page numbers and links come from PyMuPDF, never from the Markdown converter.</p>
+  <div class="flow">
+    <div class="node"><b>PDFs</b><small>2 documents, SHA-256 pinned in <code>ingest/sources.yaml</code></small></div><div class="arrow">→</div>
+    <div class="node violet"><b>Ingest (10 stages)</b><small>extract, classify pages, figures + OCR, clean, structure, links, validate</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>pages.jsonl</b><small>112 page records · 11/11 hard checks</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>Chunking (C0–C9)</b><small>section-aware prose, row-aware tables, figures, footnotes</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>chunks.jsonl</b><small>208 chunks · 9/9 hard checks</small></div>
+  </div>
+  <div class="flow">
+    <div class="node blue"><b>chunks.jsonl</b><small>each chunk: <code>embed_text</code> (breadcrumb + content, ≤ 512 tokens) and <code>display_text</code></small></div><div class="arrow">→</div>
+    <div class="node amber"><b>bge-small-en-v1.5</b><small>384-dim, normalised, no prefix on documents</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>Chroma</b><small>one cosine collection <code>nist_ai_rmf</code></small></div>
+    <div class="arrow" style="padding:0 14px">+</div>
+    <div class="node violet"><b>BM25 (rank_bm25)</b><small>our <code>tokenize()</code>: IDs kept whole, snowball stems · vocab 2,408</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>What a chunk is (208 total)</h3>
+      <table><tr><th>type</th><th>count</th><th>note</th></tr>
+      <tr><td>prose</td><td>107</td><td>one section path each</td></tr>
+      <tr><td>genai_action_table</td><td>63</td><td>rows kept whole; split tables carry <code>part</code>/<code>parts_total</code></td></tr>
+      <tr><td>rmf_core_table</td><td>19</td><td>AI RMF Core categories</td></tr>
+      <tr><td>footnote</td><td>14</td><td>GenAI Profile only</td></tr>
+      <tr><td>figure</td><td>5</td><td>captions + OCR text, AI RMF only</td></tr></table>
+      <p class="sub">By document: AI RMF 85, GenAI Profile 123.</p></div>
+    <div class="card"><h3>Metadata every chunk carries</h3>
+      <p><code>chunk_id</code> · <code>doc_id</code> (<code>ai_rmf_1_0</code> / <code>genai_profile</code>) · <code>section_path</code> · <code>pdf_page_start/end</code> · <code>printed_page_*</code> · <code>citation_label</code> · <code>citation_url</code> (<code>#page=N</code>)</p>
+      <p class="sub">Link check: all 208 chunks have the right printed page and URL (<code>eval/link_check_report.json</code>).</p></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="runtime">
+  <h2>3 · Runtime map: who owns what</h2>
+  <p class="lead">Everything heavy (models, indexes, prompts, clients) is loaded once at startup (~7.5 s) and held in a <code>Components</code> object; graph nodes are closures over it, so graph state stays plain data.</p>
+  <div class="scroll"><table>
+    <tr><th>Package</th><th>Responsibility</th><th>Key entry points</th></tr>
+    <tr><td><code>app/</code></td><td>HTTP + SSE, request/response schemas, error → HTTP mapping</td><td><code>POST /chat</code>, <code>POST /chat/stream</code>, <code>GET /health</code>, <code>GET/DELETE /threads/{id}</code></td></tr>
+    <tr><td><code>graph/</code></td><td>main graph, RAG subgraph, state, greeting rules, router prompt, debug, usage, tracing</td><td><code>build.py</code>, <code>rag_subgraph.py</code>, <code>router.py</code>, <code>greeting_rules.py</code></td></tr>
+    <tr><td><code>llm/</code></td><td>Groq client + retry with backoff (rate-limit / temporary errors only, before the first streamed token)</td><td><code>groq_client.py</code></td></tr>
+    <tr><td><code>retrieval/</code></td><td>hybrid search, fusion, rerank, gate, sibling table parts, final ordering</td><td><code>pipeline.retrieve()</code></td></tr>
+    <tr><td><code>augmentation/</code></td><td>load versioned prompts, build the <code>&lt;sources&gt;</code> block + key map, assemble exactly 2 messages, parse and validate the output</td><td><code>build_messages()</code>, <code>parse_answer()</code></td></tr>
+    <tr><td><code>generation/</code></td><td>call the 20B model (streaming), budget pre-check, apply fixes, decide ANSWERED / INSUFFICIENT / ERROR</td><td><code>generate_stream()</code>, <code>fixer.apply_fixes()</code></td></tr>
+    <tr><td><code>insufficient/</code></td><td>reasons, fixed refusal text, 5 related sections</td><td><code>gate_failure_reply</code>, <code>finalize_model_refusal</code></td></tr>
+    <tr><td><code>attribution/</code></td><td>cited keys → merged, ordered <code>{keys,label,url,kind}</code> sources</td><td><code>build_sources()</code></td></tr>
+    <tr><td><code>eval/</code></td><td>routing, retrieval, generation, insufficient, integration, link-check, prompt-size evaluations</td><td><code>python -m eval.*</code></td></tr>
+  </table></div>
+  <p><b>Data stores:</b> <code>data/chroma</code> (vectors), <code>data/index/bm25_corpus.json</code>, <code>data/processed/chunks.jsonl</code> (git-ignored, regenerated by the pipeline). <b>Memory:</b> LangGraph <code>InMemorySaver</code> keyed by <code>thread_id</code>; history holds only final answer text (markers stripped). <b>Tracing:</b> LangSmith, off unless its env vars are set.</p>
+</section>
+
+<!-- 4 -->
+<section id="main">
+  <h2>4 · Main graph (conversation handling)</h2>
+  <p class="lead">Exported from the real compiled graph (<code>docs/graph.md</code>). Solid = always taken; dashed = conditional.</p>
+  <div class="scroll">
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Main graph">
+    <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor" style="color:var(--muted)"/></marker></defs>
+    <rect class="box b-violet" x="10" y="170" width="120" height="48" rx="10"/><text x="70" y="191" text-anchor="middle">reset_turn</text><text class="t-small" x="70" y="206" text-anchor="middle">clear per-turn state</text>
+    <rect class="box b-violet" x="170" y="170" width="150" height="48" rx="10"/><text x="245" y="191" text-anchor="middle">rule_greeting_check</text><text class="t-small" x="245" y="206" text-anchor="middle">pure greeting? no LLM</text>
+    <rect class="box b-green" x="370" y="170" width="170" height="48" rx="10"/><text x="455" y="191" text-anchor="middle">classify_and_rewrite</text><text class="t-small" x="455" y="206" text-anchor="middle">LLM #1: route + query</text>
+    <rect class="box b-violet" x="620" y="30" width="150" height="46" rx="10"/><text x="695" y="58" text-anchor="middle">greeting_reply</text>
+    <rect class="box b-violet" x="620" y="110" width="150" height="46" rx="10"/><text x="695" y="138" text-anchor="middle">out_of_scope_reply</text>
+    <rect class="box b-blue" x="620" y="190" width="150" height="62" rx="10"/><text x="695" y="214" text-anchor="middle">rag (subgraph)</text><text class="t-small" x="695" y="232" text-anchor="middle">see section 5</text>
+    <rect class="box b-red" x="620" y="320" width="150" height="46" rx="10"/><text x="695" y="348" text-anchor="middle">error_finalize</text>
+    <rect class="box b-violet" x="850" y="110" width="120" height="46" rx="10"/><text x="910" y="130" text-anchor="middle">finalize</text><text class="t-small" x="910" y="145" text-anchor="middle">1 assistant msg</text>
+    <path class="edge" d="M130 194H168" marker-end="url(#ar2)"/>
+    <path class="edge dash" d="M320 194H368" marker-end="url(#ar2)"/><text class="t-small" x="344" y="186" text-anchor="middle">else</text>
+    <path class="edge dash" d="M245 170C245 20 500 40 618 50" marker-end="url(#ar2)"/><text class="t-small" x="300" y="50">pure greeting</text>
+    <path class="edge dash" d="M520 170L620 55" marker-end="url(#ar2)"/><text class="t-small" x="548" y="100">greeting</text>
+    <path class="edge dash" d="M540 185L618 135" marker-end="url(#ar2)"/><text class="t-small" x="560" y="165">out_of_scope</text>
+    <path class="edge dash" d="M540 205L618 215" marker-end="url(#ar2)"/><text class="t-small" x="556" y="236">nist_question</text>
+    <path class="edge dash" d="M455 218C455 300 520 343 618 343" marker-end="url(#ar2)"/><text class="t-small" x="440" y="300">error</text>
+    <path class="edge" d="M770 53C820 53 840 100 850 120" marker-end="url(#ar2)"/>
+    <path class="edge" d="M770 133H848" marker-end="url(#ar2)"/>
+    <path class="edge dash" d="M770 205C820 205 840 170 880 158" marker-end="url(#ar2)"/>
+    <path class="edge dash" d="M695 252V318" marker-end="url(#ar2)"/><text class="t-small" x="702" y="290">error</text>
+    <text class="t-small" x="850" y="355">→ END (both exits)</text>
+    <path class="edge" d="M770 343H845" marker-end="url(#ar2)"/>
+  </svg>
+  </div>
+  <table>
+    <tr><th>Route</th><th>Path</th><th>LLM calls</th></tr>
+    <tr><td>Pure greeting (rule)</td><td><code>reset_turn → rule_greeting_check → greeting_reply → finalize</code></td><td>0</td></tr>
+    <tr><td>Greeting (LLM)</td><td>… <code>→ classify_and_rewrite → greeting_reply → finalize</code></td><td>1</td></tr>
+    <tr><td>Out of scope</td><td>… <code>→ classify_and_rewrite → out_of_scope_reply → finalize</code> (fixed text <i>Sorry, we don't have this answer.</i>)</td><td>1</td></tr>
+    <tr><td>NIST question</td><td>… <code>→ classify_and_rewrite → rag → finalize</code></td><td>1, plus 1 if it reaches generation</td></tr>
+    <tr><td>Any failure</td><td><code>→ error_finalize</code>: error written as <code>{code, message, node}</code>, the unanswered user message is rolled back from history</td><td>—</td></tr>
+  </table>
+  <p><b>The router call</b> sees only the last 2 turns and returns <code>route</code> + a <b>standalone query</b> in one structured (JSON-schema) response. That is how follow-ups like “What about MAP?” become searchable. Routing eval: 33/35 cases, 97.1 % route accuracy.</p>
+</section>
+
+<!-- 5 -->
+<section id="rag">
+  <h2>5 · RAG subgraph (answering)</h2>
+  <p class="lead">Every node records its path name and timing; any node error jumps to the single error exit.</p>
+  <div class="scroll">
+  <svg viewBox="0 0 1000 330" role="img" aria-label="RAG subgraph">
+    <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="currentColor" style="color:var(--muted)"/></marker></defs>
+    <rect class="box b-amber" x="10" y="50" width="160" height="60" rx="10"/><text x="90" y="75" text-anchor="middle">hybrid_search</text><text class="t-small" x="90" y="93" text-anchor="middle">vector + BM25 → fuse</text>
+    <rect class="box b-amber" x="210" y="50" width="160" height="60" rx="10"/><text x="290" y="75" text-anchor="middle">rerank</text><text class="t-small" x="290" y="93" text-anchor="middle">cross-encoder, top 5</text>
+    <rect class="box b-violet" x="410" y="50" width="160" height="60" rx="10"/><text x="490" y="75" text-anchor="middle">gate</text><text class="t-small" x="490" y="93" text-anchor="middle">best score ≥ 0.15 ?</text>
+    <rect class="box b-blue" x="610" y="50" width="160" height="60" rx="10"/><text x="690" y="75" text-anchor="middle">expand_context</text><text class="t-small" x="690" y="93" text-anchor="middle">add sibling table parts</text>
+    <rect class="box b-green" x="810" y="50" width="180" height="60" rx="10"/><text x="900" y="75" text-anchor="middle">generate</text><text class="t-small" x="900" y="93" text-anchor="middle">LLM #2 + fixer + parser</text>
+    <rect class="box b-red" x="410" y="220" width="160" height="60" rx="10"/><text x="490" y="245" text-anchor="middle">gate_failure_reply</text><text class="t-small" x="490" y="263" text-anchor="middle">no LLM · 5 related sections</text>
+    <rect class="box b-violet" x="700" y="220" width="130" height="60" rx="10"/><text x="765" y="245" text-anchor="middle">attribute</text><text class="t-small" x="765" y="263" text-anchor="middle">build_sources()</text>
+    <rect class="box b-red" x="850" y="220" width="140" height="60" rx="10"/><text x="920" y="238" text-anchor="middle">finalize_model_</text><text x="920" y="252" text-anchor="middle">refusal</text><text class="t-small" x="920" y="270" text-anchor="middle">5 related sections</text>
+    <path class="edge" d="M170 80H208" marker-end="url(#ar3)"/><path class="edge" d="M370 80H408" marker-end="url(#ar3)"/>
+    <path class="edge" d="M570 80H608" marker-end="url(#ar3)"/><path class="edge" d="M770 80H808" marker-end="url(#ar3)"/>
+    <text class="t-small" x="590" y="72" text-anchor="middle">pass</text>
+    <path class="edge dash" d="M490 110V218" marker-end="url(#ar3)"/><text class="t-small" x="498" y="170">below threshold</text>
+    <path class="edge dash" d="M880 110L780 218" marker-end="url(#ar3)"/><text class="t-small" x="790" y="160">answered</text>
+    <path class="edge dash" d="M920 110V218" marker-end="url(#ar3)"/><text class="t-small" x="928" y="170">model said Case D</text>
+    <text class="t-small" x="10" y="320">Any node may instead write error {code, message, node} → main graph error_finalize.</text>
+  </svg>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Node</th><th>Reads</th><th>Writes</th><th>Notes</th></tr>
+    <tr><td><code>hybrid_search</code></td><td>standalone query</td><td>fused candidates</td><td>embedding + BM25 run in worker threads</td></tr>
+    <tr><td><code>rerank</code></td><td>all fused candidates</td><td>top 5, sigmoid scores 0–1</td><td>reranker call behind a lock (one device)</td></tr>
+    <tr><td><code>gate</code></td><td>best score</td><td>relevant / not</td><td>threshold 0.15 chosen by the user from the evaluation</td></tr>
+    <tr><td><code>expand_context</code></td><td>selected chunks</td><td>chunks + siblings (≤ 10)</td><td>only split <i>tables</i> are expanded</td></tr>
+    <tr><td><code>generate</code></td><td>query, chunks</td><td>final text, cited keys, key map, usage</td><td>streams only tokens tagged <code>answer_generation</code></td></tr>
+    <tr><td><code>attribute</code></td><td>final text, cited keys, key map</td><td><code>sources</code></td><td>runs only when outcome = answered</td></tr>
+  </table></div>
+</section>
+
+<!-- 6 -->
+<section id="retrieval">
+  <h2>6 · Retrieval in detail</h2>
+  <p class="lead">Measured on 43 cases (33 answerable, 10 unanswerable): Hit@5 vector 0.879 · BM25 0.879 · ensemble 0.879 · <b>ensemble + rerank 1.000</b>; MRR 0.808 / 0.723 / 0.781 / <b>0.899</b>. Latency p50 755 ms, p95 935 ms.</p>
+  <div class="flow">
+    <div class="node green"><b>Standalone query</b><small>from the router</small></div><div class="arrow">→</div>
+    <div>
+      <div class="node amber" style="margin-bottom:6px"><b>Vector (Chroma)</b><small>k = 10 · query gets the bge prefix, documents do not</small></div>
+      <div class="node violet"><b>BM25</b><small>k = 10 · our versioned <code>tokenize()</code></small></div>
+    </div><div class="arrow">→</div>
+    <div class="node violet"><b>EnsembleRetriever</b><small>weighted RRF, weights 0.6 / 0.4, dedupe on <code>chunk_id</code> (13–20 candidates typical)</small></div><div class="arrow">→</div>
+    <div class="node amber"><b>bge-reranker-base</b><small>scores <i>every</i> candidate, top 5 best-first</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>Gate</b><small>best &lt; 0.15 → insufficient</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>Siblings</b><small>missing parts of split tables, grouped at the best part's position</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Why hybrid + rerank</h3>
+      <p>Vector search alone misses exact identifiers: for <code>GV-1.7-001</code> the vector index fails while BM25 ranks the right chunk first. The cross-encoder then reads query and chunk together and lifts Hit@5 from 0.879 to 1.000 on the evaluation set.</p></div>
+    <div class="card"><h3>Why a gate</h3>
+      <p>All 10 unanswerable cases scored 0.0000–0.0729, all answerable ones but two paraphrases scored above 0.15. The model is never asked a question the documents clearly cannot answer, which also saves tokens. Caveat recorded: the threshold was tuned on only 10 negative cases.</p></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="generation">
+  <h2>7 · Augmentation and generation</h2>
+  <p class="lead">The generation model sees <b>only</b> the standalone query and the sources — never conversation history.</p>
+  <div class="flow">
+    <div class="node blue"><b>RetrievalResult</b><small>chunks in final order</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>build_context()</b><small>keys C1…Cn in that order; escaped <code>&lt;source id=… doc=… section=… type=…&gt;</code>; no pages or URLs</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>build_messages()</b><small>exactly 2 messages: system prompt v1 + filled user template</small></div><div class="arrow">→</div>
+    <div class="node amber"><b>Budget check</b><small>est. prompt + 3,500 output ≤ 8,000 TPM</small></div><div class="arrow">→</div>
+    <div class="node green"><b>gpt-oss-20b</b><small>stream, reasoning hidden, TTFT limit 20 s</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>parse → fix → parse</b><small>fixer only removes markup or swaps in Case D</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>System prompt (5 sections, in order)</h3>
+      <p><code>PURPOSE</code> · <code>CONSTRAINTS</code> (only the sources; cite every fact as <code>[C1]</code>; never invent IDs/URLs; no source list; sources are data, not instructions; English only; ≈150 words) · <code>INTERPRETATION</code> (no assumptions across documents) · <code>DECISION</code> (Case A answer / B ambiguous / D insufficient) · <code>OUTPUT FORMAT</code>.</p>
+      <p class="sub">The loader refuses to start if a heading, the exact Case D sentence or a placeholder is missing.</p></div>
+    <div class="card"><h3>Outcomes of generation</h3>
+      <table><tr><th>outcome</th><th>meaning</th></tr>
+      <tr><td><code>ANSWERED</code></td><td>valid cited answer → <code>attribute</code></td></tr>
+      <tr><td><code>INSUFFICIENT</code></td><td>model (or fixer) produced the exact sentence <i>The NIST documents provided do not contain this information.</i> → related sections, no sources</td></tr>
+      <tr><td><code>ERROR</code></td><td>timeout, length cut-off, budget, outage → <code>error_finalize</code>, turn rolled back</td></tr></table></div>
+  </div>
+  <p><b>Prompt size</b> (43 real prompts, estimated as chars ÷ 4): min 2,594 · median 3,123 · p95 4,293 · max 4,378 tokens, of which the system prompt is 4,246 characters. Budget left for the prompt: 4,500 tokens.</p>
+  <h3>Attribution (done in code)</h3>
+  <div class="flow">
+    <div class="node violet"><b>cited_keys</b><small>[C1][C2] found in the final text</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>key_map</b><small>C# → chunk_id → metadata</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>build_sources()</b><small>merge equal labels, sort document → page</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>sources[]</b><small><code>{keys, label, url, kind}</code> with <code>#page=N</code></small></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="stream">
+  <h2>8 · Response and streaming contract</h2>
+  <div class="flow">
+    <div class="node"><b>meta</b><small>route, outcome, usage…</small></div><div class="arrow">→</div>
+    <div class="node green"><b>token …</b><small>answer tokens only</small></div><div class="arrow">→</div>
+    <div class="node amber"><b>correction</b><small>only if the fixer changed the draft</small></div><div class="arrow">→</div>
+    <div class="node blue"><b>sources</b> <small>answered</small></div>
+    <div class="arrow">or</div>
+    <div class="node blue"><b>related</b> <small>insufficient</small></div><div class="arrow">→</div>
+    <div class="node"><b>done</b><small>llm_calls, latency, usage, model, prompt version</small></div>
+  </div>
+  <p>On failure the stream ends with <code>error</code> (code + generic message, never a stack trace) and nothing follows. Router output, reasoning and chunk text are never streamed: only LLM calls carrying the <code>answer_generation</code> tag may stream, and the leak tests with marker strings fail if that filter is removed. With <code>"debug": true</code> the response adds path, scores, labels, IDs and usage — never chunk text, prompt text or reasoning.</p>
+</section>
+
+<!-- 9 -->
+<section id="examples">
+  <h2>9 · Worked examples (real runs)</h2>
+  <p class="lead">Taken from <code>eval/integration_report.json</code> (live Groq + real indexes), <code>eval/retrieval_report.json</code> and <code>eval/insufficient_report.json</code>. Times and token counts are as measured, not rounded up.</p>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-ex="e1">Answered question</button>
+    <button role="tab" aria-selected="false" data-ex="e2">Greeting (no LLM)</button>
+    <button role="tab" aria-selected="false" data-ex="e3">Out of scope</button>
+    <button role="tab" aria-selected="false" data-ex="e4">Gate failure</button>
+    <button role="tab" aria-selected="false" data-ex="e5">Model refusal</button>
+    <button role="tab" aria-selected="false" data-ex="e6">Follow-up</button>
+  </div>
+
+  <div class="ex on" id="e1">
+    <h3>“Which of the four AI RMF functions is cross-cutting?”</h3>
+    <div class="kv"><span>route: nist_question</span><span>outcome: answered</span><span>2 LLM calls</span><span>latency 3,376 ms</span><span>tokens: router 1,197 + generation 2,815 = 4,012</span></div>
+    <ol class="steps">
+      <li><span class="n">reset_turn → rule_greeting_check</span><span class="tag">pure code</span><br>Not a bare greeting, so it continues.</li>
+      <li><span class="n">classify_and_rewrite</span><span class="tag">LLM #1 · gpt-oss-120b</span><br>route = <code>nist_question</code>; no history, so the standalone query is the question itself.</li>
+      <li><span class="n">hybrid_search</span><span class="tag">15 fused candidates</span><br>Vector and BM25 both rank the §5 AI RMF Core chunk first (<code>first_hit_rank = 1</code> in all four configurations).</li>
+      <li><span class="n">rerank</span><span class="tag">top 5 of 15</span>
+        <table><tr><th>#</th><th>label</th><th>score</th><th>fused pos.</th></tr>
+        <tr><td>C1</td><td>NIST AI 100-1, §5 AI RMF Core, pp. 20–21</td><td>0.9987</td><td>1</td></tr>
+        <tr><td>C2</td><td>NIST AI 100-1, §5.1 Govern, pp. 21–22</td><td>0.9905</td><td>11</td></tr>
+        <tr><td>C3</td><td>NIST AI 100-1, Executive Summary, p. 3</td><td>0.9656</td><td>2</td></tr>
+        <tr><td>C4</td><td>NIST AI 100-1, §5 AI RMF Core, Fig. 5, p. 20 (figure)</td><td>0.9540</td><td>12</td></tr>
+        <tr><td>C5</td><td>NIST AI 600-1, §2 Overview of Risks…, pp. 3–4</td><td>0.8391</td><td>13</td></tr></table>
+        The reranker pulled the GOVERN section from fused position 11 up to rank 2.</li>
+      <li><span class="n">gate</span><span class="tag">best 0.9987 ≥ 0.15</span><br>Relevant, continue.</li>
+      <li><span class="n">expand_context</span><br>No split tables among the five, so no siblings are added.</li>
+      <li><span class="n">generate</span><span class="tag">LLM #2 · gpt-oss-20b</span><br>Prompt = system v1 + <code>&lt;sources&gt;</code> C1–C5 + the question. Fixer: no fixes needed.
+        <pre>The cross‑cutting function is **GOVERN**. It is described as a cross‑cutting function that is
+infused throughout the other three functions of the AI RMF [C1][C2].</pre></li>
+      <li class="done"><span class="n">attribute</span><span class="tag">only cited chunks → sources</span>
+        <pre>[ {keys:["C1"], label:"NIST AI 100-1, §5 AI RMF Core, pp. 20–21",  url:"…#page=20", kind:"prose"},
+  {keys:["C2"], label:"NIST AI 100-1, §5.1 Govern, pp. 21–22",       url:"…#page=21", kind:"prose"} ]</pre>
+        C3–C5 were retrieved but not cited, so they are not listed. <code>finalize</code> stores the answer with <code>[C#]</code> stripped in history.</li>
+    </ol>
+    <div class="note">Observation: the real answer contains Markdown bold (<code>**GOVERN**</code>) although the contract says plain text. The parser and fixer currently let it through.</div>
+  </div>
+
+  <div class="ex" id="e2">
+    <h3>“Hello!”</h3>
+    <div class="kv"><span>route: greeting</span><span>0 LLM calls</span><span>latency 8 ms</span><span>0 tokens</span></div>
+    <ol class="steps">
+      <li><span class="n">reset_turn</span> <span class="tag">0.1 ms</span></li>
+      <li class="done"><span class="n">rule_greeting_check</span> <span class="tag">2.4 ms</span><br>The message is <i>entirely</i> a greeting (phrases from <code>greeting_phrases.yaml</code>), so the router is skipped.</li>
+      <li class="skip"><span class="n">classify_and_rewrite</span> <span class="tag">skipped</span></li>
+      <li><span class="n">greeting_reply → finalize</span><br><pre>Hello! I can answer questions about the NIST AI Risk Management Framework and its Generative AI Profile.
+What would you like to know?</pre></li>
+    </ol>
+    <p>“Hi! What is the GOVERN function?” is <i>not</i> a pure greeting (negative test <code>mixed-1</code>), so it goes to the router and is answered as a NIST question.</p>
+  </div>
+
+  <div class="ex" id="e3">
+    <h3>“What's the capital of France?”</h3>
+    <div class="kv"><span>route: out_of_scope</span><span>1 LLM call</span><span>latency 762 ms</span><span>tokens 1,165</span></div>
+    <ol class="steps">
+      <li><span class="n">rule_greeting_check</span> → not a greeting.</li>
+      <li><span class="n">classify_and_rewrite</span><span class="tag">754 ms</span><br>Router returns <code>out_of_scope</code>.</li>
+      <li class="skip"><span class="n">rag subgraph</span><span class="tag">never entered: no retrieval, no generation</span></li>
+      <li class="done"><span class="n">out_of_scope_reply → finalize</span><pre>Sorry, we don't have this answer.</pre> (fixed text, <code>sources = []</code>)</li>
+    </ol>
+    <p>Same route for “What does NIST say about quantum computing risks?” (1,260 ms, 1,191 tokens).</p>
+  </div>
+
+  <div class="ex" id="e4">
+    <h3>“What penalties does the EU AI Act set for non-compliance?” — through the RAG subgraph</h3>
+    <div class="kv"><span>outcome: insufficient</span><span>reason: gate_low_score</span><span>generation never ran</span><span>best score 0.0008 &lt; 0.15</span></div>
+    <div class="note">In the live end-to-end run the router sent this exact question to <code>out_of_scope</code> (see tab “Out of scope”). The trace below is the subgraph run directly, which is what happens for near-scope questions the router lets through (e.g. <code>u02</code>, best score 0.0729).</div>
+    <ol class="steps">
+      <li><span class="n">hybrid_search</span><span class="tag">493.5 ms</span></li>
+      <li><span class="n">rerank</span><span class="tag">1,175.1 ms</span><br>Best cross-encoder score: 0.0008.</li>
+      <li class="stop"><span class="n">gate</span><br>0.0008 &lt; 0.15 → <code>insufficient_reason = gate_low_score</code>. <b>No LLM call</b> (enforced by a test whose mocks fail on any LLM or network call).</li>
+      <li class="done"><span class="n">gate_failure_reply</span><br>Text <i>The NIST documents provided do not contain this information.</i>, <code>sources = []</code>, and 5 <code>related_sections</code>:
+        <pre>NIST AI 100-1, §5.1 Govern, GOVERN 6, p. 24
+NIST AI 100-1, §3.4 Accountable and Transparent, p. 16
+NIST AI 600-1, A.1.8 Incident Disclosure, pp. 52–53
+NIST AI 100-1, Executive Summary, p. 2
+NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
+    </ol>
+    <div class="note">Known limitation: related sections are the top reranked chunks even when nothing matches. Here they are clearly unrelated to the EU AI Act; the evaluation flagged 8 of 10 unanswerable cases this way. They are sent in a separate <code>related</code> field, never as <code>sources</code>.</div>
+  </div>
+
+  <div class="ex" id="e5">
+    <h3>“Does the AI RMF 1.0 itself list confabulation as a risk?”</h3>
+    <div class="kv"><span>route: nist_question</span><span>outcome: insufficient</span><span>reason: model_case_d</span><span>2 LLM calls</span><span>latency 3,910 ms</span><span>tokens 1,264 + 2,825 = 4,089</span></div>
+    <ol class="steps">
+      <li><span class="n">retrieval</span><br>The gate passes: the retrieved chunks are on topic (confabulation is discussed in the GenAI Profile), so a score check alone cannot catch this.</li>
+      <li><span class="n">generate</span><span class="tag">LLM #2</span><br>The prompt's INTERPRETATION rule says a statement in one document does not apply to the other, so the model answers with the Case D sentence.</li>
+      <li class="done"><span class="n">finalize_model_refusal</span><br>Normalises the sentence to the exact constant (the model may drop the final period), refuses to pass through any extra text, sets <code>sources = []</code> and adds 5 related sections.</li>
+    </ol>
+    <div class="note">Limitation observed in the same run: a two-part question (“four functions <i>and</i> what penalties does NIST impose”) was answered partially (first part cited, second part noted as missing) instead of refused. This is prompt v1 behaviour, left as is; deciding on prompt v2 is open.</div>
+  </div>
+
+  <div class="ex" id="e6">
+    <h3>Follow-up: “Which one is cross-cutting?” after “What are the four core functions of the AI RMF?”</h3>
+    <div class="note">Illustrative trace built from routing case <code>follow-1</code> (<code>eval/routing_cases.yaml</code>). The expected route is <code>nist_question</code>; the exact rewrite text below is an example, not a recorded output.</div>
+    <ol class="steps">
+      <li><span class="n">history in the checkpoint</span><br>
+        <code>user:</code> What are the four core functions of the AI RMF?<br>
+        <code>assistant:</code> The AI RMF Core has four functions: GOVERN, MAP, MEASURE and MANAGE. <span class="tag">(final text only, markers stripped)</span></li>
+      <li><span class="n">classify_and_rewrite</span><br>Router sees the last 2 turns + “Which one is cross-cutting?” and returns <code>route = nist_question</code>, <code>standalone_query ≈ “Which of the four AI RMF functions is cross-cutting?”</code></li>
+      <li><span class="n">retrieval → generation</span><br>Only the standalone query and the sources go to the 20B model. <b>The history never reaches generation</b>: the rewrite already carries the context, which saves tokens and stops old turns leaking into answers.</li>
+      <li class="done"><span class="n">finalize</span><br>Per-message state is reset each turn; only <code>messages</code> accumulates.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 10 -->
+<section id="rules">
+  <h2>10 · Invariants and limits</h2>
+  <div class="grid2">
+    <div class="card"><h3>Content rules</h3>
+      <ul>
+        <li>Every chunk has exactly one section path and exact pages.</li>
+        <li><code>embed_text</code> ≤ 512 tokens (bge-small tokenizer, special tokens counted).</li>
+        <li>Answers: plain text, <code>[C#]</code> on every fact-stating sentence, ≈150 words, English only.</li>
+        <li>The LLM never writes URLs, page numbers or source lists.</li>
+        <li>Insufficient answers: <code>sources = []</code>, 5 <code>related_sections</code>, <code>meta.insufficient_reason</code> set.</li>
+        <li>History stores only the final answer text.</li></ul></div>
+    <div class="card"><h3>Operational rules</h3>
+      <ul>
+        <li>Groq free tier: 8,000 tokens/min; output cap 3,500 including reasoning.</li>
+        <li>Retries only for rate-limit / temporary errors and only before the first streamed token; no fallback model.</li>
+        <li>Reasoning output is never streamed, returned, stored or logged at INFO.</li>
+        <li>Node errors → <code>{code, message, node}</code> → <code>error_finalize</code>; <code>llm_unavailable</code> maps to 503, other codes to 500.</li>
+        <li>LangSmith off unless its env vars are set; checkpoints use <code>durability="exit"</code> (≈87 KB per NIST turn).</li></ul></div>
+  </div>
+  <h3>Fixed texts</h3>
+  <table>
+    <tr><td>Out of scope</td><td><code>Sorry, we don't have this answer.</code></td></tr>
+    <tr><td>Insufficient context</td><td><code>The NIST documents provided do not contain this information.</code></td></tr>
+    <tr><td>Ambiguous (first line)</td><td><code>This question can be read in more than one way:</code></td></tr>
+    <tr><td>Uncovered reading</td><td><code>not covered by the provided documents.</code></td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section id="status">
+  <h2>11 · Build status</h2>
+  <table>
+    <tr><th>#</th><th>Phase</th><th>Status</th></tr>
+    <tr><td>1–3</td><td>Ingestion, chunking, embedding &amp; indexing</td><td class="ok">built · 208 chunks, all hard checks pass</td></tr>
+    <tr><td>4</td><td>API &amp; routing</td><td class="ok">built · 2 routing misses open for review</td></tr>
+    <tr><td>5</td><td>Retrieval</td><td class="ok">built · threshold 0.15</td></tr>
+    <tr><td>6</td><td>Augmentation</td><td class="ok">built · cases approved, size report written</td></tr>
+    <tr><td>7</td><td>Generation</td><td class="ok">built · behaviour accuracy 13/17, prompt v2 decision open</td></tr>
+    <tr><td>8–9</td><td>Insufficient path, attribution</td><td class="ok">built · related-section quality flagged</td></tr>
+    <tr><td>10</td><td>Graph integration</td><td class="ok">built · live end-to-end run passes</td></tr>
+    <tr><td>11</td><td>End-to-end evaluation</td><td class="bad">not built</td></tr>
+    <tr><td>12</td><td>Deliverables (README, DESIGN, Makefile, packaging)</td><td class="bad">not built</td></tr>
+  </table>
+</section>
+</main>
+<script>
+(function(){
+  var tabs=document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){
+    b.addEventListener('click',function(){
+      tabs.forEach(function(t){t.setAttribute('aria-selected','false')});
+      b.setAttribute('aria-selected','true');
+      document.querySelectorAll('.ex').forEach(function(e){e.classList.remove('on')});
+      document.getElementById(b.dataset.ex).classList.add('on');
+    });
+  });
+})();
+</script>
+</body>
+</html>
