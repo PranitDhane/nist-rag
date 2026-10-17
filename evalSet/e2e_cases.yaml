@@ -1,0 +1,403 @@
+# =============================================================================
+# End-to-end test set — NIST AI RMF Agentic RAG
+# Spec: docs/E2E_EVALUATION_PLAN.md (Sections 3–4, Stage V1)
+#
+# Composition: 10 core single-turn cases + 2 optional single-turn cases
+#              + 2 conversations x 3 turns (same thread_id within a conversation)
+# Origin tags:  source: assignment  -> taken directly from Assignment_ AI engineer.pdf
+#               source: plan        -> from the E2E plan's coverage list
+#
+# Every gold fact has a gold_location verified against the PDFs:
+#   pdf_page = 1-based physical page (used in #page= links)
+#   printed  = number printed on the page (used in citation labels)
+#
+# Fixed texts are referenced by config key, NEVER copied here (CLAUDE.md §5):
+#   {OUT_OF_SCOPE_TEXT}  {INSUFFICIENT_TEXT}  {GREETING_TEXT}
+# The harness resolves them from the app's config at run time.
+#
+# Matching rules for must_contain / must_not_contain (harness, check B1/B2):
+#   case-insensitive; hyphens, en dashes and extra spaces are ignored;
+#   a fact passes if ANY of its variants is found.
+#   min_facts: how many facts count as full coverage (reported, not gated).
+# =============================================================================
+
+version: 1
+defaults:
+  debug: true
+  llm_calls:            # expected per outcome (check A5)
+    greeting_rule: 0
+    out_of_scope: 1
+    insufficient_gate: 1
+    insufficient_model: 2
+    answered: 2
+
+# -----------------------------------------------------------------------------
+# SINGLE-TURN CASES
+# -----------------------------------------------------------------------------
+single_turn:
+
+  - id: S1
+    source: assignment
+    message: "What are the four core functions of the NIST AI RMF?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: govern
+        variants: ["govern"]
+      - fact: map
+        variants: ["map"]
+      - fact: measure
+        variants: ["measure"]
+      - fact: manage
+        variants: ["manage"]
+    min_facts: 4
+    must_not_contain: []
+    expected_sections:
+      - {doc: ai_rmf_1_0, section: "5"}
+      - {doc: ai_rmf_1_0, section: "5.1"}
+    must_not_cite:
+      # The assignment's illustrative citation says "Section 1.3"; the real answer is in Section 5.
+      - {doc: ai_rmf_1_0, section: "1.3"}
+    gold_locations:
+      - {fact: "four functions", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "the Core is composed of four functions: GOVERN, MAP, MEASURE, and MANAGE"}
+    notes: "The assignment's own example question. Also checks the citation is Section 5, not the illustrative 'Section 1.3'."
+
+  - id: S2
+    source: plan
+    message: "What characteristics make an AI system trustworthy according to the AI RMF?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: valid and reliable
+        variants: ["valid and reliable", "valid & reliable"]
+      - fact: safe
+        variants: ["safe"]
+      - fact: secure and resilient
+        variants: ["secure and resilient", "secure & resilient"]
+      - fact: accountable and transparent
+        variants: ["accountable and transparent", "accountable & transparent"]
+      - fact: explainable and interpretable
+        variants: ["explainable and interpretable", "explainable & interpretable"]
+      - fact: privacy-enhanced
+        variants: ["privacy-enhanced", "privacy enhanced"]
+      - fact: fair with harmful bias managed
+        variants: ["harmful bias managed", "fair"]
+    min_facts: 7
+    must_not_contain: []
+    expected_sections:
+      - {doc: ai_rmf_1_0, section: "3"}
+    gold_locations:
+      - {fact: "seven characteristics", doc: ai_rmf_1_0, pdf_page: 17, printed: "12", quote: "Characteristics of trustworthy AI systems include: valid and reliable, safe, secure and resilient, accountable and transparent, explainable and interpretable, privacy-enhanced, and fair with harmful bias managed."}
+    notes: "A list answer: expect a lead-in line plus bullets, each with a citation."
+
+  - id: S3
+    source: plan
+    message: "How do AI risks differ from traditional software risks?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: training data may not represent the context
+        variants: ["not be a true or appropriate representation", "representation of the context", "data quality", "harmful bias"]
+      - fact: pre-trained models
+        variants: ["pre-trained", "pretrained"]
+      - fact: opacity / reproducibility
+        variants: ["opacity", "reproducibility"]
+      - fact: drift and maintenance
+        variants: ["drift", "maintenance"]
+      - fact: testing difficulty
+        variants: ["testing"]
+      - fact: privacy from data aggregation
+        variants: ["privacy", "data aggregation"]
+    min_facts: 2       # the source lists ~13 items; a ~150-word answer covers a subset
+    must_not_contain: []
+    expected_sections:
+      - {doc: ai_rmf_1_0, section: "Appendix B"}
+    gold_locations:
+      - {fact: "list of AI-specific risks", doc: ai_rmf_1_0, pdf_page: 43, printed: "38", quote: "Compared to traditional software, AI-specific risks that are new or increased include the following:"}
+    notes: "Appendix retrieval. min_facts is low by design because of the word limit."
+
+  - id: S4
+    source: plan
+    message: "What is confabulation in the Generative AI Profile?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: erroneous or false content
+        variants: ["erroneous or false content", "erroneous", "false content"]
+      - fact: confidently presented
+        variants: ["confidently"]
+      - fact: also called hallucinations or fabrications
+        variants: ["hallucination", "fabrication"]
+    min_facts: 2
+    must_not_contain: []
+    expected_sections:
+      - {doc: genai_profile, section: "2.2"}
+      - {doc: genai_profile, section: "2"}
+    gold_locations:
+      - {fact: "definition", doc: genai_profile, pdf_page: 10, printed: "6", quote: "“Confabulation” refers to a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts."}
+      - {fact: "short definition in risk list", doc: genai_profile, pdf_page: 8, printed: "4", quote: "Confabulation: The production of confidently stated but erroneous or false content (known colloquially as “hallucinations” or “fabrications”)"}
+    notes: "Checks the quoting rule: expect the exact term in quotes."
+
+  - id: S5
+    source: plan
+    message: "What does the Generative AI Profile suggest for decommissioning GAI systems?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: data retention
+        variants: ["data retention"]
+      - fact: data security / leakage
+        variants: ["data security", "data leakage"]
+      - fact: dependencies between systems
+        variants: ["dependencies"]
+      - fact: open-source data or models
+        variants: ["open-source", "open source"]
+      - fact: users' emotional entanglement
+        variants: ["emotional entanglement"]
+      - fact: ability to deactivate
+        variants: ["deactivat"]
+    min_facts: 3
+    must_not_contain: []
+    expected_sections:
+      - {doc: genai_profile, section: "GOVERN 1.7"}
+    gold_locations:
+      - {fact: "GV-1.7-001 deactivation", doc: genai_profile, pdf_page: 21, printed: "17", quote: "Protocols are put in place to ensure GAI systems are able to be deactivated when necessary."}
+      - {fact: "GV-1.7-002 factors", doc: genai_profile, pdf_page: 21, printed: "17", quote: "Consider the following factors when decommissioning GAI systems: Data retention requirements; Data security, e.g., containment, protocols, Data leakage after decommissioning; Dependencies ...; Use of open-source data or models; Users’ emotional entanglement with GAI functions."}
+    notes: "Table-based answer (a GenAI action table). The words 'decommissioning' and 'shutting down' test vector + BM25 together."
+
+  - id: S6
+    source: plan
+    message: "What is suggested action GV-1.7-001?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: deactivation protocols
+        variants: ["deactivat"]
+    min_facts: 1
+    must_not_contain: []
+    expected_sections:
+      - {doc: genai_profile, section: "GOVERN 1.7"}
+    gold_locations:
+      - {fact: "GV-1.7-001", doc: genai_profile, pdf_page: 21, printed: "17", quote: "GV-1.7-001 Protocols are put in place to ensure GAI systems are able to be deactivated when necessary."}
+    notes: "An exact-ID lookup; proves the BM25 tokenizer keeps action IDs whole. With debug=true, the GOVERN 1.7 chunk should be at rerank rank 1."
+
+  - id: S7
+    source: plan
+    message: "What penalties does the EU AI Act set for non-compliance?"
+    expected_route: nist_question       # near scope (AI regulation); routing may also say out_of_scope, see notes
+    expected_outcome: insufficient
+    expected_text_key: INSUFFICIENT_TEXT
+    expected_insufficient_reason_any: [gate_low_score, model_case_d, fix_partial_answer, fix_no_citations]
+    must_contain: []
+    must_not_contain:
+      - fact: invented penalty amounts
+        variants: ["€", "euro", "% of", "million"]
+    expected_sections: []
+    gold_locations:
+      - {fact: "absent from both documents", doc: both, pdf_page: null, printed: null, quote: "Verified: 'EU AI Act', 'European Union' and 'penalt' have 0 hits in both PDFs."}
+    acceptable_alternative:
+      expected_route: out_of_scope
+      expected_text_key: OUT_OF_SCOPE_TEXT
+    notes: "Either insufficient (preferred: on-topic but not in the docs) or out_of_scope is acceptable. The report records which one happened. Must never answer with outside knowledge."
+
+  - id: S8
+    source: plan
+    message: "What are the four functions of the AI RMF, and how much does an AI RMF certification cost?"
+    expected_route: nist_question
+    expected_outcome: insufficient
+    expected_text_key: INSUFFICIENT_TEXT
+    expected_insufficient_reason_any: [model_case_d, fix_partial_answer]
+    must_contain: []
+    must_not_contain:
+      - fact: partial answer leaked
+        variants: ["govern", "measure"]
+      - fact: invented cost
+        variants: ["$", "usd", "dollar", "fee"]
+    expected_sections: []
+    gold_locations:
+      - {fact: "part 1 answerable", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "the Core is composed of four functions"}
+      - {fact: "part 2 not in docs", doc: ai_rmf_1_0, pdf_page: 7, printed: "2", quote: "The Framework is intended to be voluntary ... (no certification or cost is described)"}
+    notes: "Tests the strict rule 'partly answerable → refuse entirely' (augmentation G-D7). Part 2 was changed from the plan's draft ('when will AI RMF 2.0 be published'), because the document mentions a review 'no later than 2028', which made that gold answer ambiguous."
+
+  - id: S9
+    source: plan
+    message: "What is the capital of France?"
+    expected_route: out_of_scope
+    expected_outcome: out_of_scope
+    expected_text_key: OUT_OF_SCOPE_TEXT
+    must_contain: []
+    must_not_contain:
+      - fact: answered from general knowledge
+        variants: ["paris"]
+    expected_sections: []
+    notes: "Exact apology; 1 LLM call; no retrieval in debug.path."
+
+  - id: S10
+    source: plan
+    message: "Hello!"
+    expected_route: greeting
+    expected_outcome: greeting
+    expected_route_source: rule
+    expected_text_key: GREETING_TEXT
+    must_contain: []
+    must_not_contain: []
+    expected_sections: []
+    notes: "Pure greeting: caught by the rule, 0 LLM calls."
+
+  # --- optional extras (cheap; run unless the user excludes them) -------------
+
+  - id: S11
+    optional: true
+    source: plan
+    message: "How does the AI RMF define an AI system?"
+    expected_route: nist_question
+    expected_outcome: answered
+    must_contain:
+      - fact: engineered or machine-based system (exact definition)
+        variants: ["engineered or machine-based system"]
+      - fact: outputs such as predictions, recommendations, or decisions
+        variants: ["predictions, recommendations, or decisions", "predictions", "recommendations"]
+    min_facts: 2
+    must_not_contain: []
+    expected_sections:
+      - {doc: ai_rmf_1_0, section: "Executive Summary"}
+    gold_locations:
+      - {fact: "AI system definition", doc: ai_rmf_1_0, pdf_page: 6, printed: "1", quote: "The AI RMF refers to an AI system as an engineered or machine-based system that can, for a given set of objectives, generate outputs such as predictions, recommendations, or decisions influencing real or virtual environments."}
+    notes: "Checks the quoting rule for definitions (exact NIST wording in double quotes)."
+
+  - id: S12
+    optional: true
+    source: plan
+    message: "What can you do?"
+    expected_route: out_of_scope
+    expected_outcome: out_of_scope
+    expected_text_key: OUT_OF_SCOPE_TEXT
+    must_contain: []
+    must_not_contain: []
+    expected_sections: []
+    notes: "Questions about the assistant itself are out of scope by design (API plan A-D8)."
+
+# -----------------------------------------------------------------------------
+# CONVERSATIONS (each conversation = one thread_id; turns run in order)
+# -----------------------------------------------------------------------------
+conversations:
+
+  - id: C1
+    source: assignment
+    description: "The assignment's own follow-up example, plus a second follow-up (the assignment requires at least two)."
+    turns:
+
+      - id: C1-T1
+        message: "What are the four functions of the AI RMF?"
+        expected_route: nist_question
+        expected_outcome: answered
+        must_contain:
+          - {fact: govern,  variants: ["govern"]}
+          - {fact: map,     variants: ["map"]}
+          - {fact: measure, variants: ["measure"]}
+          - {fact: manage,  variants: ["manage"]}
+        min_facts: 4
+        must_not_contain: []
+        expected_sections:
+          - {doc: ai_rmf_1_0, section: "5"}
+        gold_locations:
+          - {fact: "four functions", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "the Core is composed of four functions: GOVERN, MAP, MEASURE, and MANAGE"}
+
+      - id: C1-T2
+        message: "Which one is cross-cutting?"
+        expected_route: nist_question
+        expected_outcome: answered
+        expected_standalone_terms:
+          all_of: ["cross-cutting"]
+          any_of: ["function", "AI RMF", "govern, map, measure"]
+        must_contain:
+          - {fact: govern, variants: ["govern"]}
+          - {fact: cross-cutting, variants: ["cross-cutting", "cross cutting"]}
+        min_facts: 2
+        must_not_contain: []
+        expected_sections:
+          - {doc: ai_rmf_1_0, section: "5"}
+          - {doc: ai_rmf_1_0, section: "5.1"}
+        gold_locations:
+          - {fact: "Fig. 5 caption", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "Governance is designed to be a cross-cutting function to inform and be infused throughout the other three functions."}
+          - {fact: "Section 5.1 text", doc: ai_rmf_1_0, pdf_page: 27, printed: "22", quote: "GOVERN is a cross-cutting function that is infused throughout AI risk management and enables the other functions of the process."}
+        notes: "Assignment's follow-up 1. Fails without history: the router must rewrite 'which one' using turn 1."
+
+      - id: C1-T3
+        message: "What categories does it include?"
+        expected_route: nist_question
+        expected_outcome: answered
+        expected_standalone_terms:
+          all_of: ["govern"]
+          any_of: ["categor"]
+        must_contain:
+          - {fact: "GOVERN 1: policies, processes, procedures, practices", variants: ["govern 1", "policies, processes", "policies"]}
+          - {fact: "GOVERN 2: accountability structures",                 variants: ["govern 2", "accountability"]}
+          - {fact: "GOVERN 3: workforce diversity, equity, inclusion",     variants: ["govern 3", "diversity"]}
+          - {fact: "GOVERN 4: culture that considers AI risk",             variants: ["govern 4", "culture"]}
+          - {fact: "GOVERN 5: engagement with relevant AI actors",         variants: ["govern 5", "engagement"]}
+          - {fact: "GOVERN 6: third-party software, data, supply chain",   variants: ["govern 6", "third-party", "third party", "supply chain"]}
+        min_facts: 4
+        must_not_contain:
+          - {fact: "MAP/MEASURE categories mixed in", variants: ["map 1", "measure 1", "manage 1"]}
+        expected_sections:
+          - {doc: ai_rmf_1_0, section: "5.1"}
+          - {doc: ai_rmf_1_0, section: "GOVERN 1"}
+        gold_locations:
+          - {fact: "GOVERN 1", doc: ai_rmf_1_0, pdf_page: 27, printed: "22", quote: "GOVERN 1: Policies, processes, procedures, and practices across the organization ..."}
+          - {fact: "GOVERN 2–4", doc: ai_rmf_1_0, pdf_page: 28, printed: "23", quote: "GOVERN 2: Accountability structures ... GOVERN 3: Workforce diversity ... GOVERN 4: Organizational teams are committed to a culture ..."}
+          - {fact: "GOVERN 5–6", doc: ai_rmf_1_0, pdf_page: 29, printed: "24", quote: "GOVERN 5: Processes are in place for robust engagement ... GOVERN 6: Policies and procedures are in place to address AI risks and benefits arising from third-party software and data ..."}
+        notes: "Assignment requirement: second follow-up. 'it' must resolve to GOVERN across 2 turns. A split table may bring in sibling parts (retrieval T-D8)."
+
+  - id: C2
+    source: plan
+    description: "A GenAI risk, a mixed greeting + follow-up (routing trap), then a topic switch to out of scope."
+    turns:
+
+      - id: C2-T1
+        message: "What is confabulation in generative AI?"
+        expected_route: nist_question
+        expected_outcome: answered
+        must_contain:
+          - {fact: erroneous or false content, variants: ["erroneous", "false content"]}
+          - {fact: hallucinations, variants: ["hallucination", "fabrication"]}
+        min_facts: 1
+        must_not_contain: []
+        expected_sections:
+          - {doc: genai_profile, section: "2.2"}
+          - {doc: genai_profile, section: "2"}
+        gold_locations:
+          - {fact: "definition", doc: genai_profile, pdf_page: 10, printed: "6", quote: "GAI systems generate and confidently present erroneous or false content in response to prompts"}
+
+      - id: C2-T2
+        message: "Hi again! Which trustworthy AI characteristics is it related to?"
+        expected_route: nist_question        # NOT greeting: the mixed-message trap (API plan D3)
+        expected_route_source: llm
+        expected_outcome: answered
+        expected_standalone_terms:
+          all_of: ["confabulation"]
+          any_of: ["trustworthy", "characteristic"]
+        must_contain:
+          - {fact: fair with harmful bias managed, variants: ["harmful bias managed", "fair"]}
+          - {fact: safe, variants: ["safe"]}
+          - {fact: valid and reliable, variants: ["valid and reliable", "valid & reliable"]}
+          - {fact: explainable and interpretable, variants: ["explainable and interpretable", "explainable & interpretable"]}
+        min_facts: 3
+        must_not_contain:
+          - {fact: "characteristics of other risks", variants: ["secure and resilient", "privacy enhanced", "privacy-enhanced", "accountable and transparent"]}
+        expected_sections:
+          - {doc: genai_profile, section: "2.2"}
+        gold_locations:
+          - {fact: "2.2 characteristic line", doc: genai_profile, pdf_page: 10, printed: "6", quote: "Trustworthy AI Characteristics: Fair with Harmful Bias Managed, Safe, Valid and Reliable, Explainable and Interpretable"}
+        notes: "Verified: this characteristic line sits between the 2.2 and 2.3 headings, so it belongs to Confabulation. The must_not_contain traps catch lines from neighbouring risks (2.3, 2.4, 2.5)."
+
+      - id: C2-T3
+        message: "What's the weather in Pune today?"
+        expected_route: out_of_scope
+        expected_outcome: out_of_scope
+        expected_text_key: OUT_OF_SCOPE_TEXT
+        must_contain: []
+        must_not_contain:
+          - {fact: weather answer, variants: ["°", "degrees", "rain", "sunny", "humid"]}
+        expected_sections: []
+        notes: "A topic switch inside a conversation must still be out of scope, despite the NIST history."
