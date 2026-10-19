@@ -476,10 +476,10 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
 
 <!-- 11 -->
 <section id="e2e">
-  <h2>11 · End-to-end evaluation (phase 11, in progress)</h2>
-  <p class="lead">Checks the finished system <i>as a user sees it</i>: a running server, real HTTP, real Groq. The evaluation only observes and reports (no pass/fail gate, exit code 0 unless the harness itself breaks) and makes no LLM calls of its own. Stages V0–V2 are built; V3–V6 are not.</p>
+  <h2>11 · End-to-end evaluation (phase 11)</h2>
+  <p class="lead">Checks the finished system <i>as a user sees it</i>: a running server, real HTTP, real Groq. The evaluation only observes and reports (no pass/fail gate, exit code 0 unless the harness itself breaks) and makes no LLM calls of its own. All stages V0–V6 are built and one live run has been made (run <code>20261019-105606</code>); the Markdown report format (Q7) is awaiting approval.</p>
   <div class="legend">
-    <span><i class="i-green"></i>built and tested</span><span><i class="i-amber"></i>planned (not built)</span><span><i class="i-blue"></i>files on disk</span>
+    <span><i class="i-green"></i>built and tested</span><span><i class="i-blue"></i>files on disk</span>
   </div>
   <div class="scroll">
   <svg viewBox="0 0 1000 330" role="img" aria-label="End-to-end evaluation flow">
@@ -489,18 +489,18 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
     <rect class="box b-green" x="430" y="20" width="170" height="56" rx="10"/><text x="515" y="43" text-anchor="middle">V2 harness</text><text class="t-small" x="515" y="60" text-anchor="middle">eval/e2e.py</text>
     <rect class="box b-plain" x="650" y="20" width="170" height="56" rx="10"/><text x="735" y="43" text-anchor="middle">Running server</text><text class="t-small" x="735" y="60" text-anchor="middle">POST /chat, debug=true</text>
     <rect class="box b-blue" x="430" y="130" width="170" height="56" rx="10"/><text x="515" y="153" text-anchor="middle">e2e_runs/&lt;time&gt;/</text><text class="t-small" x="515" y="170" text-anchor="middle">raw/&lt;id&gt;.json + run.json</text>
-    <rect class="box b-amber" x="10" y="250" width="200" height="56" rx="10"/><text x="110" y="273" text-anchor="middle">V3 deterministic checks</text><text class="t-small" x="110" y="290" text-anchor="middle">routes, facts, citations, links</text>
-    <rect class="box b-amber" x="250" y="250" width="200" height="56" rx="10"/><text x="350" y="273" text-anchor="middle">V4 groundedness score</text><text class="t-small" x="350" y="290" text-anchor="middle">reranker + key_map + chunks</text>
-    <rect class="box b-amber" x="490" y="250" width="200" height="56" rx="10"/><text x="590" y="273" text-anchor="middle">V5 full run + streaming</text><text class="t-small" x="590" y="290" text-anchor="middle">/chat/stream subset</text>
-    <rect class="box b-amber" x="730" y="250" width="200" height="56" rx="10"/><text x="830" y="273" text-anchor="middle">V6 report</text><text class="t-small" x="830" y="290" text-anchor="middle">report.json + E2E_RESULTS.md</text>
+    <rect class="box b-green" x="10" y="250" width="200" height="56" rx="10"/><text x="110" y="273" text-anchor="middle">V3 deterministic checks</text><text class="t-small" x="110" y="290" text-anchor="middle">routes, facts, citations, links</text>
+    <rect class="box b-green" x="250" y="250" width="200" height="56" rx="10"/><text x="350" y="273" text-anchor="middle">V4 groundedness score</text><text class="t-small" x="350" y="290" text-anchor="middle">reranker + key_map + chunks</text>
+    <rect class="box b-green" x="490" y="250" width="200" height="56" rx="10"/><text x="590" y="273" text-anchor="middle">V5 full run + streaming</text><text class="t-small" x="590" y="290" text-anchor="middle">/chat/stream subset</text>
+    <rect class="box b-green" x="730" y="250" width="200" height="56" rx="10"/><text x="830" y="273" text-anchor="middle">V6 report</text><text class="t-small" x="830" y="290" text-anchor="middle">report.json + E2E_RESULTS.md</text>
     <path class="edge" d="M160 48H208" marker-end="url(#ar4)"/><path class="edge" d="M380 48H428" marker-end="url(#ar4)"/>
     <path class="edge" d="M600 40H648" marker-end="url(#ar4)"/><path class="edge" d="M650 58H602" marker-end="url(#ar4)"/>
     <path class="edge" d="M515 76V128" marker-end="url(#ar4)"/><text class="t-small" x="523" y="108">saves every exchange</text>
-    <path class="edge dash" d="M470 186C400 215 200 215 110 248" marker-end="url(#ar4)"/>
-    <path class="edge dash" d="M500 186C450 215 380 225 350 248" marker-end="url(#ar4)"/>
-    <path class="edge dash" d="M560 186L590 248" marker-end="url(#ar4)"/>
-    <path class="edge dash" d="M600 160C760 170 820 200 830 248" marker-end="url(#ar4)"/>
-    <text class="t-small" x="10" y="322">Solid = built. Dashed = planned. Checks read the saved files (--from-run), so they can be re-run without spending tokens.</text>
+    <path class="edge" d="M470 186C400 215 200 215 110 248" marker-end="url(#ar4)"/>
+    <path class="edge" d="M500 186C450 215 380 225 350 248" marker-end="url(#ar4)"/>
+    <path class="edge" d="M560 186L590 248" marker-end="url(#ar4)"/>
+    <path class="edge" d="M600 160C760 170 820 200 830 248" marker-end="url(#ar4)"/>
+    <text class="t-small" x="10" y="322">Checks and the report read the saved files (--from-run), so they can be re-run without spending tokens.</text>
   </svg>
   </div>
   <div class="grid2">
@@ -532,18 +532,26 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
     <tr><td>Cold models (first request ~14 s)</td><td><code>--warmup</code> sends one throwaway question first (off by default, ~4,000 tokens, not recorded)</td></tr>
     <tr><td>Re-checking a finished run</td><td><code>--from-run &lt;dir&gt;</code> reloads the saved files, no network</td></tr>
   </table>
-  <h3>Checks planned for V3–V4 (reported, never gated)</h3>
+  <h3>Checks (V3–V4, reported, never gated)</h3>
   <div class="scroll"><table>
     <tr><th></th><th>Group</th><th>Examples</th></tr>
     <tr><td>A</td><td>routing and outcome</td><td>route, outcome, exact fixed texts, standalone-query terms for follow-ups, expected LLM-call count</td></tr>
     <tr><td>B</td><td>content</td><td>must-contain facts with variants, must-not-contain traps, English, word count</td></tr>
     <tr><td>C</td><td>citations</td><td><code>[C#]</code> ↔ <code>sources</code> consistency, expected sections, link check on cited chunks, fixes and warnings</td></tr>
-    <tr><td>D</td><td>groundedness</td><td>reranker support score of each sentence against its cited chunks, calibrated with positive, negative and sanity controls (threshold chosen at V4)</td></tr>
+    <tr><td>D</td><td>groundedness</td><td>reranker support score of each sentence against its cited chunks, threshold 0.70 chosen from the calibration (11 positives min 0.943, 33 random negatives max 0.692, 16 verbatim sanity pairs min 0.9995)</td></tr>
     <tr><td>E</td><td>insufficient path</td><td>exact sentence, empty <code>sources</code>, 5 related sections, reason recorded</td></tr>
     <tr><td>F</td><td>operations</td><td>HTTP status, latency, tokens, LLM calls</td></tr>
   </table></div>
   <div class="note">Limitation to state in the results: the support score uses the same reranker model as retrieval, so it is not an independent judge. The gold facts and citation checks complement it.</div>
-  <p class="sub">Tests so far: 36 for the case validator, 21 for the harness (against a stdlib fake server with real sockets, time faked); full suite 886 passed.</p>
+  <h3>First live run (16 requests + 2 streamed, 35 s pacing)</h3>
+  <p>Numbers are read from <code>docs/E2E_RESULTS.md</code> (generated from <code>report.json</code>): route accuracy 15/16, outcome accuracy 13/16, fixed texts exact 5/5, follow-ups resolved 3/3, key-fact coverage 29/45, links open the cited text 8/8, sentences supported 11/11, streaming order 2/2, latency p50 4,556 ms / p95 5,820 ms. 19 failed checks are listed, none filtered. Findings behind the failures:</p>
+  <ul>
+    <li><b>S3</b> (“How do AI risks differ from traditional software risks?”) was routed <code>out_of_scope</code> by the router (the known routing miss).</li>
+    <li><b>C1-T3 and C2-T2</b>: retrieval scored 0.995 and 0.996, yet the model answered with the Case D sentence, so two follow-ups the documents can answer were refused (prompt v1 strictness).</li>
+    <li><b>S4, S6, C2-T1</b>: the model left a fact-stating sentence uncited or cited only the last sentence of a paragraph (<code>UNCITED_SENTENCE</code>; D3 counted 3 of 14 sentences).</li>
+    <li>The V3 English check wrongly failed the real answer to C1-T1 (only 2 stop words); the threshold was corrected from 3 to 2 and a test added.</li>
+  </ul>
+  <p class="sub">Tests: 36 case validator, 27 harness (stdlib fake server on real sockets, time faked), 64 checks, 24 groundedness, 13 report; full suite 993 passed.</p>
 </section>
 
 <!-- 12 -->
@@ -559,7 +567,7 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
     <tr><td>8–9</td><td>Insufficient path, attribution</td><td class="ok">built · related-section quality flagged</td></tr>
     <tr><td>10</td><td>Graph integration</td><td class="ok">built · live end-to-end run passes</td></tr>
     <tr><td>11</td><td>End-to-end evaluation</td><td class="ok">V0 debug <code>key_map</code>, V1 case file, V2 harness built</td></tr>
-    <tr><td></td><td>&nbsp;&nbsp;remaining: V3 checks, V4 groundedness, V5 full run, V6 report</td><td class="bad">not built</td></tr>
+    <tr><td></td><td>&nbsp;&nbsp;V3 checks, V4 groundedness, V5 live run + streaming, V6 report</td><td class="ok">built · Q7 (report format) awaiting approval</td></tr>
     <tr><td>12</td><td>Deliverables (README, DESIGN, Makefile, packaging)</td><td class="bad">not built</td></tr>
   </table>
 </section>

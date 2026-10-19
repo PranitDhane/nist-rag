@@ -32,9 +32,9 @@ Supporting documents:
 
 **Path change in phase 12:** Stage D6 moves all plan files to `docs/process/plans/`, and `PROGRESS.md` and `PROBLEMS_AND_SOLUTIONS.md` to `docs/process/`. When that happens, **update every path in this file** in the same stage. `CLAUDE.md` itself stays at the repository root unless the user decides otherwise (deliverables Q6).
 
-**Status reported by the user:** phases 1–10 are built (phase 6 completed 2026-10-17). Phases 11–12 are planned and not yet built.
+**Status reported by the user:** phases 1–11 are built (phase 6 completed 2026-10-17, phase 11 on 2026-10-19). Phase 12 is in progress.
 
-**Current phase: 11 — End-to-end evaluation.** *(Confirm with the user at the start of every session. Change this line only with the user's approval.)*
+**Current phase: 12 — Deliverables.** *(Confirm with the user at the start of every session. Change this line only with the user's approval.)*
 
 ## 3. How to work (every phase)
 
