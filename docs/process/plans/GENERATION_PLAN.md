@@ -222,7 +222,7 @@ On a mid-stream failure: `meta → token × k → error`. No `correction`, `sour
    - average tokens and latency.
 4. **Ask Q9:** the user reviews the results and decides whether the rates are acceptable, or whether a prompt `v2` is wanted. Any prompt change needs the user's approval and a new version file, with `v1` kept.
 
-**Done when:** `eval/generation_behaviour_report.json` and a Markdown summary `docs/GENERATION_RESULTS.md` exist.
+**Done when:** `eval/generation_behaviour_report.json` and a Markdown summary `docs/process/GENERATION_RESULTS.md` exist.
 
 **Checkpoint:** show the summary metrics and every case where the actual case differed from the expected one.
 

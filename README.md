@@ -1,353 +1,432 @@
-# NIST AI RMF — ingestion, chunking and indexing pipeline
+# NIST AI RMF Assistant
 
-Three phases, each reading only the previous phase's output: **ingestion** (PDF → `pages.jsonl`),
-**chunking** (→ `chunks.jsonl`) and **embedding & indexing** (→ a Chroma vector index + a BM25 keyword index).
-Retrieval, the agent and the UI are later phases. The rest of this section describes ingestion.
+An agentic retrieval-augmented question-answering system over two NIST documents: **AI RMF 1.0 (NIST AI 100-1)** and the **Generative AI Profile (NIST AI 600-1)**. Ask a question (and follow-ups) over HTTP and get a short, grounded answer with citations that open the exact PDF page, or an honest "the documents do not contain this" when they do not. It is built with **LangGraph** behind a **FastAPI** API, uses **Groq's free tier** as the LLM, `bge-small-en-v1.5` embeddings in **Chroma**, a **BM25** keyword index, and a `bge-reranker-base` cross-encoder. The reasoning behind each choice is in [`DESIGN.md`](DESIGN.md).
 
-Ingestion turns two official NIST PDFs (AI 100-1 *AI RMF 1.0* and AI 600-1 *Generative AI Profile*) into
-validated, cleaned, **page-level** records in `data/processed/pages.jsonl` plus a run report
-`data/processed/ingest_report.json`. Chunking, embeddings, retrieval and the agent are later
-phases and read only `pages.jsonl`; they never open the PDFs.
-
-## Setup
-
-Python 3.12 (3.11 also works), `pip` + `venv`, exact pinned versions:
+## Quickstart
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+git clone <repository-url> nist-rag && cd nist-rag
+python3.12 -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+make install                                               # pip install -r requirements.txt
+cp .env.example .env                                       # then put your Groq API key in GROQ_API_KEY=
+make build                                                 # download the PDFs, then ingest -> chunk -> index
+make serve                                                 # start the API (leave it running)
 ```
 
-### Optional: Tesseract (figure OCR)
+In a second terminal:
 
-Without Tesseract everything still runs; figure records keep their caption but have
-`text: null, method: "caption_only", ocr_status: "skipped_unavailable"`, and the report lists a
-warning. With it, the five AI RMF figures are OCR'd (text stored separately, never in page Markdown).
+```bash
+make ask Q="What are the four core functions of the NIST AI RMF?"
+```
+
+<!-- TIMINGS:START -->
+Timings for each step are added after the fresh-clone acceptance test.
+<!-- TIMINGS:END -->
+
+No `make`? Section 6 pairs every target with its Python command.
+
+## Requirements
+
+- **Python 3.12** (the version this project was built and tested with) and `pip`.
+- **Internet, once:** the two NIST PDFs (downloaded by `make build`), the Hugging Face models (`bge-small-en-v1.5`, `bge-reranker-base`, downloaded on first use), and, at run time, the Groq API.
+- **A Groq API key** (free tier): <https://console.groq.com>.
+- **Disk and memory:** PyTorch and the two Hugging Face models are the large downloads. Everything runs on CPU; Apple-silicon and CUDA GPUs are used automatically when available.
+- **Optional:** [Tesseract](https://github.com/tesseract-ocr/tesseract) for figure OCR (see below).
+- Developed on macOS; Linux works the same way. On Windows use the Python commands in section 6.
+
+## Installation
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+pip install -r requirements.txt      # exact pinned versions; make install does the same
+```
+
+`requirements.txt` pins every direct dependency, and `pip check` is clean. PyTorch is the largest download.
+
+**Optional: Tesseract (figure OCR).** Without it everything still runs: figure records keep their captions but have no OCR text, and the ingestion report lists a warning. With it, the AI RMF's figures are OCR'd and become searchable chunks.
 
 | OS | Install |
 |---|---|
 | macOS | `brew install tesseract` |
-| Ubuntu/Debian | `sudo apt install tesseract-ocr` |
-| Windows | installer from https://github.com/UB-Mannheim/tesseract/wiki, then add it to `PATH` |
+| Ubuntu / Debian | `sudo apt install tesseract-ocr` |
+| Windows | installer from <https://github.com/UB-Mannheim/tesseract/wiki>, then add it to `PATH` |
 
-OCR output below a confidence threshold is dropped (default 60; set `OCR_CONFIDENCE_THRESHOLD`
-in `.env`, or `none` to keep everything). Paths can also be overridden in `.env` (see `.env.example`).
+## Configuration
 
-## Run
+Copy `.env.example` to `.env`. Only `GROQ_API_KEY` is required; everything else has a default. `.env` is git-ignored: never commit it.
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `GROQ_API_KEY` | none (**required**) | Groq API key |
+| `ROUTER_MODEL` | `openai/gpt-oss-120b` | Model for the routing call (route + standalone query) |
+| `ROUTER_REASONING_EFFORT` | `low` | Reasoning effort of the routing call |
+| `GEN_MODEL` | `openai/gpt-oss-20b` | Model that writes the answer |
+| `HISTORY_TURNS` | `2` | Previous turns the router sees |
+| `APP_HOST`, `APP_PORT` | `127.0.0.1`, `8000` | Where `make serve` listens |
+| `MAX_MESSAGE_CHARS` | `2000` | Longer messages are rejected with a 422 |
+| `LLM_MAX_ATTEMPTS`, `LLM_BASE_DELAY`, `LLM_MAX_DELAY`, `LLM_TIMEOUT` | `4`, `1.0`, `20.0`, `30.0` | Retry and timeout settings for rate-limit or temporary Groq errors |
+| `RETRIEVAL_DEVICE`, `INDEX_DEVICE` | `auto` | `auto`, `cpu`, `mps` or `cuda` for the reranker and for embedding |
+| `INDEX_BATCH_SIZE`, `INDEX_COLLECTION` | `32`, `nist_ai_rmf` | Embedding batch size, Chroma collection name |
+| `OCR_CONFIDENCE_THRESHOLD` | `60` | Figure OCR below this confidence is dropped (`none` keeps everything) |
+| `DATA_DIR`, `RAW_DIR`, `PROCESSED_DIR`, `STAGES_DIR`, `CHUNKS_PATH`, `INDEX_DIR`, `INDEX_CHROMA_DIR` | under `data/` | Where the PDFs, pipeline outputs and indexes live |
+| `LANGSMITH_TRACING`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT` | empty (**off**) | Optional LangSmith tracing. **When on, every prompt, every retrieved NIST passage and every answer is sent to LangSmith's servers.** |
+
+## Downloading and processing the documents
 
 ```bash
-python -m ingest                         # download (if missing), then run all stages; exit 0 only if all hard checks pass
-python -m ingest --from-dir <folder>     # use local PDFs (found by manifest filename or the 100-1 / 600-1 part of the name)
-python -m ingest --rebuild               # delete cached stage outputs first (PDFs that pass their checks are kept)
-python -m ingest --from-stage 7          # rerun from a stage (3-10) using cached earlier outputs
-python -m ingest --only-stage 8          # run one stage (2-10)
-pytest -q                                # unit + integration tests (integration skipped if the PDFs are absent)
+make build        # ingest -> chunk -> index; stops at the first failure
 ```
 
-Stage outputs are cached in `data/processed/stages/NN_<stage>.jsonl` (inspectable); everything under
-`data/processed/` is regenerated by the command above. `data/` is git-ignored.
+1. **`make ingest`** downloads the two PDFs into `data/raw/` (and checks the `%PDF` header, page count, title and a pinned SHA-256), extracts every page with PyMuPDF, classifies pages, OCRs figures, cleans the text, finds the section structure and links, and validates the result (a set of hard checks; the run fails if one fails). Output: `data/processed/pages.jsonl` and `ingest_report.json`.
+2. **`make chunk`** splits pages into section-aware, table-aware chunks with exact pages and citation links, then validates them. Output: `data/processed/chunks.jsonl` and `chunk_report.json`.
+3. **`make index`** embeds the chunks into a Chroma collection, builds the BM25 index, validates both against the chunk IDs, and runs a small retrieval smoke test. Output: `data/chroma/` and `data/index/`.
 
-## Stages
+Everything under `data/` is regenerated and git-ignored.
 
-2 acquire (+ checks: `%PDF`, page count, title, SHA-256) → 3 profile → 4 extract (per-page Markdown + PyMuPDF
-page facts) → 5 classify page types → 6 figure OCR → 7 clean → 8 structure → 9 links → 10 assemble + validate.
-The specification is `docs/INGESTION_PLAN.md`; `docs/PROGRESS.md` logs what was built and every deviation.
+- **Offline PDFs:** `make ingest FROM_DIR=/path/to/pdfs` (files are found by the `100-1` / `600-1` part of the name) instead of downloading.
+- **Rebuild from scratch:** `make rebuild` (deletes cached stage outputs and both indexes; keeps the PDFs). `make clean` removes `data/processed`, `data/chroma` and `data/index`; `make clean-all` also removes the PDFs after asking.
+- Per-stage details of the pipeline are in [`docs/process/phase_notes.md`](docs/process/phase_notes.md); the measured size of each stage's output is in [`docs/RESULTS.md`](docs/RESULTS.md#corpus-chunks-and-indexes).
 
-## Design decisions
+## Make targets and their Python commands
 
-- **PDFs are the source of truth.** Page numbers, links and fonts come from PyMuPDF, never from the Markdown converter; Markdown is a regenerated per-page intermediate and is never edited by hand.
-- **Manifest, not filenames.** `ingest/sources.yaml` holds the documents (URL, SHA-256, page count, title) and the expected results. Expectations are read **only** by `validate.py`, so the checks stay independent of the code they test.
-- **Page numbers.** Both `pdf_page` (for `#page=` links) and `printed_page` (for human citations: page labels for AI RMF, first line = pdf page − 4 for GenAI).
-- **Sections from numbering,** not bookmarks or pymupdf4llm heading levels (both unreliable).
-- **Footnotes** are found by font size + digits (not the superscript flag, which also fires on a normal table cell); markers are removed from the text and the footnote text moves to a `footnotes` field.
-- **Cleaning is an ordered list of named, unit-tested rules**; each page's `cleaning_log` says which fired. The hyphenation protect-list (`ingest/hyphen_protect.txt`) was approved by a human after scanning every candidate join.
-- **References appendix** is parsed and kept but `index_eligible = false`; internal links are dropped; only `http`, `https`, `mailto` links survive.
-- **Figure text** is targeted OCR, stored separately with method/confidence, and Tesseract is optional.
+Every `make` target prints the Python command it runs. Without `make` (for example on Windows) run these in the activated virtual environment:
+
+| Target | Python command |
+|---|---|
+| `make install` | `python -m pip install -r requirements.txt` |
+| `make download` | `python -m ingest --only-stage 2` |
+| `make ingest` | `python -m ingest` (`--from-dir <dir>` for local PDFs) |
+| `make chunk` | `python -m chunking` |
+| `make index` | `python -m indexing` |
+| `make build` | the three commands above, in order |
+| `make rebuild` | `python -m ingest --rebuild`, then `python -m chunking --rebuild`, then `python -m indexing --rebuild` |
+| `make serve` | `python -m app.main` (same as `uvicorn app.main:app --host 127.0.0.1 --port 8000`) |
+| `make health` | `curl http://127.0.0.1:8000/health` |
+| `make ask Q="..."` | `curl -X POST http://127.0.0.1:8000/chat -H "Content-Type: application/json" -d '{"message": "...", "debug": true}'` |
+| `make test` | `python -m pytest -q` |
+| `make eval-routing` | `python -m eval.routing` (real Groq calls) |
+| `make eval-retrieval` | `python -m eval.retrieval_eval` (local models, no LLM) |
+| `make e2e` | `python -m eval.e2e --base-url http://127.0.0.1:8000` (needs a running server) |
+| `make e2e-report RUN=<dir>` | `python -m eval.e2e_report --from-run <dir>` |
+| `make results` | `python docs/build_results.py` |
+| `make clean` | delete `data/processed`, `data/chroma`, `data/index` |
+
+## Running the application
+
+```bash
+make serve        # loads the models once, then listens on 127.0.0.1:8000
+```
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /chat` | One JSON response per message |
+| `POST /chat/stream` | The same, as Server-Sent Events |
+| `GET /health` | Is the server up, which router model, is a key configured |
+| `GET /threads/{thread_id}` | The stored history of a conversation (final answer text only) |
+| `DELETE /threads/{thread_id}` | Forget a conversation |
+
+**Request** (`/chat` and `/chat/stream`): `{"message": "...", "thread_id": "...", "debug": false}`. Only `message` is required. Leave `thread_id` out to start a conversation; the response contains the id the server created, and you send it back with the next message. `debug: true` adds ids, scores, labels, timings, usage and the `key_map` (never chunk text, prompt text or reasoning).
+
+**Response** (`/chat`):
+
+| Field | Meaning |
+|---|---|
+| `thread_id` | The conversation id |
+| `route` | `greeting`, `nist_question` or `out_of_scope` |
+| `answer` | Plain text with `[C1]`-style citation markers |
+| `sources` | Only the cited chunks: `{keys, label, url, kind}` with the label like `NIST AI 100-1, §5.1 Govern, pp. 21–22` and a `#page=N` link into the PDF; `kind` is `prose`, `table`, `figure-ocr` or `footnote` |
+| `standalone_query` | The self-contained question the router made from your message and the history |
+| `related_sections` | When the documents do not contain the answer: the five closest sections (never mixed into `sources`) |
+| `meta` | `outcome` (`answered`, `insufficient`, `greeting`, `out_of_scope`), `insufficient_reason`, `llm_calls`, `latency_ms`, `usage` (tokens), model, prompt version, any fixes or warnings, and `debug` when requested |
+
+**Streaming events:** `meta` → `token`… → `correction` (only if validation changed the text) → `sources` → `related` (insufficient answers only) → `done`, or `error` (nothing follows it). Only answer tokens are streamed; routing output, reasoning and chunk text never are.
+
+**Errors** carry a code and a generic message, never a stack trace: `422` invalid or too long, `404 thread_not_found` (unknown or expired `thread_id`, for example after a restart), `409 thread_busy` (two requests at once on one conversation), `503 llm_unavailable` (rate limit or provider outage, with `Retry-After`), `500` for other failures.
+
+## Example questions
+
+The examples below come from the end-to-end case file [`eval/e2e_cases.yaml`](eval/e2e_cases.yaml), starting with the assignment's own. Start the server first (`make serve`).
+
+**1. The assignment's example question**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' \
+  -d '{"message": "What are the four core functions of the NIST AI RMF?"}'
+```
+
+A real answer from the end-to-end run (abridged):
+
+```json
+{
+  "route": "nist_question",
+  "answer": "The four core functions of the NIST AI RMF are **GOVERN, MAP, MEASURE,** and **MANAGE** [C1][C2].",
+  "sources": [
+    {"keys": ["C2"], "label": "NIST AI 100-1, Executive Summary, p. 3", "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=8", "kind": "prose"},
+    {"keys": ["C1"], "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21", "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=25", "kind": "prose"}
+  ]
+}
+```
+
+The label shows the printed page numbers; the link opens the PDF page. (Answers can contain Markdown bold such as `**GOVERN**`; see Known limitations.)
+
+**2. A follow-up conversation (the assignment's example, three turns on one `thread_id`)**
+
+```bash
+URL=http://127.0.0.1:8000/chat
+ask() { curl -s -X POST $URL -H 'Content-Type: application/json' -d "$1"; }
+
+R1=$(ask '{"message": "What are the four functions of the AI RMF?"}'); echo "$R1"
+TID=$(echo "$R1" | python3 -c 'import sys,json; print(json.load(sys.stdin)["thread_id"])')
+
+ask "{\"message\": \"Which one is cross-cutting?\", \"thread_id\": \"$TID\", \"debug\": true}"
+ask "{\"message\": \"What categories does it include?\", \"thread_id\": \"$TID\"}"
+```
+
+For the second message the router rewrites the question using the history (`standalone_query`, for example *"Which of the four AI RMF core functions is cross-cutting?"*); the answer cites the AI RMF Core and GOVERN sections.
+
+**3. A streaming call**
+
+```bash
+curl -sN -X POST http://127.0.0.1:8000/chat/stream -H 'Content-Type: application/json' \
+  -d '{"message": "What does the Generative AI Profile suggest for decommissioning GAI systems?"}'
+```
+
+**4. The documents do not contain the answer**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' \
+  -d '{"message": "What are the four functions of the AI RMF, and how much does an AI RMF certification cost?"}'
+```
+
+The question is only partly answerable, so the reply is the exact sentence `The NIST documents provided do not contain this information.`, `sources` is empty, `meta.insufficient_reason` says why (here `model_case_d`), and `related_sections` lists the five closest sections (for example *NIST AI 100-1, §5 AI RMF Core, pp. 20–21*).
+
+**5. Out of scope, and a greeting**
+
+```bash
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' -d '{"message": "What is the capital of France?"}'
+curl -s -X POST http://127.0.0.1:8000/chat -H 'Content-Type: application/json' -d '{"message": "Hello!"}'
+```
+
+The first returns `Sorry, we don't have this answer.` after one LLM call; the second returns the greeting text without any LLM call.
+
+More questions to try: *What characteristics make an AI system trustworthy according to the AI RMF?*, *What is suggested action GV-1.7-001?* (an exact-ID lookup), *What is confabulation in the Generative AI Profile?*. `./testing_curl.sh` runs a set of curl tests against a running server (`./testing_curl.sh` lists them).
+
+## How it works
+
+A message enters the main graph, which routes it; questions about the documents go through the RAG subgraph (retrieve, then answer). Full diagrams and reasoning: [`DESIGN.md`](DESIGN.md), [`docs/graph.md`](docs/graph.md), and the illustrated walk-through in [`docs/architecture.html`](docs/architecture.html).
+
+1. A message that is entirely a greeting is answered by a rule, with no LLM call.
+2. Otherwise one LLM call decides the route (`greeting`, `nist_question`, `out_of_scope`) and, for a question, rewrites it into a standalone query using the last two turns.
+3. `hybrid_search`: vector search and BM25 (10 each) are fused with weighted reciprocal-rank fusion.
+4. `rerank`: a cross-encoder scores every candidate; the best five are kept.
+5. `gate`: if even the best score is below the threshold, the reply is the insufficient-context sentence without calling the answering model.
+6. `expand_context` adds the missing parts of split tables; `generate` writes the answer from the standalone query and the sources only (no history), streaming it.
+7. Validation repairs markup problems deterministically; `attribute` builds the `sources` list in code from the `[C#]` markers.
+8. `finalize` stores the final answer text (markers stripped) in the conversation history.
+
+**Main graph**
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	reset_turn(reset_turn)
+	rule_greeting_check(rule_greeting_check)
+	classify_and_rewrite(classify_and_rewrite)
+	greeting_reply(greeting_reply)
+	out_of_scope_reply(out_of_scope_reply)
+	rag(rag)
+	finalize(finalize)
+	error_finalize(error_finalize)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> reset_turn;
+	classify_and_rewrite -.-> error_finalize;
+	classify_and_rewrite -.-> greeting_reply;
+	classify_and_rewrite -.-> out_of_scope_reply;
+	classify_and_rewrite -.-> rag;
+	greeting_reply --> finalize;
+	out_of_scope_reply --> finalize;
+	rag -.-> error_finalize;
+	rag -.-> finalize;
+	reset_turn --> rule_greeting_check;
+	rule_greeting_check -.-> classify_and_rewrite;
+	rule_greeting_check -.-> greeting_reply;
+	error_finalize --> __end__;
+	finalize --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+```
+
+**With the RAG subgraph expanded**
+
+```mermaid
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	reset_turn(reset_turn)
+	rule_greeting_check(rule_greeting_check)
+	classify_and_rewrite(classify_and_rewrite)
+	greeting_reply(greeting_reply)
+	out_of_scope_reply(out_of_scope_reply)
+	finalize(finalize)
+	error_finalize(error_finalize)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> reset_turn;
+	classify_and_rewrite -.-> error_finalize;
+	classify_and_rewrite -.-> greeting_reply;
+	classify_and_rewrite -.-> out_of_scope_reply;
+	classify_and_rewrite -.-> rag\3ahybrid_search;
+	greeting_reply --> finalize;
+	out_of_scope_reply --> finalize;
+	rag\3a__end__ -.-> error_finalize;
+	rag\3a__end__ -.-> finalize;
+	reset_turn --> rule_greeting_check;
+	rule_greeting_check -.-> classify_and_rewrite;
+	rule_greeting_check -.-> greeting_reply;
+	error_finalize --> __end__;
+	finalize --> __end__;
+	subgraph rag
+	rag\3ahybrid_search(hybrid_search)
+	rag\3arerank(rerank)
+	rag\3agate(gate)
+	rag\3aexpand_context(expand_context)
+	rag\3agate_failure_reply(gate_failure_reply)
+	rag\3afinalize_model_refusal(finalize_model_refusal)
+	rag\3aattribute(attribute)
+	rag\3agenerate(generate)
+	rag\3a__end__(<p>__end__</p>)
+	rag\3aexpand_context -.-> rag\3a__end__;
+	rag\3aexpand_context -.-> rag\3agenerate;
+	rag\3agate -.-> rag\3a__end__;
+	rag\3agate -.-> rag\3aexpand_context;
+	rag\3agate -.-> rag\3agate_failure_reply;
+	rag\3agenerate -.-> rag\3a__end__;
+	rag\3agenerate -.-> rag\3aattribute;
+	rag\3agenerate -.-> rag\3afinalize_model_refusal;
+	rag\3ahybrid_search -.-> rag\3a__end__;
+	rag\3ahybrid_search -.-> rag\3arerank;
+	rag\3arerank -.-> rag\3a__end__;
+	rag\3arerank -.-> rag\3agate;
+	rag\3aattribute --> rag\3a__end__;
+	rag\3afinalize_model_refusal --> rag\3a__end__;
+	rag\3agate_failure_reply --> rag\3a__end__;
+	end
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+```
+
+## Important design decisions
+
+Each row links to its section of [`DESIGN.md`](DESIGN.md).
+
+| Decision | Choice | Reason |
+|---|---|---|
+| [Splitting](DESIGN.md#21-how-the-documents-were-split-and-why) | Section-first, table-aware chunks with exact pages; the PDF is the source of truth for page numbers | A citation must open the right page; mixed-section chunks mislead |
+| [Embeddings and store](DESIGN.md#22-why-this-embedding-model-and-vector-store) | `bge-small-en-v1.5`, normalised, cosine, one local Chroma collection | Small, runs anywhere, 512-token window the chunker is sized for |
+| [Hybrid search](DESIGN.md#23-how-retrieval-works) | Vector + BM25, weighted reciprocal-rank fusion | Vectors miss exact identifiers such as `GV-1.7-001`; BM25 misses paraphrases |
+| [Reranker](DESIGN.md#23-how-retrieval-works) | Cross-encoder over all candidates, top 5 | Orders the candidates by reading query and chunk together |
+| [Workflow](DESIGN.md#24-how-the-langgraph-workflow-is-structured) | Main graph + RAG subgraph, no loops, one error exit | Explicit, testable paths; at most two LLM calls per question |
+| [Insufficient context](DESIGN.md#25-how-insufficient-or-irrelevant-context-is-handled) | Router, relevance gate, and a prompt rule; partly answerable questions should be refused | An honest "not in the documents" beats a confident partial answer |
+| [Conversation](DESIGN.md#26-how-conversational-context-is-maintained) | Server `thread_id`, in-memory checkpointer, standalone-query rewriting, no history in generation | Cheap, and old turns cannot leak into an answer |
+| [Citations](DESIGN.md#3-grounding-and-citations) | Plain text with `[C#]` markers; sources built in code | The LLM cannot invent a URL, page or source list |
+| [No retries for content](DESIGN.md#3-grounding-and-citations) | A deterministic fixer repairs markup; uncited sentences are kept with a warning | A retry costs another call on a tight token budget |
+| [Free tier](DESIGN.md#4-free-tier-constraints) | Small answering model, token-budget pre-check, no fallback model | Tokens per minute, not requests, is the binding limit |
+
+## Results
+
+<!-- RESULTS:START -->
+Numbers below are generated from the evaluation reports by `make results`; details in [`docs/RESULTS.md`](docs/RESULTS.md).
+
+- **Retrieval** (33 answerable questions): Hit@5 vector 0.879, BM25 0.879, hybrid 0.879, hybrid + reranker **1.000**; MRR 0.808 / 0.723 / 0.781 / 0.899; retrieval latency p50 755.1 ms, p95 934.5 ms.
+- **Routing:** 33/35 cases, route accuracy 97.1%.
+- **Insufficient context:** 10/10 unanswerable questions got the insufficient-context reply (10 through the relevance gate without calling the LLM).
+- **Citation links:** 208/208 chunks open a PDF page that contains the cited text (0 failed).
+- **Generation cost:** median 2,925 tokens per answered question (max 4,939 of the 8,000 tokens/minute free-tier limit); median time to first token 1155 ms.
+- **Conversation memory:** 86,927 bytes of checkpoint per NIST turn (in-memory, lost on restart).
+- **End to end** (16 requests through the running API, run `20261019-105606`): route 15/16, outcome 13/16, follow-ups resolved 3/3, links open the cited text 8/8, sentences supported 11/11, 19 failed checks (all listed in [`docs/E2E_RESULTS.md`](docs/E2E_RESULTS.md)), latency p50 4,556 ms.
+<!-- RESULTS:END -->
 
 ## Known limitations
 
-- Figure 2's curved text OCRs to nothing (it is recorded as `below_threshold`); figure text in answers depends on whether Tesseract is installed.
-- Footnote markers are no longer linked to their footnote text.
-- The References appendix is not retrievable; some bare reference URLs are garbled in the PDF itself (lost "fi" ligature) and cannot be repaired.
-- GenAI footnote 5 (p.7) stays inline: pymupdf4llm garbles its underlined text, so it cannot be matched (reported as a warning).
-- Ingestion counts 211 action IDs because its ID pattern skips `GV4.3--001` (PDF p.23 prints GV-4.3-001 with a typo). Chunking repairs it, so the real total of table-row action IDs is **212** (`chunk_action_ids` in `sources.yaml`).
-- Cleaning rules and expectations are tuned to these two documents; a new document needs its own manifest entry and possibly new rules.
+- **Conversation history is in memory.** It is lost when the server restarts (an old `thread_id` then gets a 404), and memory grows with conversation length.
+- **Partly answerable questions** should be refused entirely; the prompt asks for it, but following it is up to the model. In the end-to-end run the model also refused two questions the documents can answer.
+- **Citations are not guaranteed on every sentence.** An uncited sentence or an over-length answer is kept and logged as a warning rather than rejected; the measured rates are in the results above. Answers can also contain Markdown bold although the output contract says plain text.
+- **Routing can misclassify.** The routing evaluation includes a question about how AI risks differ from traditional software risks that is routed as out of scope.
+- **Related sections can be loosely related.** They are simply the five best-scoring chunks, even when nothing matches.
+- **Thresholds and weights are tuned on small sets** (the relevance threshold on a small number of unanswerable questions), so they are sensible defaults rather than optima.
+- **Reranker input limit.** Long chunks are truncated at 512 tokens when scored; `EnsembleRetriever` hides the fusion scores (a diagnostic mode reproduces them).
+- **Documents.** Figure 2's text cannot be extracted (curved text, no usable OCR), and figure text depends on Tesseract; footnote markers are not linked to the sentences that use them; the References appendix is not retrievable; the cleaning and table rules are tuned to these two PDFs.
+- **English answers only.**
+- **Free-tier throughput is low:** an answered question costs thousands of tokens against a per-minute token limit (the measured figures are in [`DESIGN.md`](DESIGN.md#4-free-tier-constraints)); the end-to-end harness paces its requests for this reason.
+- **The local support score** used in the end-to-end evaluation uses the same reranker as retrieval, so it is not an independent judge.
+- **Test suite note.** One live LangSmith test (`tests/test_tracing.py::test_live_trace_carries_the_tags`) only runs when `LANGSMITH_API_KEY` is set and then fails, because that test file blocks outbound network calls. Leave the variable unset to run the suite cleanly.
 
+## What I'd do with more time
 
----
+- An **LLM-as-judge** evaluation on a larger, independently labelled set, alongside the local checks.
+- A **revised answering prompt (v2)** aimed at the findings of the end-to-end run: refusals of answerable follow-ups, uncited sentences, Markdown in answers, and partial answers to two-part questions.
+- A better **routing prompt**, measured against the routing cases (the AI-risks-vs-software question is misrouted).
+- **Persistent conversation history** (a SQLite checkpointer) with history trimming.
+- A simple **chat UI** over the existing SSE endpoint.
+- **Re-tune the relevance threshold and fusion weights** on a larger set with independent labels.
+- **Better figure extraction** (a vision model) for figures such as Figure 2.
 
-# Chunking phase
+## Project structure
+
+```
+app/            FastAPI app, request/response schemas, SSE
+graph/          main graph, RAG subgraph, state, routing rules, debug output
+llm/            Groq client with retry and backoff
+ingest/         PDF -> pages (10 stages)          chunking/   pages -> chunks
+indexing/       chunks -> Chroma + BM25           retrieval/  hybrid search, rerank, gate, siblings
+augmentation/   prompt loading, sources block, output parser     generation/  model call, fixer, streaming
+insufficient/   insufficient-context replies      attribution/ sources list and link formatting
+prompts/        versioned prompt files            eval/        case files, evaluation scripts, saved reports
+tests/          unit, API and (skipped-by-default) live tests
+docs/           RESULTS.md (generated), graph.md, architecture.html, E2E_RESULTS.md, process/ (plans and decision log)
+data/           PDFs, pipeline outputs, indexes (git-ignored, regenerated by `make build`)
+```
+
+## Testing and evaluation
 
 ```bash
-python -m chunking --rebuild      # pages.jsonl -> chunks.jsonl + chunk_report.json; exit 0 only if all 9 hard checks pass
-python -m chunking --only-stage C2   # profile only (token-size measurements)
-python -m chunking --only-stage C9   # validate the existing chunks.jsonl
+make test             # unit and API tests with mocked LLMs: no network, no key needed
 ```
 
-208 chunks: `prose` (250–350 token pieces, ~10 % overlap inside a section only, tiny sections merged forward),
-`genai_action_table` (one per GenAI subcategory, split only *between* action rows, header and "AI Actor Tasks"
-line repeated), `rmf_core_table` (one per AI RMF Core category), `figure` (OCR text, labelled) and `footnote`.
-Every chunk has exact page numbers (from a character-offset page map, never from text search), a citation label
-and URL, and an `embed_text` (breadcrumb + content) that is verified ≤ 512 tokens with the bge-small tokenizer.
-Specification: `CHUNKING_PLAN.md`; deviations are listed in `docs/PROGRESS.md`.
+Live tests and evaluations skip themselves when `GROQ_API_KEY` or the built data is missing.
 
-# Embedding & indexing phase
+| Command | What it does | Needs |
+|---|---|---|
+| `make eval-retrieval` | Hit@5 / MRR of vector, BM25, hybrid and hybrid + reranker, and the relevance-gate table | built indexes, no key |
+| `make eval-routing` | Labelled routing cases with real Groq calls, paced for the free tier | key |
+| `make e2e` | Every case of `eval/e2e_cases.yaml` through the running HTTP API (two 3-turn conversations included), paced after each generation turn, plus a streamed subset; saves the raw responses under `eval/e2e_runs/<timestamp>/` | key, running server |
+| `make e2e-report RUN=eval/e2e_runs/<timestamp>` | Applies the deterministic checks and the local support score to a saved run and writes `report.json` and `docs/E2E_RESULTS.md` | built data |
+| `make results` | Regenerates `docs/RESULTS.md`, the results block above and the evidence paragraphs of `DESIGN.md` from the saved reports | none |
 
-```bash
-python -m indexing --rebuild     # delete and rebuild both indexes, then validate (8 hard checks + smoke checks)
-python -m indexing               # full rebuild without deleting the directories first
-python -m indexing --only bm25   # rebuild one index (also: chroma); the ID-equality check still runs
-python -m indexing --validate    # Stage E6 only, against the existing indexes
-```
+Token use per question and the cost of a full end-to-end run are in [`docs/RESULTS.md`](docs/RESULTS.md). The end-to-end evaluation only observes: it makes no LLM calls of its own and never gates; every failed check is listed in [`docs/E2E_RESULTS.md`](docs/E2E_RESULTS.md).
 
-Outputs (all git-ignored and rebuildable): `data/chroma/` (Chroma), `data/index/bm25_corpus.json`,
-`data/index/index_manifest.json`, `data/index/index_report.json`.
+## Troubleshooting
 
-- **First run needs the internet once** to download `BAAI/bge-small-en-v1.5` from Hugging Face (pinned to a commit);
-  later runs load it from the local cache and work offline.
-- **Install note:** `sentence-transformers` brings in PyTorch, a large download. This is a known cost of the chosen library.
-- Retrieval code must use `indexing.loaders.load_vector_store()`, `load_bm25()` and `load_chunk_lookup()` and the shared
-  `indexing.bm25_index.tokenize()`; never rebuild at query time. The loaders read the manifest first and raise a clear
-  error if the model, revision, normalization, distance or tokenizer version differ.
+- **`503 llm_unavailable` or slow answers.** The free tier limits tokens per minute. Wait for the `Retry-After` seconds; the server retries rate-limit errors itself before giving up (never after the first streamed token). Send questions a few seconds apart.
+- **First run is slow.** `make build` and the first start download the Hugging Face models once; after that they are cached.
+- **`GROQ_API_KEY is not set`.** Put the key in `.env` (see `.env.example`).
+- **`Indexes missing: run 'make build' first`.** The data directory is empty or incomplete; run `make build`.
+- **`make` is not available (Windows).** Use the Python commands in the table above.
+- **Tesseract not found.** Figure OCR is skipped (a warning is logged); everything else works. Install it as described under Installation and run `make rebuild`.
+- **`404 thread_not_found`.** History lives in memory: after a restart, or with an unknown id, omit `thread_id` to start a new conversation.
+- **`409 thread_busy`.** Wait for the previous request on that conversation to finish.
 
-Design decisions and reasons:
+## Development process
 
-| Decision | Why |
-|---|---|
-| `bge-small-en-v1.5`, 384-d, normalized vectors, **cosine** distance | model-card recommendation; Chroma's default is L2 and cannot be changed after creation, so the collection is created with `configuration={"hnsw": {"space": "cosine"}}` and the setting is read back and checked |
-| One Chroma collection, `doc_id` as a filter | simple; both documents are searched together or filtered by document |
-| Chroma document = `embed_text`, `display_text` in metadata | the stored document is exactly what was embedded |
-| Lists stored as JSON strings in metadata | exact round trip; Chroma metadata cannot hold `None` |
-| Full rebuild every run | corpus is small; guarantees no stale or duplicate IDs |
-| BM25 via `rank_bm25`, tokenized corpus saved as JSON (no pickle), rebuilt at load | safe, inspectable, identical scores after a round trip |
-| BM25 indexes `embed_text`; lowercase + snowball stemming; IDs like `GV-1.7-001`, `2.12`, `GOVERN 1.7` kept whole | exact-term search for IDs and rare terms; every split part keeps its section/subcategory words |
-| Device `auto` (MPS/CUDA if available, else CPU) | recorded in the manifest |
-| `langchain-huggingface` replaces `\n` with a space before embedding | library behaviour (does not change bge token counts); documented, not worked around |
-
-Known limitations: a dense query like "GV-1.7-001" does not find its chunk (embeddings are poor at identifiers); BM25
-does, which is why both indexes exist. Hybrid fusion, re-ranking and the optional bge *query* instruction prefix are
-retrieval-phase decisions (the manifest records `document_prefix: none`).
-
-
----
-
-# API & routing phase
-
-Takes a user message, decides what it is, and either replies with a fixed template or hands it to the RAG pipeline
-(since the graph-integration phase: the real RAG subgraph; see the last section). Conversation history lives in memory,
-so follow-up questions work. Specification: `docs/API_ROUTING_PLAN.md`.
-
-## Start the server
-
-```bash
-# 1. put your key in .env (never committed):  GROQ_API_KEY=...      (see .env.example for the other settings)
-# 2. start (127.0.0.1:8000 by default; override with APP_HOST / APP_PORT in .env)
-python -m app.main                                   # or: uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-The server refuses to start without `GROQ_API_KEY` and says so. The graph is built once at startup.
-
-## Calls (curl / Postman)
-
-```bash
-# first message: no thread_id; the server creates one and returns it
-curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
-     -d '{"message": "What are the four core functions of the AI RMF?"}'
-# -> {"thread_id": "98d3...", "route": "nist_question", "answer": "...", "sources": [], "standalone_query": "...",
-#     "meta": {"llm_calls": 1, "route_source": "llm", "latency_ms": 900}}
-
-# follow-up: send the thread_id back
-curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
-     -d '{"message": "Which one is cross-cutting?", "thread_id": "98d3..."}'
-
-# streaming (Server-Sent Events): events meta -> token -> sources -> done   (error ends the stream)
-curl -N -X POST localhost:8000/chat/stream -H 'Content-Type: application/json' -d '{"message": "hello!"}'
-
-curl localhost:8000/health                          # {"status", "model", "key_configured"}
-curl localhost:8000/threads/<thread_id>             # stored conversation (with the route of each reply)
-curl -X DELETE localhost:8000/threads/<thread_id>   # forget a conversation (204)
-```
-
-Errors: `422` validation (FastAPI format; message must be non-empty and at most 2000 characters), `404 thread_not_found`
-(unknown or expired `thread_id`, e.g. after a restart: omit it to start fresh), `409 thread_busy` (two simultaneous
-requests on one conversation), `503 llm_unavailable` with a `Retry-After` header, `500` generic (details only in the log).
-Error bodies look like `{"error": {"code": "...", "message": "..."}}`. For `/chat/stream`, 422/404/409 are plain HTTP
-errors sent before the stream starts; an LLM outage is an `error` event.
-
-## Design notes
-
-- **Three routes:** `greeting`, `nist_question` (includes follow-ups), `out_of_scope`. Out of scope is never answered: the
-  reply is the fixed text "Sorry, we don't have this answer." Questions about the assistant itself are out of scope.
-- **Routing, and why:** (1) a rule catches messages that are *entirely* a greeting/thanks/goodbye (list in
-  `graph/greeting_phrases.yaml`) with **zero LLM calls**; mixed messages like "Hi again! Which one is cross-cutting?" are
-  never caught by it. (2) Everything else gets **one** structured-output Groq call that returns the route and a standalone
-  rewrite of the question, using the last **2 turns** of history (any kind of turn counts). One call per message keeps
-  latency low and respects the free tier's limits. Template replies make no LLM call.
-- **If the router's output is invalid twice** the route falls back to `out_of_scope` (never reaches retrieval/generation);
-  **if Groq is unavailable** after 4 attempts (exponential backoff, `retry-after` honoured) the request fails with 503. A
-  route is never guessed on an outage, and the unanswered message is removed from the history.
-- **History is in memory** (LangGraph `InMemorySaver`): lost on restart. Every reply, templates included, is stored.
-- **Streaming:** only text meant for the user is streamed. The router's JSON is internal and never appears in the stream
-  (tested). Template replies and gate-failure replies arrive as ONE `token` event; real model tokens stream only from LLM
-  calls tagged `answer_generation` (`STREAM_TAG` in `app/api.py`), through the RAG subgraph.
-- **Free-tier reality:** the router prompt costs ~1,200 tokens, and the key's limit is 8,000 tokens/minute and 1,000
-  requests/day, i.e. roughly **6 routed messages per minute**. Pure greetings cost nothing. The evaluation paces itself.
-- Logging: one structured line per request (thread, route, source, llm calls, latency). Message text is only logged at DEBUG.
-
-## Tests and the routing evaluation
-
-```bash
-pytest -q                      # unit + API tests use a mocked LLM; the live tests skip without GROQ_API_KEY
-python -m eval.routing         # 35 labelled cases with REAL Groq calls (~1.5 min); writes eval/routing_report.json
-```
-
-Misses in the evaluation never fail anything; they are for you to review and decide whether to adjust the prompt
-(`graph/prompts.py`).
-
-## Retrieval (hybrid search + reranking)
-
-```python
-from retrieval.pipeline import retrieve, warmup
-warmup()                                   # load models and indexes once, at startup
-res = retrieve("Which of the four AI RMF functions is cross-cutting?")
-res.relevant, res.best_score               # relevance gate (threshold 0.15, sigmoid scale)
-[(c.chunk_id, c.rerank_score, c.added_as_sibling) for c in res.chunks]   # best first
-```
-
-`python -m eval.retrieval_eval` reruns the retrieval evaluation (no LLM calls) and rewrites `eval/retrieval_report.json`; the summary is in `docs/RETRIEVAL_RESULTS.md`. `retrieval.diagnostics.diagnose(get_components(), query)` shows per-retriever ranks next to the fused order.
-
-Design notes:
-- **Why hybrid:** vector search finds meaning (paraphrases), BM25 finds exact terms (`GV-1.7-001`, `GOVERN 1.7`). On the evaluation set each alone finds 29/33 answerable cases and they miss different ones.
-- **Why RRF:** it fuses ranks, so no score calibration between cosine similarity and BM25 is needed (weights 0.6 vector / 0.4 BM25, 10 candidates each).
-- **Why a cross-encoder:** it reads the query and the chunk together. Reranking all fused candidates takes Hit@5 from 0.879 to 1.000 (MRR 0.899); the exact-ID chunk for `GV-1.7-001` sits at fused position 11 before reranking.
-- **Best-first order, sibling expansion:** the strongest evidence comes first; when one part of a split table is selected its other part is added (group kept together at its best part's position) so the LLM never sees half a table.
-- **Threshold:** `relevant = best rerank score >= 0.15`, chosen by the user from the table in `docs/RETRIEVAL_RESULTS.md` (plateau 0.073-0.240; tuned on 10 unanswerable cases only).
-- **Limitations:** the reranker cuts inputs at 512 tokens (27 of 745 evaluation pairs); `EnsembleRetriever` hides fusion scores (diagnostic mode exists); `BM25Retriever` pads with zero-score chunks when few chunks match.
-
-## Generation (Groq `openai/gpt-oss-20b`)
-
-```python
-from generation.generate import generate, generate_stream      # async; both take (standalone_query, RetrievalResult)
-from generation.node import make_generate_node                  # LangGraph node, see its docstring for the state fields
-```
-
-- **Model:** a smaller, faster reasoning model; the free tier's 8,000 tokens per minute is the binding limit (a typical request is ~3,000 tokens, the largest measured 4,939). Numbers in `docs/GENERATION_RESULTS.md`.
-- **Reasoning:** medium effort, hidden at the API (`reasoning_format="hidden"`) and filtered again in the stream. Reasoning tokens still count, and the output limit (`MAX_COMPLETION_TOKENS = 3500`, raised from 2500 during graph integration because reasoning varied from ~1.6k to 2.5k+ tokens on broad questions; the budget pre-check's safety margin went from 1.2 to 1.0 for the same reason: at 1.2 it rejected 14% of real prompts) includes them; if it is hit the request fails (`finish_reason = length` becomes an error) instead of showing a cut-off answer.
-- **Streaming with a correction:** answer tokens stream live; when the full text is validated (`parse_answer`) and `apply_fixes` changes it, a `correction` event `{text, reasons}` follows the last `token`. The client replaces everything it showed with `text`. A failure after the first token sends `error` and the client discards the partial text.
-- **Violation policy** (code only removes or normalizes markup, or replaces the whole answer with the Case D sentence): malformed citations are normalized, invented ones removed, a sources list, URLs, headings and code fences removed, and an answer left with no citations becomes Case D. **Uncited sentences and over-length answers are kept with a logged warning** (measured: see results doc).
-- **No retries after the first token and no fallback model:** retries (router settings) only cover failures before the first content token; the free-tier token budget makes a second model call costly and one model keeps behaviour consistent. The user sees an error and the turn is rolled back.
-
----
-
-# Insufficient-context path
-
-When a question routed as `nist_question` cannot be answered from the documents, the user gets the exact sentence
-`The NIST documents provided do not contain this information.`, a list of the **closest sections searched**
-(`related_sections`, never answer content), and the **reason** in `meta.insufficient_reason`. Specification:
-`docs/INSUFFICIENT_CONTEXT_PLAN.md`; code in `insufficient/` and `attribution/format.py`.
-
-**Two failure sources, and no retries.** (1) *Gate failure*: retrieval's best rerank score is below the threshold, so we
-reply straight away, with **no generation call** (1 LLM call in total: routing). (2) *Model refusal*: generation ended
-`INSUFFICIENT` (the model wrote the sentence, or the fixer forced it), which is final (2 LLM calls). There is no query
-rewriting, second retrieval or second generation: the free tier allows about 6 routed messages per minute, and a truly
-unanswerable question wastes any retry.
-
-**Reason codes** (`meta.insufficient_reason`): `gate_low_score`, `no_candidates` (retrieval returned nothing);
-`model_case_d` (the model refused by itself); `fix_partial_answer` (the model mixed the sentence with an answer, so the
-whole reply was refused), `fix_no_citations` (nothing cited after removing invented citations), `fix_empty_output`;
-`fix_truncated` (only if the generation layer's `LENGTH_POLICY` is `"insufficient"`; it is `"error"` today, so this code
-cannot occur yet). If several apply, the first in that order wins.
-
-**Why show closest sections, and why separately from `sources`.** A bare refusal is a dead end; the list tells the user
-where the search looked so they can verify. They are kept in their own field (`related_sections`, SSE event `related`)
-because `sources` means "evidence for the answer", and these do not support one. Entries carry doc, section, pages, label,
-URL and kind only: no text, no summary, no score. They are not stored in the conversation history.
-
-**Honest consequence of "top 5, always".** There is no score floor, so an unanswerable question still lists 5 sections,
-and some are only loosely related. In the real check (`python -m eval.insufficient`, 10 unanswerable cases) every case
-was stopped at the gate, but for questions such as "How many parameters does GPT-4 have?" the list is just generic AI-risk
-sections. The `note` sent with the list says so: "These were the closest sections found. They do not answer the question,
-but you may want to check them."
-
-**API / SSE contract.** `/chat` NIST responses always include `related_sections` (empty when answered), `meta.outcome`
-(`answered` | `insufficient`) and `meta.insufficient_reason`; greeting and out-of-scope responses are unchanged. When
-insufficient, `sources` is `[]`. `/chat/stream` order: `meta, token(s), [correction], sources ([]), related, done`; `done`
-carries `outcome` and `insufficient_reason`. A `correction` event (the exact sentence) follows streamed tokens when the
-validated final text differs from what was streamed (e.g. the fixer forced Case D).
-
-**For whoever wires the graph** (item 5): when `retrieval_result.relevant` is false call
-`insufficient.reply.gate_failure_reply(retrieval_result)` instead of generating; when the generation outcome is
-`INSUFFICIENT` call `finalize_model_refusal(state["generation"], state["retrieval_result"])`. Put `reply.answer` in
-`answer`, `reply.sources` (`[]`) in `sources`, `reply.outcome` in `outcome` and `reply.to_dict()` in `insufficient`
-(add `outcome` and `insufficient` to `GraphState` and reset them every message); answered replies set `outcome="answered"`.
-`app/api.py` already reads exactly those keys. Call `log_insufficient(reply, thread_id, llm_calls)` once per outcome.
-
-# Source attribution
-
-An answered NIST question carries `[C1]`, `[C2]`... markers in the text and a `sources` list; each entry shows which markers point to it:
-
-```json
-{"keys": ["C1", "C3"], "label": "NIST AI 100-1, §5.1 Govern, pp. 22–23", "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=27", "kind": "prose"}
-```
-
-- **Keys are kept as written** (no renumbering). Renumbering would change the text the user already watched stream, so almost every answer would need a correction event. Entries with the same label are merged (`[C1][C3]`), sorted document then page. Only cited chunks are listed.
-- **The label shows the printed page, the link uses the PDF page index**: AI RMF printed `p. 21` is PDF page 26, so its link ends in `#page=26`. Both are correct.
-- `kind` is `prose`, `table`, `figure-ocr` or `footnote`; figure and footnote labels say `Fig. 3` / `footnote 1`, never "OCR".
-- `/chat` returns `sources`; `/chat/stream` sends the same list as `event: sources` after the last token/correction. It is `[]` for insufficient, greeting and out-of-scope replies (related sections are a separate field).
-- Conversation history stores the answer **without** the `[C#]` markers (keys are local to one answer); the response keeps them.
-- **Link check** (`python -m eval.link_check`, local PDFs only): all 208 chunks link to the right page, 0 failures. 171 match the chunk's first and last 60 characters exactly; 37 do not match exactly because of table cell order in the PDF text layer or a synthetic `Footnote N:` line, and each of those still has the linked page as its best match (details in `eval/link_check_report.json`).
-
-
-## Graph integration (the full workflow)
-
-Everything built so far runs as one LangGraph workflow behind `/chat` and `/chat/stream`. Diagrams (exported from the real
-graphs, kept in sync by a test) and a walk through every path: **`docs/graph.md`**. Specification:
-`docs/GRAPH_INTEGRATION_PLAN.md`.
-
-- **Two graphs.** The *main graph* handles the conversation (reset, greeting rule, router, template replies, history,
-  one error exit). The *RAG subgraph* answers: `hybrid_search -> rerank -> gate -> expand_context -> generate -> attribute`,
-  with `gate_failure_reply` (no LLM) and `finalize_model_refusal` as the insufficient-context exits. Each can be tested alone
-  (`build_rag_subgraph(components).ainvoke({"standalone_query": "..."})`). Retrieval is split into nodes so the graph shows
-  the retrieval strategy. There are **no loops and no retries**: the graph is a decision tree.
-- **State** holds the full retrieval and generation results (reasoning text never exists in it), as plain dicts so the
-  checkpointer serializes them safely. Every per-message field is reset at the start of each message. `finalize` stores one
-  assistant message per turn (text with `[C#]` markers stripped); sources, related sections and retrieval data are never in
-  `messages`. A failed turn is rolled back, so the next follow-up never sees an unanswered question.
-- **Errors:** every node catches its own failure into `error = {code, message, node}` (logged with the stack trace) and
-  the graph exits through `error_finalize`. The API answers with a generic body: `llm_unavailable` 503 + `Retry-After`
-  (Groq retries exhausted, or no first token in 20 s / no answer in 60 s), `retrieval_failed` / `rerank_failed` /
-  `generation_failed` / `internal_error` 500. In the stream the same code arrives as an `error` event and nothing follows it.
-- **Streaming:** `meta -> token* -> [correction] -> sources -> [related] -> done` (or `error`). Only tokens of the call tagged
-  `answer_generation` are forwarded; the router's JSON, reasoning text, chunk texts and rerank internals never appear
-  (marker-string tests, plus a mutation check that the tests fail without the filter).
-- **`meta` on every response:** `outcome` (`answered` / `insufficient` / `greeting` / `out_of_scope`), `insufficient_reason`,
-  `llm_calls`, `latency_ms`, `usage` (tokens: router, generation, total); `model`, `prompt_version`, `fixes`, `warnings`
-  when generation ran. **`"debug": true`** in the request adds `meta.debug` (also on the stream's `done` event): node path and
-  timings, route, standalone query, retrieval candidates (id, label, rerank score; max 20), gate result, generation
-  settings and usage, config versions. It never contains chunk, prompt or reasoning text.
-- **Memory:** history is kept in memory and lost on restart. The API persists **one checkpoint per request**
-  (`durability="exit"`); per-step checkpoints would keep ~15 per NIST turn. Measured over a 20-message conversation with real
-  retrieval: **1.27 MB** (87 KB per NIST turn) versus 8.75 MB per-step. Growth is still linear per conversation; the
-  library's in-memory saver cannot prune old checkpoints (`aprune` raises `NotImplementedError` in this version).
-- **LangSmith (optional, off by default).** Set `LANGSMITH_TRACING=true`, `LANGSMITH_API_KEY` and `LANGSMITH_PROJECT=nist-rag`
-  in `.env`. **Enabling it sends every prompt, every retrieved NIST passage and every answer to LangSmith's servers.** Runs
-  are tagged `nist-rag` and `prompt:<version>` with `thread_id`, prompt version, retrieval config hash and index version as
-  metadata. With no variables set, no LangSmith client is created and no network call is made (tested).
-- **Components** (vector store, BM25, reranker, embedding model, Groq clients) load once at startup (~7.5 s here) and reach
-  the nodes as closures, never through state. CPU-heavy steps run in worker threads so the event loop stays free; the
-  reranker call is serialized by a lock (one device), searches overlap across requests.
-
-Live check through the real app (real Groq, real indexes), one message per path, from `eval/integration_report.json`:
-
-| Path | Outcome | LLM calls | Latency | Tokens |
-|---|---|---|---|---|
-| Greeting by rule | `greeting` | 0 | 8 ms | 0 |
-| Out of scope | `out_of_scope` | 1 | 762 ms | 1,165 |
-| NIST question, answered | `answered` | 2 | 3.4 s | 4,012 |
-| NIST question, model refusal | `insufficient` (`model_case_d`) | 2 | 3.9 s | 4,089 |
-| Gate failure (real subgraph, no LLM) | `insufficient` (`gate_low_score`, best score 0.0008 < 0.15) | 1 (router only) | n/a | n/a |
-
-Streaming an answered question: first token after 2.9 s. In real use the gate rarely fires through the router: questions
-unrelated to NIST are routed `out_of_scope` first, and in-scope-sounding questions about content that is not indexed
-(e.g. "What does Appendix F of the AI RMF 1.0 describe?") score 0.7+ with the reranker and are refused by the model instead.
+The project was built in twelve phases (ingestion, chunking, indexing, API and routing, retrieval, augmentation, generation, insufficient-context handling, source attribution, graph integration, end-to-end evaluation, deliverables), with an AI coding assistant (Claude Code) doing much of the implementation under a written plan per phase, one stage at a time, with me answering the open design questions and approving each stage. The plans, the running progress log with every decision and deviation, and a historical per-phase README are kept in [`docs/process/`](docs/process/) so the reasoning behind the code can be inspected; I reviewed and can explain each decision recorded there.

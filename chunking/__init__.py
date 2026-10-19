@@ -1,1 +1,1 @@
-"""Chunking phase: pages.jsonl -> chunks.jsonl (see CHUNKING_PLAN.md)."""
+"""Chunking phase: pages.jsonl -> chunks.jsonl (see docs/process/plans/CHUNKING_PLAN.md)."""

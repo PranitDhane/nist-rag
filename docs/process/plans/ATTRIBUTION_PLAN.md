@@ -31,7 +31,7 @@ For an answered NIST question, build `sources`: one entry per cited source, each
 | SA-D6 | Figures (OCR) and footnotes | Marked by a **separate `kind` field only**; the label text has no "(OCR)" or "Footnote" suffix |
 | SA-D7 | Label format | `NIST AI 100-1, §5.1 Govern, pp. 22–23` |
 
-**This also settles open questions in other plans:** insufficient-context plan Q6 (label format) is answered by SA-D7 and SA-D6. Record it in `docs/PROGRESS.md`.
+**This also settles open questions in other plans:** insufficient-context plan Q6 (label format) is answered by SA-D7 and SA-D6. Record it in `docs/process/PROGRESS.md`.
 
 ## 3. Label and URL specification (the shared formatter)
 

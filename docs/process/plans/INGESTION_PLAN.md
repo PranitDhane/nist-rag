@@ -190,7 +190,7 @@ Each stage writes its output to `data/processed/stages/NN_<stage>.jsonl` (or `.j
 
 **Purpose:** define the documents and settings in one place, so no other code depends on filenames or paths.
 
-**Input:** none. **Output:** `ingest/sources.yaml`, `ingest/config.py`, `.env.example`, `requirements.txt`, `.gitignore`, package skeleton, `docs/PROGRESS.md`.
+**Input:** none. **Output:** `ingest/sources.yaml`, `ingest/config.py`, `.env.example`, `requirements.txt`, `.gitignore`, package skeleton, `docs/process/PROGRESS.md`.
 
 **Steps**
 1. `sources.yaml` has a `documents:` list. Each entry has: `doc_id`, `display_name`, `url`, `filename`, `sha256` (empty for now), `expected_pages`, `expected_title`, `page_number_strategy` (`page_label` for AI RMF; `first_line_offset` with `offset: 4` for GenAI).

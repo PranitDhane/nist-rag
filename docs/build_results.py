@@ -33,6 +33,8 @@ REPORTS = {
     "integration": ("eval/integration_report.json", "python -m eval.integration_check"),
 }
 E2E_GLOB = "eval/e2e_runs/*/report.json"
+# Written by `make build` (git-ignored). They carry build timings and timestamps, so they are read but never hashed or dated here.
+BUILD_FILES = {"ingest": "data/processed/ingest_report.json", "chunks": "data/processed/chunk_report.json", "index": "data/index/index_manifest.json"}
 
 
 # ------------------------------------------------------------------ small helpers
@@ -88,6 +90,36 @@ def source(rel: str, sha: str, extra: str = "") -> str:
 
 
 # ------------------------------------------------------------------ one section per report
+def sec_corpus(ing: dict, ch: dict, ix: dict) -> list[str]:
+    """What `make build` produced. Build seconds and timestamps are deliberately not shown (they differ on every run)."""
+    docs = ing["documents"]
+    passed = sum(c["passed"] for c in ing["checks"])
+    cc = ch["checks"]
+    L = ["## Corpus, chunks and indexes", "",
+         "_Source: `data/processed/ingest_report.json`, `data/processed/chunk_report.json`, `data/index/index_manifest.json` (written by `make build`, not committed)_", "",
+         f"Ingestion: {n(sum(d['pages'] for d in docs.values()))} pages in {len(docs)} documents; {passed}/{len(ing['checks'])} hard validation checks passed, "
+         f"{len(ing['warnings'])} soft warnings (listed in the report).", ""]
+    L += table(["Document", "Pages", "Index-eligible pages", "Sections found", "Figures", "Footnotes"],
+               [[k, d["pages"], d["index_eligible_pages"], d["headings"], d["figures"], d["footnotes"]] for k, d in docs.items()])
+    L += [f"Chunking: {n(ch['total_chunks'])} chunks; {sum(c['passed'] for c in cc)}/{len(cc)} chunk validation checks passed "
+          f"(every chunk's embedded text is at most 512 tokens; no prose chunk spans two sections; no table row is split).", ""]
+    counts: dict[str, int] = {}
+    for per_doc in ch["counts"].values():
+        for kind, c in per_doc.items():
+            counts[kind] = counts.get(kind, 0) + c
+    hist = ch["token_histograms_embed"]
+    L += table(["Chunk type", "Chunks", "Embedded tokens: min", "median", "max"],
+               [[k, counts[k], n(hist[k]["min"]), n(hist[k]["median"]), n(hist[k]["max"])] for k in sorted(counts)])
+    sp, mg = ch["splits"], ch["merges"]
+    L += [f"Splits: {sum(sp['table_pieces'].values())} GenAI action tables were split between rows (the header repeats in each piece); "
+          f"{sum(sp['prose_pieces'].values())} prose pieces came from long sections. Tiny sections merged forward: {sum(len(v) for v in mg.values())}.", ""]
+    b = ix["bm25"]
+    L += [f"Indexes: `{ix['embedding_model']}` (revision `{ix['model_revision'][:8]}`, {ix['dimension']} dimensions, normalised, document prefix: {ix['document_prefix']}) "
+          f"in one {ix['distance']}-distance {ix['vector_store']} collection (`{ix['collection_name']}`, {ix['chunk_count']} chunks); BM25 via `{b['library']}` "
+          f"{b['version']} (k1={b['k1']}, b={b['b']}, {b['stemming']} stemming, action IDs kept whole, vocabulary {n(b['vocab_size'])}, tokenizer `{b['tokenizer_version']}`).", ""]
+    return L
+
+
 def sec_retrieval(r: dict, rel: str, sha: str) -> list[str]:
     c, s = r["config"], r["summary"]
     L = ["## Retrieval", "", source(rel, sha, f"; config `{r['config_version']}`"), "",
@@ -276,6 +308,11 @@ def build(root: Path = ROOT) -> tuple[str, str]:
         rel, cmd = REPORTS[key]
         out.extend(fn(rep, rel, sha) if rep is not None else not_run(title, rel, cmd))
 
+    build_files = {k: load(root, rel)[0] for k, rel in BUILD_FILES.items()}
+    if all(build_files.values()):
+        out.extend(sec_corpus(build_files["ingest"], build_files["chunks"], build_files["index"]))
+    else:
+        out += ["## Corpus, chunks and indexes", "", "_Not built: run `make build` to produce the ingestion, chunking and index reports, then `make results`._", ""]
     put("retrieval", "Retrieval", sec_retrieval)
     put("routing", "Routing", sec_routing)
     gen, gsha = loaded["generation"]
@@ -336,13 +373,152 @@ def readme_block(loaded: dict, e2e: dict | None) -> str:
     return "\n".join(L) + "\n"
 
 
-def update_readme(text: str, block: str) -> str | None:
-    """Replace everything between the two markers; None when the README does not have exactly one well-ordered pair."""
-    if text.count(START) != 1 or text.count(END) != 1 or text.index(START) > text.index(END):
+def replace_block(text: str, start: str, end: str, block: str) -> str | None:
+    """Replace everything between one well-ordered pair of markers; None when the pair is missing, duplicated or reversed."""
+    if text.count(start) != 1 or text.count(end) != 1 or text.index(start) > text.index(end):
         return None
-    head, rest = text.split(START, 1)
-    _, tail = rest.split(END, 1)
-    return f"{head}{START}\n{block}{END}{tail}"
+    head, rest = text.split(start, 1)
+    _, tail = rest.split(end, 1)
+    return f"{head}{start}\n{block}{end}{tail}"
+
+
+def update_readme(text: str, block: str) -> str | None:
+    return replace_block(text, START, END, block)
+
+
+# ------------------------------------------------------------------ evidence lines for DESIGN.md
+EVIDENCE_NAMES = ("chunking", "indexing", "retrieval", "gate", "routing", "conversation", "insufficient", "grounding", "freetier", "e2e")
+
+
+def evidence_markers(name: str) -> tuple[str, str]:
+    return f"<!-- EVIDENCE:{name}:START -->", f"<!-- EVIDENCE:{name}:END -->"
+
+
+def build_evidence(root: Path = ROOT) -> dict[str, str]:
+    """One short, generated 'Evidence' paragraph per DESIGN.md section. Every figure is read from a report; a missing report
+    gives a 'not available' sentence, never a made-up number. DESIGN.md holds the reasoning; these blocks hold the numbers."""
+    rp = {k: load(root, rel)[0] for k, (rel, _) in REPORTS.items()}
+    bf = {k: load(root, rel)[0] for k, rel in BUILD_FILES.items()}
+    e2e = latest_e2e(root)[0]
+    na = "_Evidence not available: the report was not found (see `docs/RESULTS.md`)._"
+    ev: dict[str, str] = {}
+
+    if all(bf.values()):
+        ch, ix = bf["chunks"], bf["index"]
+        counts: dict[str, int] = {}
+        for per_doc in ch["counts"].values():
+            for kind, c in per_doc.items():
+                counts[kind] = counts.get(kind, 0) + c
+        hist = ch["token_histograms_embed"]
+        longest = max(h["max"] for h in hist.values())
+        ev["chunking"] = (f"**Evidence** ([results](docs/RESULTS.md#corpus-chunks-and-indexes)): {n(ch['total_chunks'])} chunks ("
+                          + ", ".join(f"{counts[k]} {k.replace('_', ' ')}" for k in sorted(counts, key=lambda k: -counts[k]))
+                          + f"). Prose chunks have a median of {n(hist['prose']['median'])} embedded tokens (maximum {n(hist['prose']['max'])}); the longest chunk of any type is "
+                          f"{n(longest)} tokens, under the 512-token limit. {sum(ch['splits']['table_pieces'].values())} GenAI action tables were split between rows, "
+                          f"{sum(len(v) for v in ch['merges'].values())} tiny sections were merged forward, and {sum(c['passed'] for c in ch['checks'])}/{len(ch['checks'])} "
+                          f"chunk validation checks pass.")
+        b = ix["bm25"]
+        ev["indexing"] = (f"**Evidence** ([results](docs/RESULTS.md#corpus-chunks-and-indexes)): `{ix['embedding_model']}` produces {ix['dimension']}-dimensional normalised vectors stored in one "
+                          f"{ix['distance']} collection of {ix['chunk_count']} chunks; the BM25 index has a vocabulary of {n(b['vocab_size'])} terms "
+                          f"(tokenizer `{b['tokenizer_version']}`).")
+    else:
+        ev["chunking"] = ev["indexing"] = "_Evidence not available: run `make build` and `make results`._"
+
+    r = rp["retrieval"]
+    if r:
+        s, lat = r["summary"], r["latency_ms"]
+        ev["retrieval"] = (f"**Evidence** ([results](docs/RESULTS.md#retrieval)), {r['answerable']} answerable questions: Hit@5 is {n(s['vector_only']['hit_at_5'], 3)} for vector search alone, "
+                           f"{n(s['bm25_only']['hit_at_5'], 3)} for BM25 alone and {n(s['ensemble']['hit_at_5'], 3)} for the hybrid, and **{n(s['ensemble_rerank']['hit_at_5'], 3)}** with the reranker; "
+                           f"MRR rises from {n(s['ensemble']['mrr'], 3)} to {n(s['ensemble_rerank']['mrr'], 3)}. The correct chunk was within the first 20 fused candidates "
+                           f"in {s['recall_at_20_fused']['found']}/{s['recall_at_20_fused']['of']} cases (Recall@20), which is what the reranker gets to see. Retrieval takes p50 {n(lat['p50'], 1, ' ms')} "
+                           f"and p95 {n(lat['p95'], 1, ' ms')}; {r['truncated_pairs']['truncated']} of {r['truncated_pairs']['pairs']} reranked pairs exceed the reranker's input limit.")
+        t = r["thresholds"]
+        row = min(t["rows"], key=lambda x: abs(x["threshold"] - r["config"]["threshold"]))
+        ev["gate"] = (f"**Evidence** ([results](docs/RESULTS.md#retrieval)): on {r['unanswerable']} unanswerable questions the best reranker score was at most {n(t['unanswerable_scores']['best'], 4)}; "
+                      f"on answerable ones it ranged from {n(t['answerable_scores']['worst'], 4)} to {n(t['answerable_scores']['best'], 4)}. At a threshold near {r['config']['threshold']} "
+                      f"(table row {n(row['threshold'], 4)}) {pct(row['unanswerable_rejected_pct'])} of unanswerable questions are rejected and {pct(row['answerable_kept_pct'])} of answerable ones are kept, "
+                      f"so the threshold was tuned on only {r['unanswerable']} negative cases.")
+    else:
+        ev["retrieval"] = ev["gate"] = na
+
+    rt = rp["routing"]
+    if rt:
+        fu = rt["by_category"]["follow_up"]
+        ev["routing"] = (f"**Evidence** ([results](docs/RESULTS.md#routing)): the router passed {rt['passed']}/{rt['cases']} cases ({n(rt['route_accuracy'] * 100, 1, '%')} route accuracy); "
+                         f"{rt['rule_decided']} of {rt['cases']} were answered by the greeting rule without an LLM call. Follow-ups passed {fu['passed']}/{fu['cases']}. "
+                         f"Failures: " + "; ".join(f"`{f['id']}` ({f['expected_route']} → {f['route']})" if f["route"] != f["expected_route"] else f"`{f['id']}` (right route, standalone-query terms missing)"
+                                                  for f in rt["failures"]) + ".")
+    else:
+        ev["routing"] = na
+
+    ig = rp["integration"]
+    if e2e and ig:
+        a, m, per = e2e["aggregates"], ig["memory"], ig["memory"]["per_step_default"]
+        ev["conversation"] = (f"**Evidence** ([results](docs/RESULTS.md#end-to-end-evaluation)): in the end-to-end run {a['follow_up_resolution']['passed']}/{a['follow_up_resolution']['applicable']} follow-up questions "
+                              f"were rewritten into a standalone query containing the expected terms. Checkpointing once per request (`durability=\"exit\"`) costs "
+                              f"{n(m['production']['avg_bytes_per_nist_turn'])} bytes per NIST turn, against {n(per['avg_bytes_per_nist_turn'])} with LangGraph's per-step default "
+                              f"over the same {m['production']['turns']}-turn conversation.")
+    else:
+        ev["conversation"] = na
+
+    ins = rp["insufficient"]
+    if ins and e2e:
+        u = ins["unanswerable"]
+        part = next((p_ for p_ in (rp["integration"] or {}).get("live", {}).get("paths", []) if p_["path_name"].startswith("model_refusal")), None)
+        two_part = (f"in the integration run the two-part question was {'answered partially (outcome `' + part['outcome'] + '`)' if part['outcome'] == 'answered' else 'refused (outcome `' + part['outcome'] + '`)'}."
+                    if part else "no integration run is available.")
+        refused = [r_["id"] for r_ in e2e["per_turn"] if any(c["id"] == "A2" and c["status"] == "fail" and "outcome=insufficient" in c["detail"] for c in r_["checks"])]
+        ev["insufficient"] = (f"**Evidence** ([results](docs/RESULTS.md#insufficient-context-path)): {u['insufficient']}/{u['cases']} unanswerable questions received the insufficient-context reply, "
+                              f"{u['via_gate']} of them from the relevance gate alone (no generation call); the five related sections looked unrelated for {u['flagged_unrelated']} of them. "
+                              f"The cost of strictness shows in the end-to-end run: {len(refused)} questions the documents can answer were refused ({', '.join(refused) or 'none'}). "
+                              f"Compliance with the 'refuse partly answerable questions' rule is up to the model: " + two_part)
+    else:
+        ev["insufficient"] = na
+
+    lk, gen = rp["link_check"], rp["generation"]
+    if lk and gen and e2e:
+        a = e2e["aggregates"]
+        ev["grounding"] = (f"**Evidence** ([results](docs/RESULTS.md#citation-links)): all {lk['chunks_checked']} chunk links open a PDF page containing the cited text ({lk['failed']} failed). "
+                           f"In the end-to-end run {a['support_rate']['supported']}/{a['support_rate']['total']} cited sentences scored at least {a['support_rate']['threshold']} against their cited chunk, "
+                           f"and {a['uncited_sentence_rate']['uncited']} of {a['uncited_sentence_rate']['uncited'] + a['uncited_sentence_rate']['cited']} fact-stating sentences carried no citation. "
+                           f"In the {gen['cases']} generation behaviour cases the invented-citation rate was {pct(gen['invented_citation_rate_pct'])}, the over-length rate {pct(gen['over_length_rate_pct'])} "
+                           f"and {pct(gen['uncited_sentence_rate']['sentences_uncited_pct'])} of sentences were uncited.")
+    else:
+        ev["grounding"] = na
+
+    us, ps = rp["usage"], rp["prompt_size"]
+    if us and ps and e2e:
+        tt = us["total_tokens"]
+        ev["freetier"] = (f"**Evidence** ([results](docs/RESULTS.md#generation)): a generation call used a median of {n(tt['median'])} tokens (p95 {n(tt['p95'])}, maximum {n(tt['max'])}) against the "
+                          f"{n(us['tpm_limit'])} tokens-per-minute limit; with the router call an answered end-to-end turn averaged "
+                          f"{n(e2e['aggregates']['by_turn_type']['answered']['tokens_mean'])} tokens. Prompts are {n(ps['summary']['total_tokens_est']['median'])} tokens at the median "
+                          f"({n(ps['summary']['total_tokens_est']['max'])} at most). At that average the limit allows about "
+                          f"{us['tpm_limit'] / e2e['aggregates']['by_turn_type']['answered']['tokens_mean']:.1f} answered questions per minute, so the end-to-end harness paces "
+                          f"{n(e2e['pace_seconds'], 0, ' s')} after each generation turn.")
+    else:
+        ev["freetier"] = na
+
+    if e2e:
+        a = e2e["aggregates"]
+        ev["e2e"] = (f"**Evidence** ([results](docs/RESULTS.md#end-to-end-evaluation)): {e2e['requests']} requests through the running API; route accuracy {a['route_accuracy']['passed']}/{a['route_accuracy']['applicable']}, "
+                     f"outcome accuracy {a['outcome_accuracy']['passed']}/{a['outcome_accuracy']['applicable']}, key-fact coverage {a['key_fact_coverage']['found']}/{a['key_fact_coverage']['total']}, "
+                     f"{len(e2e['failures'])} failed checks (all listed in `docs/E2E_RESULTS.md`).")
+    else:
+        ev["e2e"] = na
+    return ev
+
+
+def update_design(text: str, evidence: dict[str, str]) -> tuple[str, list[str]]:
+    """Fill every EVIDENCE block of DESIGN.md. Returns (new text, names whose markers were missing or malformed)."""
+    missing = []
+    for name in EVIDENCE_NAMES:
+        start, end = evidence_markers(name)
+        new = replace_block(text, start, end, evidence[name] + "\n")
+        if new is None:
+            missing.append(name)
+        else:
+            text = new
+    return text, missing
 
 
 def main(root: Path = ROOT) -> int:
@@ -360,6 +536,15 @@ def main(root: Path = ROOT) -> int:
             print(f"updated the results block in {readme.name}")
         else:
             print(f"{readme.name} results block already up to date")
+    design = root / "DESIGN.md"
+    if design.is_file():
+        old = design.read_text(encoding="utf-8")
+        new, missing = update_design(old, build_evidence(root))
+        if missing:
+            print(f"note: DESIGN.md is missing evidence markers for: {', '.join(missing)}")
+        if new != old:
+            design.write_text(new, encoding="utf-8")
+            print("updated the evidence blocks in DESIGN.md")
     return 0
 
 

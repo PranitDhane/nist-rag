@@ -40,7 +40,7 @@ Build a retrieval module that takes a **standalone query** (from the routing pha
 
 Claude Code must **verify each against the installed versions** and report.
 
-1. **BM25 must be a LangChain retriever** for `EnsembleRetriever`. Use LangChain's `BM25Retriever` with **our versioned `tokenize()`** from `indexing.bm25_index` as its preprocessing function, built from the saved tokenized corpus (`bm25_corpus.json`) without re-tokenizing, if the installed version allows building it from a prebuilt BM25 object. **Check how to construct it and report.** If the class can't be built from saved tokens, stop and ask before re-tokenizing at load time. This resolves indexing-plan Q5 in favour of `BM25Retriever`; record that in `docs/PROGRESS.md`.
+1. **BM25 must be a LangChain retriever** for `EnsembleRetriever`. Use LangChain's `BM25Retriever` with **our versioned `tokenize()`** from `indexing.bm25_index` as its preprocessing function, built from the saved tokenized corpus (`bm25_corpus.json`) without re-tokenizing, if the installed version allows building it from a prebuilt BM25 object. **Check how to construct it and report.** If the class can't be built from saved tokens, stop and ask before re-tokenizing at load time. This resolves indexing-plan Q5 in favour of `BM25Retriever`; record that in `docs/process/PROGRESS.md`.
 2. **Duplicate detection inside the ensemble:** `EnsembleRetriever` merges the same chunk found by both retrievers either by a configurable key or by comparing `page_content`. **Check whether the installed version supports an ID key** and use `chunk_id`. If it doesn't, both retrievers must return **identical `page_content`** (`embed_text`) for the same chunk; add a test proving a chunk found by both appears **once**.
 3. **The order of retrievers and weights must match:** retrievers `[vector, bm25]` with weights `[0.6, 0.4]`. Use the RRF constant at its library default (60) and record it in config.
 4. **EnsembleRetriever returns no fusion scores** and doesn't say which retriever found each chunk. A separate **diagnostic mode** (Stage T3) runs both retrievers independently to provide that information. Diagnostic mode is for evaluation and debugging, never the normal query path.
@@ -278,7 +278,7 @@ tests/
 
 ### Stage T8 — Final report
 
-The report holds the configuration comparison, the threshold choice, latency, the truncated-pair count, and the known retrieval weaknesses (the failed cases). It is written to `eval/retrieval_report.json`, with a short Markdown summary in `docs/RETRIEVAL_RESULTS.md` for the README and DESIGN.md.
+The report holds the configuration comparison, the threshold choice, latency, the truncated-pair count, and the known retrieval weaknesses (the failed cases). It is written to `eval/retrieval_report.json`, with a short Markdown summary in `docs/process/RETRIEVAL_RESULTS.md` for the README and DESIGN.md.
 
 **Checkpoint:** show the Markdown summary.
 

@@ -12,25 +12,25 @@ A take-home assignment: a question-answering system over two NIST documents, **A
 
 | # | Phase | Plan file | Module(s) |
 |---|---|---|---|
-| 1 | Ingestion | `docs/INGESTION_PLAN.md` | `ingest/` |
-| 2 | Chunking | `docs/CHUNKING_PLAN.md` | `chunking/` |
-| 3 | Embedding & indexing | `docs/EMBEDDING_INDEXING_PLAN.md` | `indexing/` |
-| 4 | API & routing | `docs/API_ROUTING_PLAN.md` | `app/`, `graph/`, `llm/` |
-| 5 | Retrieval | `docs/RETRIEVAL_PLAN.md` | `retrieval/` |
-| 6 | Augmentation (prompt construction) | `docs/AUGMENTATION_PLAN.md` + `prompts/` | `augmentation/` |
-| 7 | Generation | `docs/GENERATION_PLAN.md` | `generation/` |
-| 8 | Insufficient-context path | `docs/INSUFFICIENT_CONTEXT_PLAN.md` | `insufficient/` |
-| 9 | Source attribution | `docs/ATTRIBUTION_PLAN.md` | `attribution/` |
-| 10 | Graph integration | `docs/GRAPH_INTEGRATION_PLAN.md` | `graph/` (main graph + RAG subgraph) |
-| 11 | End-to-end evaluation | `docs/E2E_EVALUATION_PLAN.md` | `eval/` |
-| 12 | Deliverables (README, DESIGN.md, Makefile, packaging) | `docs/DELIVERABLES_PLAN.md` | `Makefile`, `README.md`, `DESIGN.md`, `docs/` |
+| 1 | Ingestion | `docs/process/plans/INGESTION_PLAN.md` | `ingest/` |
+| 2 | Chunking | `docs/process/plans/CHUNKING_PLAN.md` | `chunking/` |
+| 3 | Embedding & indexing | `docs/process/plans/EMBEDDING_INDEXING_PLAN.md` | `indexing/` |
+| 4 | API & routing | `docs/process/plans/API_ROUTING_PLAN.md` | `app/`, `graph/`, `llm/` |
+| 5 | Retrieval | `docs/process/plans/RETRIEVAL_PLAN.md` | `retrieval/` |
+| 6 | Augmentation (prompt construction) | `docs/process/plans/AUGMENTATION_PLAN.md` + `prompts/` | `augmentation/` |
+| 7 | Generation | `docs/process/plans/GENERATION_PLAN.md` | `generation/` |
+| 8 | Insufficient-context path | `docs/process/plans/INSUFFICIENT_CONTEXT_PLAN.md` | `insufficient/` |
+| 9 | Source attribution | `docs/process/plans/ATTRIBUTION_PLAN.md` | `attribution/` |
+| 10 | Graph integration | `docs/process/plans/GRAPH_INTEGRATION_PLAN.md` | `graph/` (main graph + RAG subgraph) |
+| 11 | End-to-end evaluation | `docs/process/plans/E2E_EVALUATION_PLAN.md` | `eval/` |
+| 12 | Deliverables (README, DESIGN.md, Makefile, packaging) | `docs/process/plans/DELIVERABLES_PLAN.md` | `Makefile`, `README.md`, `DESIGN.md`, `docs/` |
 
 Supporting documents:
-- `docs/PROBLEMS_AND_SOLUTIONS.md`: every problem found and the decision made (source material for `DESIGN.md`).
-- `docs/PROGRESS.md`: the running status log (Section 4).
+- `docs/process/PROBLEMS_AND_SOLUTIONS.md`: every problem found and the decision made (source material for `DESIGN.md`).
+- `docs/process/PROGRESS.md`: the running status log (Section 4).
 - `eval/e2e_cases.yaml`: the end-to-end test set (assignment examples plus coverage cases, gold facts verified against the PDFs). Approval is E2E plan Q1.
 
-**Path change in phase 12:** Stage D6 moves all plan files to `docs/process/plans/`, and `PROGRESS.md` and `PROBLEMS_AND_SOLUTIONS.md` to `docs/process/`. When that happens, **update every path in this file** in the same stage. `CLAUDE.md` itself stays at the repository root unless the user decides otherwise (deliverables Q6).
+**Where the process documents live (moved in deliverables Stage D6):** all plan files are in `docs/process/plans/`; `PROGRESS.md`, `PROBLEMS_AND_SOLUTIONS.md` and the per-phase summaries are in `docs/process/`. `CLAUDE.md` stays at the repository root so Claude Code loads it (D6 Q6). The generated results (`docs/RESULTS.md`, `docs/E2E_RESULTS.md`), `docs/build_results.py`, `docs/graph.md` and `docs/architecture.html` stay in `docs/`. Append progress entries to `docs/process/PROGRESS.md`; its older entries keep the paths that were valid when they were written.
 
 **Status reported by the user:** phases 1–11 are built (phase 6 completed 2026-10-17, phase 11 on 2026-10-19). Phase 12 is in progress.
 
@@ -39,17 +39,17 @@ Supporting documents:
 ## 3. How to work (every phase)
 
 1. **Session start:**
-   - read this file, `docs/PROGRESS.md`, and the **current phase's plan file in full**;
+   - read this file, `docs/process/PROGRESS.md`, and the **current phase's plan file in full**;
    - summarise in 3–5 bullets where things stand (last finished stage, open questions);
    - confirm the current phase and stage with the user.
 2. **One stage at a time**, in the order the plan gives. Never start the next stage until the user confirms the current one.
 3. **At the start of a stage:** restate in 3–5 bullets what you will build and which files you will create or change. Then build it.
 4. **At the end of a stage:** do exactly what its **Checkpoint** says: run the stage, run its tests, and show the listed outputs. Then **stop and wait**.
-5. **Open questions:** each plan has an "Open questions" table saying *when* to ask each one. Ask each question **at its stage**, present the options with evidence (measurements, examples, comparisons), and record the answer in the right config file and in `docs/PROGRESS.md`.
+5. **Open questions:** each plan has an "Open questions" table saying *when* to ask each one. Ask each question **at its stage**, present the options with evidence (measurements, examples, comparisons), and record the answer in the right config file and in `docs/process/PROGRESS.md`.
 6. **If a plan is ambiguous, or reality contradicts it** (a file, a library, an API behaving differently): **stop and ask.** Don't guess and don't silently adjust the plan.
 7. **The current phase's plan is authoritative for that phase.** Decisions recorded in the "Decisions already made by the user" table of any plan may not be changed.
 
-## 4. Progress log (`docs/PROGRESS.md`)
+## 4. Progress log (`docs/process/PROGRESS.md`)
 
 Append one line per finished stage:
 
@@ -169,7 +169,7 @@ Also record here every answer to an open question, and every **cross-plan resolu
 | E2E case-file fields | `eval/e2e_cases.yaml` uses fields beyond the E2E plan's list (`must_not_cite`, `acceptable_alternative`, `expected_route_source`, `min_facts`, `expected_text_key`); the harness (E2E Stages V1/V3) must support them |
 | Makefile vs Python CLI | The user chose a Makefile; the README must pair every target with its Python command (Windows) |
 
-Questions that one phase leaves for a later one (e.g., generation Q7 history-on-error, attribution Q3 marker stripping) are re-asked at graph integration Stage G0 if they're still open. Record every new resolution in `docs/PROGRESS.md`.
+Questions that one phase leaves for a later one (e.g., generation Q7 history-on-error, attribution Q3 marker stripping) are re-asked at graph integration Stage G0 if they're still open. Record every new resolution in `docs/process/PROGRESS.md`.
 
 ## 10. Commands
 
@@ -208,14 +208,15 @@ make results     # regenerate docs/RESULTS.md and the README results block
 make clean       # remove processed data and indexes (never data/raw)
 ```
 
-Until the Makefile exists, use the Python commands.
+Every target prints the Python command it runs (`README.md` pairs them), so the Python commands above work without `make`.
 
 ## 11. Repository layout (overview)
 
 ```
-CLAUDE.md  README.md  DESIGN.md  Makefile          ← README/DESIGN/Makefile created in phase 12
-docs/        ← plan files, PROGRESS.md, PROBLEMS_AND_SOLUTIONS.md, results summaries, graph.md
-             (phase 12: plans/process docs move to docs/process/; RESULTS.md + build_results.py stay in docs/)
+CLAUDE.md  README.md  DESIGN.md  Makefile
+docs/        ← RESULTS.md (generated), E2E_RESULTS.md (generated), build_results.py, graph.md, architecture.html
+docs/process/        ← PROGRESS.md, PROBLEMS_AND_SOLUTIONS.md, phase_notes.md, per-phase result summaries, README.md
+docs/process/plans/  ← the 12 plan files
 prompts/     ← versioned prompt files (answer_system.v1.md, answer_user.v1.md)
 ingest/  chunking/  indexing/  retrieval/  augmentation/  generation/  insufficient/  attribution/
 app/  graph/  llm/

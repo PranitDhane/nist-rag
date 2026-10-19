@@ -15,6 +15,8 @@ spec.loader.exec_module(br)
 REPORT_FILES = [rel for rel, _ in br.REPORTS.values()]
 have_reports = all((ROOT / f).is_file() for f in REPORT_FILES) and bool(list(ROOT.glob(br.E2E_GLOB)))
 needs_reports = pytest.mark.skipif(not have_reports, reason="needs the committed report files")
+have_build = all((ROOT / f).is_file() for f in br.BUILD_FILES.values())
+needs_build = pytest.mark.skipif(not (have_reports and have_build), reason="needs the reports and the output of `make build`")
 
 
 @pytest.fixture()
@@ -32,6 +34,14 @@ def repo(tmp_path):
     return tmp_path
 
 
+@pytest.fixture()
+def built(repo):
+    for rel in br.BUILD_FILES.values():
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(ROOT / rel, repo / rel)
+    return repo
+
+
 def edit(root: Path, rel: str, fn) -> None:
     path = root / rel
     data = json.loads(path.read_text())
@@ -40,8 +50,9 @@ def edit(root: Path, rel: str, fn) -> None:
 
 
 # ---------------------------------------------------------------- determinism and independence from the machine
-@needs_reports
-def test_output_is_deterministic_and_does_not_depend_on_file_times(repo):
+@needs_build
+def test_output_is_deterministic_and_does_not_depend_on_file_times(built):
+    repo = built
     first = br.build(repo)
     import os, time
     for rel in REPORT_FILES:
@@ -113,6 +124,7 @@ def test_a_corrupt_report_is_treated_as_missing(repo):
 def test_with_no_reports_at_all_every_section_says_not_run(tmp_path):
     results, block = br.build(tmp_path)
     assert results.count("_Not run:") == 8 and "End-to-end evaluation" in results and "not run" in block
+    assert "_Not built: run `make build`" in results
     assert br.main(tmp_path) == 0 and (tmp_path / "docs" / "RESULTS.md").is_file()
 
 
@@ -177,7 +189,7 @@ def test_the_script_uses_only_the_standard_library():
     assert mods <= set(sys.stdlib_module_names) | {"__future__"}, mods
 
 
-@needs_reports
+@needs_build
 def test_the_committed_results_file_is_not_stale():
     """Fails when a report changed (or the script did) but `make results` was not re-run."""
     committed = (ROOT / "docs" / "RESULTS.md").read_text(encoding="utf-8")
@@ -217,3 +229,41 @@ def test_end_to_end_sentinels_and_readme_block(repo):
     run.write_text(json.dumps(data))
     results, block = br.build(repo)
     assert "99.9% (9921/9922)" in results and "9923 `/chat` requests" in results and "route 9921/9922" in block and "9923 requests" in block
+
+
+# ---------------------------------------------------------------- corpus / chunk / index section (written by `make build`)
+@needs_build
+def test_corpus_section_shows_values_from_the_build_reports(built):
+    def ingest(d):
+        d["documents"]["ai_rmf_1_0"]["pages"] = 9901
+        d["checks"][0]["passed"] = False
+    def chunks(d):
+        d["total_chunks"] = 9902
+        d["splits"]["table_pieces"] = {"x": 9903}
+        d["token_histograms_embed"]["prose"]["median"] = 9904
+    def index(d):
+        d["dimension"] = 9905
+        d["bm25"]["vocab_size"] = 9906
+    edit(built, br.BUILD_FILES["ingest"], ingest)
+    edit(built, br.BUILD_FILES["chunks"], chunks)
+    edit(built, br.BUILD_FILES["index"], index)
+    results, _ = br.build(built)
+    for text in ("| ai_rmf_1_0 | 9901 |", "9,965 pages", "10/11 hard validation checks", "9,902 chunks", "9903 GenAI action tables", "9,904", "9905 dimensions", "9,906"):
+        assert text in results, text
+    assert "_Not built" not in results
+
+
+@needs_build
+def test_corpus_section_is_independent_of_build_timings(built):
+    one = br.build(built)[0]
+    edit(built, br.BUILD_FILES["chunks"], lambda d: d.update(build_seconds=123.4))
+    edit(built, br.BUILD_FILES["ingest"], lambda d: d.update(run_seconds=999.9))
+    edit(built, br.BUILD_FILES["index"], lambda d: d.update(built_at="2099-01-01", build_seconds=55.5, device="cuda:0"))
+    assert br.build(built)[0] == one
+
+
+@needs_build
+def test_one_missing_build_report_makes_the_whole_section_say_not_built(built):
+    (built / br.BUILD_FILES["index"]).unlink()
+    results, _ = br.build(built)
+    assert "_Not built: run `make build`" in results and "## Retrieval" in results

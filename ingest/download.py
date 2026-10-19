@@ -81,7 +81,7 @@ def verify_pdf(path: Path, spec: DocumentSpec) -> _Verified:
         title = (doc.metadata or {}).get("title") or ""
     if pages != spec.expected_pages:
         raise AcquireError(f"{spec.doc_id}: check (b) failed: page count is {pages}, expected {spec.expected_pages}. "
-                           "The document may have been revised; compare with docs/INGESTION_PLAN.md Section 5.")
+                           "The document may have been revised; compare with docs/process/plans/INGESTION_PLAN.md Section 5.")
     if title != spec.expected_title:
         raise AcquireError(f"{spec.doc_id}: check (c) failed: Title is {title!r}, expected {spec.expected_title!r}.")
     digest = sha256_of(path)
