@@ -194,7 +194,7 @@ single_turn:
         variants: ["€", "euro", "% of", "million"]
     expected_sections: []
     gold_locations:
-      - {fact: "absent from both documents", doc: both, pdf_page: null, printed: null, quote: "Verified: 'EU AI Act', 'European Union' and 'penalt' have 0 hits in both PDFs."}
+      - {fact: "absent from both documents", doc: both, absent_terms: ["EU AI Act", "European Union", "penalt"]}
     acceptable_alternative:
       expected_route: out_of_scope
       expected_text_key: OUT_OF_SCOPE_TEXT
@@ -216,7 +216,7 @@ single_turn:
     expected_sections: []
     gold_locations:
       - {fact: "part 1 answerable", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "the Core is composed of four functions"}
-      - {fact: "part 2 not in docs", doc: ai_rmf_1_0, pdf_page: 7, printed: "2", quote: "The Framework is intended to be voluntary ... (no certification or cost is described)"}
+      - {fact: "part 2 not in docs (no AI RMF certification, so no cost)", doc: both, absent_terms: ["AI RMF certification", "certification cost", "certification fee", "cost of certification"]}
     notes: "Tests the strict rule 'partly answerable → refuse entirely' (augmentation G-D7). Part 2 was changed from the plan's draft ('when will AI RMF 2.0 be published'), because the document mentions a review 'no later than 2028', which made that gold answer ambiguous."
 
   - id: S9

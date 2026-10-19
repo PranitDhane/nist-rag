@@ -130,6 +130,22 @@ def test_debug_contents_answered():
     assert dbg["config_version"]["retrieval"] and "embedding_model" in dbg["config_version"]["indexing"]
 
 
+def test_debug_carries_key_map_with_ids_only():
+    c, _ = app_for(Router(d("nist_question", "Which AI RMF function is cross-cutting?")), chat=ScriptedChat(script=ANSWER, tags=TAG))
+    j = chat(c, debug=True).json()
+    km = j["meta"]["debug"]["key_map"]
+    assert km and all(k.startswith("C") and isinstance(v, str) for k, v in km.items())
+    assert "ai:govern" in km.values() and CHUNK_MARKER not in json.dumps(km)
+    assert {k for s in j["sources"] for k in s["keys"]} <= set(km)          # every cited key can be resolved
+
+
+def test_debug_has_no_key_map_when_no_generation_ran():
+    c, _ = app_for(Router(d("nist_question", "q?")), scores={"ai:govern": 0.05})
+    assert "key_map" not in chat(c, debug=True).json()["meta"]["debug"]
+    c2, _ = app_for(Router(d("nist_question", "q?")), chat=ScriptedChat(script=ANSWER, tags=TAG))
+    assert "key_map" not in chat(c2).json()["meta"]
+
+
 def test_debug_candidates_are_capped_at_twenty_best_first():
     from graph.debug import build_debug
     cands = [{"chunk_id": f"c{i}", "citation_label": f"L{i}", "rerank_score": 1 - i / 100, "rerank_rank": i} for i in range(1, 31)]

@@ -41,5 +41,8 @@ def build_debug(state: dict) -> dict:
     if generation:
         block["generation"] = {k: generation.get(k) for k in ("model", "prompt_version", "reasoning_effort", "temperature", "usage",
                                                               "finish_reason", "fixes", "warnings", "corrected")}
+    if state.get("key_map"):
+        # E2E plan Q3: C# -> chunk_id (IDs only, no text) so an evaluation can look up the cited chunks itself.
+        block["key_map"] = dict(state["key_map"])
     block["config_version"] = {"retrieval": retrieval.get("config_version"), "indexing": _indexing_version()}
     return block
