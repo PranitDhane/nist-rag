@@ -1,0 +1,228 @@
+{
+  "id": "C1-T3",
+  "conversation": "C1",
+  "message": "What categories does it include?",
+  "thread_id_sent": "bd1aced0-dcf4-4c4a-b57b-2e86b6c5a89f",
+  "status": 200,
+  "body": {
+    "thread_id": "bd1aced0-dcf4-4c4a-b57b-2e86b6c5a89f",
+    "route": "nist_question",
+    "answer": "The NIST documents provided do not contain this information.",
+    "sources": [],
+    "standalone_query": "What categories are included in the GOVERN function of the AI RMF?",
+    "related_sections": [
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Appendix C: AI Risk Management and Human-AI Interaction",
+        "pages": "p. 41",
+        "citation_label": "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=46",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Executive Summary",
+        "pages": "p. 3",
+        "citation_label": "NIST AI 100-1, Executive Summary, p. 3",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=8",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 2 > 5 AI RMF Core",
+        "pages": "pp. 20–21",
+        "citation_label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=25",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 2 > 5 AI RMF Core > 5.1 Govern",
+        "pages": "p. 22",
+        "citation_label": "NIST AI 100-1, §5.1 Govern, p. 22",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=27",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 2 > 5 AI RMF Core > 5.1 Govern",
+        "pages": "pp. 21–22",
+        "citation_label": "NIST AI 100-1, §5.1 Govern, pp. 21–22",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=26",
+        "kind": "prose"
+      }
+    ],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 4736,
+      "outcome": "insufficient",
+      "insufficient_reason": "model_case_d",
+      "usage": {
+        "router": 1309,
+        "generation": 2875,
+        "total": 4184
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.2,
+          "rule_greeting_check": 0.2,
+          "classify_and_rewrite": 1253.7,
+          "hybrid_search": 605.2,
+          "rerank": 1886.4,
+          "gate": 0.0,
+          "expand_context": 1.1,
+          "generate": 949.0,
+          "finalize_model_refusal": 0.8,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "What categories are included in the GOVERN function of the AI RMF?",
+        "retrieval": {
+          "candidate_count": 15,
+          "candidates": [
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0048:3",
+              "label": "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+              "rerank_score": 0.9953076243400574
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:5",
+              "label": "NIST AI 100-1, Executive Summary, p. 3",
+              "rerank_score": 0.990397572517395
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:1",
+              "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+              "rerank_score": 0.9901421666145325
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0022:2",
+              "label": "NIST AI 100-1, §5.1 Govern, p. 22",
+              "rerank_score": 0.9813143610954285
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0022:1",
+              "label": "NIST AI 100-1, §5.1 Govern, pp. 21–22",
+              "rerank_score": 0.9769733548164368
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0027:1",
+              "label": "NIST AI 100-1, §5.1 Govern, GOVERN 5, p. 24",
+              "rerank_score": 0.9682467579841614
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0028:1",
+              "label": "NIST AI 100-1, §5.1 Govern, GOVERN 6, p. 24",
+              "rerank_score": 0.959426760673523
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0023:1",
+              "label": "NIST AI 100-1, §5.1 Govern, GOVERN 1, pp. 22–23",
+              "rerank_score": 0.9448405504226685
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0040:1",
+              "label": "NIST AI 100-1, §5.4 Manage, pp. 31–32",
+              "rerank_score": 0.942301869392395
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:2",
+              "label": "NIST AI 100-1, §5 AI RMF Core, p. 21",
+              "rerank_score": 0.8914185762405396
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:figure:0021:1",
+              "label": "NIST AI 100-1, §5 AI RMF Core, Fig. 5, p. 20",
+              "rerank_score": 0.7133191823959351
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0046:1",
+              "label": "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, p. 35",
+              "rerank_score": 0.3451210856437683
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0035:2",
+              "label": "NIST AI 100-1, §5.3 Measure, pp. 28–29",
+              "rerank_score": 0.2866743206977844
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0046:2",
+              "label": "NIST AI 100-1, Appendix A: Descriptions of AI Actor Tasks from Figures 2 and 3, pp. 35–36",
+              "rerank_score": 0.1618058681488037
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0016:1",
+              "label": "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17",
+              "rerank_score": 0.14071950316429138
+            }
+          ],
+          "best_score": 0.9953076243400574,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": []
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 2662,
+            "completion": 213,
+            "reasoning": 193,
+            "total": 2875
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "ai_rmf_1_0:prose:0048:3",
+          "C2": "ai_rmf_1_0:prose:0000:5",
+          "C3": "ai_rmf_1_0:prose:0020:1",
+          "C4": "ai_rmf_1_0:prose:0022:2",
+          "C5": "ai_rmf_1_0:prose:0022:1"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 4762,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 35.0,
+  "elapsed_ms": 4762,
+  "recorded_at": "2026-10-19T05:32:18+00:00"
+}

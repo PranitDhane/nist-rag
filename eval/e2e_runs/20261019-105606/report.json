@@ -1,0 +1,3657 @@
+{
+  "generated_at": "2026-10-19T05:36:44+00:00",
+  "run": "20261019-105606",
+  "run_started_at": "2026-10-19T05:26:06+00:00",
+  "base_url": "http://127.0.0.1:8000",
+  "pace_seconds": 35.0,
+  "cases_sha256": "f486542cfb83644d80039e1153e80d62746b9f950da61d3624056be6b805a259",
+  "requests": 16,
+  "streamed": 2,
+  "server": {
+    "model": "openai/gpt-oss-120b"
+  },
+  "support_threshold": 0.7,
+  "calibration": {
+    "positives": {
+      "n": 11,
+      "min": 0.9433879852294922,
+      "p10": 0.990151584148407,
+      "median": 0.9998490810394287,
+      "p90": 0.9999464750289917,
+      "max": 0.999964714050293
+    },
+    "negatives": {
+      "n": 33,
+      "min": 3.731928882189095e-05,
+      "p10": 0.00014754975563846529,
+      "median": 0.0052337972447276115,
+      "p90": 0.3550792336463928,
+      "max": 0.6921888589859009
+    },
+    "negatives_best_of_3": {
+      "n": 11,
+      "min": 0.0022533058654516935,
+      "p10": 0.003274479415267706,
+      "median": 0.02027159370481968,
+      "p90": 0.424701452255249,
+      "max": 0.6921888589859009
+    },
+    "sanity": {
+      "n": 16,
+      "min": 0.9995254278182983,
+      "p10": 0.9995917677879333,
+      "median": 0.99992835521698,
+      "p90": 0.9999666213989258,
+      "max": 0.9999666213989258
+    },
+    "overlap": {
+      "positives_at_or_below_negative_p90_pct": 0.0,
+      "negatives_at_or_above_positive_p10_pct": 0.0,
+      "max_negative": 0.6921888589859009,
+      "min_positive": 0.9433879852294922,
+      "separable": true
+    },
+    "seed": 20261019
+  },
+  "aggregates": {
+    "route_accuracy": {
+      "passed": 15,
+      "applicable": 16,
+      "pct": 93.8
+    },
+    "outcome_accuracy": {
+      "passed": 13,
+      "applicable": 16,
+      "pct": 81.2
+    },
+    "exact_text_accuracy": {
+      "passed": 5,
+      "applicable": 5,
+      "pct": 100.0
+    },
+    "follow_up_resolution": {
+      "passed": 3,
+      "applicable": 3,
+      "pct": 100.0
+    },
+    "llm_calls_as_expected": {
+      "passed": 15,
+      "applicable": 16,
+      "pct": 93.8
+    },
+    "key_fact_coverage": {
+      "found": 29,
+      "total": 45,
+      "pct": 64.4
+    },
+    "turns_meeting_min_facts": {
+      "passed": 8,
+      "applicable": 11,
+      "pct": 72.7
+    },
+    "trap_hits": {
+      "turns_with_a_hit": 0,
+      "traps_checked_turns": 6,
+      "hits": []
+    },
+    "english": {
+      "passed": 8,
+      "applicable": 8,
+      "pct": 100.0
+    },
+    "over_length_answers": {
+      "count": 0,
+      "of": 8,
+      "words_max": 89
+    },
+    "citation_consistency": {
+      "passed": 8,
+      "applicable": 11,
+      "pct": 72.7
+    },
+    "expected_section_hit": {
+      "passed": 8,
+      "applicable": 11,
+      "pct": 72.7
+    },
+    "link_check": {
+      "passed": 8,
+      "applicable": 8,
+      "pct": 100.0
+    },
+    "no_fixes_or_warnings": {
+      "passed": 8,
+      "applicable": 11,
+      "pct": 72.7
+    },
+    "support_rate": {
+      "supported": 11,
+      "total": 11,
+      "pct": 100.0,
+      "threshold": 0.7
+    },
+    "uncited_sentence_rate": {
+      "uncited": 3,
+      "cited": 11,
+      "pct": 21.4
+    },
+    "insufficient_path": {
+      "turns": 1,
+      "all_checks_passed": 1
+    },
+    "http_ok": {
+      "passed": 16,
+      "applicable": 16,
+      "pct": 100.0
+    },
+    "latency_ms": {
+      "p50": 4556,
+      "p95": 5820,
+      "n": 16
+    },
+    "by_turn_type": {
+      "answered": {
+        "turns": 8,
+        "latency_ms_p50": 4795,
+        "latency_ms_p95": 5820,
+        "tokens_mean": 4227,
+        "tokens_max": 4608,
+        "llm_calls": [
+          2
+        ]
+      },
+      "greeting": {
+        "turns": 1,
+        "latency_ms_p50": 6,
+        "latency_ms_p95": 6,
+        "tokens_mean": 0,
+        "tokens_max": 0,
+        "llm_calls": [
+          0
+        ]
+      },
+      "insufficient (model)": {
+        "turns": 3,
+        "latency_ms_p50": 5014,
+        "latency_ms_p95": 5280,
+        "tokens_mean": 4551,
+        "tokens_max": 5055,
+        "llm_calls": [
+          2
+        ]
+      },
+      "out_of_scope": {
+        "turns": 4,
+        "latency_ms_p50": 810,
+        "latency_ms_p95": 1264,
+        "tokens_mean": 1205,
+        "tokens_max": 1272,
+        "llm_calls": [
+          1
+        ]
+      }
+    },
+    "streaming": {
+      "ST1": {
+        "passed": 2,
+        "applicable": 2,
+        "pct": 100.0
+      },
+      "ST2": {
+        "passed": 2,
+        "applicable": 2,
+        "pct": 100.0
+      },
+      "ST3": {
+        "passed": 2,
+        "applicable": 2,
+        "pct": 100.0
+      }
+    },
+    "alternatives_taken": [
+      "S7"
+    ]
+  },
+  "failures": [
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "A1",
+      "name": "route",
+      "detail": "route=out_of_scope; expected route=nist_question"
+    },
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "A2",
+      "name": "outcome",
+      "detail": "outcome=out_of_scope; expected answered"
+    },
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "A5",
+      "name": "llm calls",
+      "detail": "llm_calls=1, expected 2"
+    },
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "B1",
+      "name": "must-contain facts",
+      "detail": "0/6 facts found (need 2); missing: ['training data may not represent the context', 'pre-trained models', 'opacity / reproducibility', 'drift and maintenance', 'testing difficulty', 'privacy from data aggregation']"
+    },
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "C1",
+      "name": "markers match sources",
+      "detail": "no [C#] marker and no source: an answered turn must cite"
+    },
+    {
+      "turn": "S3",
+      "via": "chat",
+      "check": "C2",
+      "name": "expected sections",
+      "detail": "no sources, so no expected section can be cited"
+    },
+    {
+      "turn": "S4",
+      "via": "chat",
+      "check": "C4",
+      "name": "fixes and warnings",
+      "detail": "fixes=[] warnings=['UNCITED_SENTENCE']"
+    },
+    {
+      "turn": "S4",
+      "via": "chat",
+      "check": "D3",
+      "name": "uncited sentences",
+      "detail": "1 uncited fact-stating sentence(s): ['Confabulation is a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts.']"
+    },
+    {
+      "turn": "S6",
+      "via": "chat",
+      "check": "C4",
+      "name": "fixes and warnings",
+      "detail": "fixes=[] warnings=['UNCITED_SENTENCE']"
+    },
+    {
+      "turn": "C1-T3",
+      "via": "chat",
+      "check": "A2",
+      "name": "outcome",
+      "detail": "outcome=insufficient; expected answered"
+    },
+    {
+      "turn": "C1-T3",
+      "via": "chat",
+      "check": "B1",
+      "name": "must-contain facts",
+      "detail": "0/6 facts found (need 4); missing: ['GOVERN 1: policies, processes, procedures, practices', 'GOVERN 2: accountability structures', 'GOVERN 3: workforce diversity, equity, inclusion', 'GOVERN 4: culture that considers AI risk', 'GOVERN 5: engagement with relevant AI actors', 'GOVERN 6: third-party software, data, supply chain']"
+    },
+    {
+      "turn": "C1-T3",
+      "via": "chat",
+      "check": "C1",
+      "name": "markers match sources",
+      "detail": "no [C#] marker and no source: an answered turn must cite"
+    },
+    {
+      "turn": "C1-T3",
+      "via": "chat",
+      "check": "C2",
+      "name": "expected sections",
+      "detail": "no sources, so no expected section can be cited"
+    },
+    {
+      "turn": "C2-T1",
+      "via": "chat",
+      "check": "C4",
+      "name": "fixes and warnings",
+      "detail": "fixes=[] warnings=['UNCITED_SENTENCE']"
+    },
+    {
+      "turn": "C2-T1",
+      "via": "chat",
+      "check": "D3",
+      "name": "uncited sentences",
+      "detail": "2 uncited fact-stating sentence(s): ['Confabulation in generative AI is the production of confidently stated but erroneous or false content in response to prompts.', 'This phenomenon can mislead or deceive users by presenting inaccurate information as fact.']"
+    },
+    {
+      "turn": "C2-T2",
+      "via": "chat",
+      "check": "A2",
+      "name": "outcome",
+      "detail": "outcome=insufficient; expected answered"
+    },
+    {
+      "turn": "C2-T2",
+      "via": "chat",
+      "check": "B1",
+      "name": "must-contain facts",
+      "detail": "0/4 facts found (need 3); missing: ['fair with harmful bias managed', 'safe', 'valid and reliable', 'explainable and interpretable']"
+    },
+    {
+      "turn": "C2-T2",
+      "via": "chat",
+      "check": "C1",
+      "name": "markers match sources",
+      "detail": "no [C#] marker and no source: an answered turn must cite"
+    },
+    {
+      "turn": "C2-T2",
+      "via": "chat",
+      "check": "C2",
+      "name": "expected sections",
+      "detail": "no sources, so no expected section can be cited"
+    }
+  ],
+  "per_turn": [
+    {
+      "id": "S1",
+      "conversation": null,
+      "message": "What are the four core functions of the NIST AI RMF?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "4/4 facts found (need 4)",
+          "data": {
+            "found": [
+              "govern",
+              "map",
+              "measure",
+              "manage"
+            ],
+            "missing": [],
+            "min_facts": 4,
+            "total": 4
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 16 words",
+          "data": {
+            "words": 16,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['ai_rmf_1_0 5']",
+          "data": {
+            "matched": [
+              "ai_rmf_1_0 5"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 100-1, Executive Summary, p. 3",
+              "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "1 of 1 cited sentence(s) scored; min 0.9998",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "The four core functions of the NIST AI RMF are **GOVERN, MAP, MEASURE,** and **MANAGE**.",
+                "keys": [
+                  "C1",
+                  "C2"
+                ],
+                "score": 0.9998,
+                "by_key": {
+                  "C1": 0.9998,
+                  "C2": 0.9991
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "1/1 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 1,
+            "total": 1,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 1
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4396 ms, 4115 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4396,
+            "client_ms": 4420,
+            "tokens": 4115,
+            "router_tokens": 1208,
+            "generation_tokens": 2907,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "conversation": null,
+      "message": "What characteristics make an AI system trustworthy according to the AI RMF?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "7/7 facts found (need 7)",
+          "data": {
+            "found": [
+              "valid and reliable",
+              "safe",
+              "secure and resilient",
+              "accountable and transparent",
+              "explainable and interpretable",
+              "privacy-enhanced",
+              "fair with harmful bias managed"
+            ],
+            "missing": [],
+            "min_facts": 7,
+            "total": 7
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 54 words",
+          "data": {
+            "words": 54,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "3 marker(s) = 3 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['ai_rmf_1_0 3']",
+          "data": {
+            "matched": [
+              "ai_rmf_1_0 3"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 100-1, Executive Summary, pp. 2–3",
+              "NIST AI 100-1, §3 AI Risks and Trustworthiness, Fig. 4, p. 12",
+              "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "3 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "2 of 2 cited sentence(s) scored; min 0.9985",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "The AI RMF defines trustworthy AI systems as those that exhibit the following characteristics: “valid and reliable,” “safe,” “secure and resilient,” “accountable and transparent,” “explainable and interpretable,” “privacy‑enhanced,” and “fair with harmful bias managed”.",
+                "keys": [
+                  "C1",
+                  "C2"
+                ],
+                "score": 0.9999,
+                "by_key": {
+                  "C1": 0.9991,
+                  "C2": 0.9999
+                }
+              },
+              {
+                "sentence": "Valid & Reliable is identified as a necessary condition for trustworthiness, forming the base for the other characteristics.",
+                "keys": [
+                  "C4"
+                ],
+                "score": 0.9985,
+                "by_key": {
+                  "C4": 0.9985
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "2/2 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 2,
+            "total": 2,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 2
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "5820 ms, 4255 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 5820,
+            "client_ms": 5846,
+            "tokens": 4255,
+            "router_tokens": 1207,
+            "generation_tokens": 3048,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "conversation": null,
+      "message": "How do AI risks differ from traditional software risks?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "fail",
+          "detail": "route=out_of_scope; expected route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "fail",
+          "detail": "outcome=out_of_scope; expected answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "fail",
+          "detail": "llm_calls=1, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "fail",
+          "detail": "0/6 facts found (need 2); missing: ['training data may not represent the context', 'pre-trained models', 'opacity / reproducibility', 'drift and maintenance', 'testing difficulty', 'privacy from data aggregation']",
+          "data": {
+            "found": [],
+            "missing": [
+              "training data may not represent the context",
+              "pre-trained models",
+              "opacity / reproducibility",
+              "drift and maintenance",
+              "testing difficulty",
+              "privacy from data aggregation"
+            ],
+            "min_facts": 2,
+            "total": 6
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "fail",
+          "detail": "no [C#] marker and no source: an answered turn must cite",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "fail",
+          "detail": "no sources, so no expected section can be cited",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no sources or no key_map",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "na",
+          "detail": "generation did not run",
+          "data": {}
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "835 ms, 1203 tokens, 1 LLM call(s)",
+          "data": {
+            "latency_ms": 835,
+            "client_ms": 853,
+            "tokens": 1203,
+            "router_tokens": 1203,
+            "generation_tokens": 0,
+            "llm_calls": 1,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S4",
+      "conversation": null,
+      "message": "What is confabulation in the Generative AI Profile?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "3/3 facts found (need 2)",
+          "data": {
+            "found": [
+              "erroneous or false content",
+              "confidently presented",
+              "also called hallucinations or fabrications"
+            ],
+            "missing": [],
+            "min_facts": 2,
+            "total": 3
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 77 words",
+          "data": {
+            "words": 77,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['genai_profile 2', 'genai_profile 2.2']",
+          "data": {
+            "matched": [
+              "genai_profile 2",
+              "genai_profile 2.2"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 600-1, §2.2 Confabulation, p. 6"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "fail",
+          "detail": "fixes=[] warnings=['UNCITED_SENTENCE']",
+          "data": {
+            "fixes": [],
+            "warnings": [
+              "UNCITED_SENTENCE"
+            ],
+            "uncited_sentence_warnings": 1
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "2 of 2 cited sentence(s) scored; min 0.9999",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "It also includes outputs that diverge from the prompts or other input or that contradict previously generated statements in the same context, and is colloquially referred to as “hallucinations” or “fabrications”.",
+                "keys": [
+                  "C1"
+                ],
+                "score": 1.0,
+                "by_key": {
+                  "C1": 1.0
+                }
+              },
+              {
+                "sentence": "GAI outputs may further contain confabulated logic or citations that purport to justify the answer, potentially misleading humans into inappropriately trusting the system’s output.",
+                "keys": [
+                  "C3"
+                ],
+                "score": 0.9999,
+                "by_key": {
+                  "C3": 0.9999
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "2/2 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 2,
+            "total": 2,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "fail",
+          "detail": "1 uncited fact-stating sentence(s): ['Confabulation is a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts.']",
+          "data": {
+            "count": 1,
+            "sentences": [
+              "Confabulation is a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts."
+            ],
+            "cited_sentences": 2
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4795 ms, 4225 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4795,
+            "client_ms": 4803,
+            "tokens": 4225,
+            "router_tokens": 1218,
+            "generation_tokens": 3007,
+            "llm_calls": 2,
+            "waited_s": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S5",
+      "conversation": null,
+      "message": "What does the Generative AI Profile suggest for decommissioning GAI systems?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "6/6 facts found (need 3)",
+          "data": {
+            "found": [
+              "data retention",
+              "data security / leakage",
+              "dependencies between systems",
+              "open-source data or models",
+              "users' emotional entanglement",
+              "ability to deactivate"
+            ],
+            "missing": [],
+            "min_facts": 3,
+            "total": 6
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 89 words",
+          "data": {
+            "words": 89,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['genai_profile GOVERN 1.7']",
+          "data": {
+            "matched": [
+              "genai_profile GOVERN 1.7"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17",
+              "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 4.1, pp. 18–19"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "2 of 2 cited sentence(s) scored; min 0.9434",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "The Generative AI Profile recommends that organizations put in place protocols that allow GAI systems to be deactivated when necessary and that, when decommissioning, they consider factors such as data‑retention requirements, data security and leakage, dependencies with other systems, use of open‑source data or models, and users’ emotional entanglement with the GAI functions.",
+                "keys": [
+                  "C1"
+                ],
+                "score": 0.9902,
+                "by_key": {
+                  "C1": 0.9902
+                }
+              },
+              {
+                "sentence": "It also advises establishing policies, procedures and oversight functions that span the entire GAI lifecycle, from problem formulation and supply chains to system decommission, to ensure safe and risk‑aware phasing out of GAI systems.",
+                "keys": [
+                  "C2"
+                ],
+                "score": 0.9434,
+                "by_key": {
+                  "C2": 0.9434
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "2/2 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 2,
+            "total": 2,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 2
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4556 ms, 4442 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4556,
+            "client_ms": 4575,
+            "tokens": 4442,
+            "router_tokens": 1251,
+            "generation_tokens": 3191,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S6",
+      "conversation": null,
+      "message": "What is suggested action GV-1.7-001?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "1/1 facts found (need 1)",
+          "data": {
+            "found": [
+              "deactivation protocols"
+            ],
+            "missing": [],
+            "min_facts": 1,
+            "total": 1
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 16 words",
+          "data": {
+            "words": 16,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "1 marker(s) = 1 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['genai_profile GOVERN 1.7']",
+          "data": {
+            "matched": [
+              "genai_profile GOVERN 1.7"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "1 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "fail",
+          "detail": "fixes=[] warnings=['UNCITED_SENTENCE']",
+          "data": {
+            "fixes": [],
+            "warnings": [
+              "UNCITED_SENTENCE"
+            ],
+            "uncited_sentence_warnings": 1
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "1 of 1 cited sentence(s) scored; min 0.9996",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "Protocols are put in place to ensure GAI systems are able to be deactivated when necessary.",
+                "keys": [
+                  "C1"
+                ],
+                "score": 0.9996,
+                "by_key": {
+                  "C1": 0.9996
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "1/1 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 1,
+            "total": 1,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 1
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4903 ms, 4608 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4903,
+            "client_ms": 4922,
+            "tokens": 4608,
+            "router_tokens": 1269,
+            "generation_tokens": 3339,
+            "llm_calls": 2,
+            "waited_s": 34.99
+          }
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "conversation": null,
+      "message": "What penalties does the EU AI Act set for non-compliance?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=out_of_scope (acceptable alternative)",
+          "data": {
+            "alternative": true,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=out_of_scope (acceptable alternative)",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "pass",
+          "detail": "OUT_OF_SCOPE_TEXT matches exactly",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=1, expected 1",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "na",
+          "detail": "no must-contain facts",
+          "data": {}
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "na",
+          "detail": "generation did not run",
+          "data": {}
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "1264 ms, 1178 tokens, 1 LLM call(s)",
+          "data": {
+            "latency_ms": 1264,
+            "client_ms": 1294,
+            "tokens": 1178,
+            "router_tokens": 1178,
+            "generation_tokens": 0,
+            "llm_calls": 1,
+            "waited_s": 34.98
+          }
+        }
+      ]
+    },
+    {
+      "id": "S8",
+      "conversation": null,
+      "message": "What are the four functions of the AI RMF, and how much does an AI RMF certification cost?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=insufficient",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "pass",
+          "detail": "INSUFFICIENT_TEXT matches exactly",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "na",
+          "detail": "no must-contain facts",
+          "data": {}
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "pass",
+          "detail": "answer='The NIST documents provided do not contain this information.'",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "pass",
+          "detail": "0 source(s)",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "pass",
+          "detail": "5 related section(s), expected 5",
+          "data": {
+            "labels": [
+              "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+              "NIST AI 100-1, Executive Summary, p. 3",
+              "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+              "NIST AI 100-1, §6 AI RMF Profiles, p. 33",
+              "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42"
+            ]
+          }
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "pass",
+          "detail": "insufficient_reason=model_case_d",
+          "data": {
+            "reason": "model_case_d"
+          }
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "5280 ms, 4415 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 5280,
+            "client_ms": 5286,
+            "tokens": 4415,
+            "router_tokens": 1300,
+            "generation_tokens": 3115,
+            "llm_calls": 2,
+            "waited_s": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S9",
+      "conversation": null,
+      "message": "What is the capital of France?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=out_of_scope",
+          "data": {
+            "alternative": false,
+            "preferred_route": "out_of_scope"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=out_of_scope",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "pass",
+          "detail": "OUT_OF_SCOPE_TEXT matches exactly",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=1, expected 1",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "na",
+          "detail": "no must-contain facts",
+          "data": {}
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "na",
+          "detail": "generation did not run",
+          "data": {}
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "810 ms, 1166 tokens, 1 LLM call(s)",
+          "data": {
+            "latency_ms": 810,
+            "client_ms": 824,
+            "tokens": 1166,
+            "router_tokens": 1166,
+            "generation_tokens": 0,
+            "llm_calls": 1,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "conversation": null,
+      "message": "Hello!",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=greeting, route_source=rule",
+          "data": {
+            "alternative": false,
+            "preferred_route": "greeting"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=greeting",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "pass",
+          "detail": "GREETING_TEXT matches exactly",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=0, expected 0",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "na",
+          "detail": "no must-contain facts",
+          "data": {}
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "na",
+          "detail": "generation did not run",
+          "data": {}
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "6 ms, 0 tokens, 0 LLM call(s)",
+          "data": {
+            "latency_ms": 6,
+            "client_ms": 9,
+            "tokens": 0,
+            "router_tokens": 0,
+            "generation_tokens": 0,
+            "llm_calls": 0,
+            "waited_s": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C1-T1",
+      "conversation": "C1",
+      "message": "What are the four functions of the AI RMF?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "4/4 facts found (need 4)",
+          "data": {
+            "found": [
+              "govern",
+              "map",
+              "measure",
+              "manage"
+            ],
+            "missing": [],
+            "min_facts": 4,
+            "total": 4
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 13 words",
+          "data": {
+            "words": 13,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['ai_rmf_1_0 5']",
+          "data": {
+            "matched": [
+              "ai_rmf_1_0 5"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 100-1, Executive Summary, p. 3",
+              "NIST AI 100-1, §5 AI RMF Core, pp. 20–21"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "1 of 1 cited sentence(s) scored; min 0.9999",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "The AI RMF Core comprises four functions: **GOVERN**, **MAP**, **MEASURE**, and **MANAGE**.",
+                "keys": [
+                  "C1",
+                  "C2"
+                ],
+                "score": 0.9999,
+                "by_key": {
+                  "C1": 0.9999,
+                  "C2": 0.9975
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "1/1 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 1,
+            "total": 1,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 1
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "5115 ms, 4189 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 5115,
+            "client_ms": 5131,
+            "tokens": 4189,
+            "router_tokens": 1221,
+            "generation_tokens": 2968,
+            "llm_calls": 2,
+            "waited_s": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C1-T2",
+      "conversation": "C1",
+      "message": "Which one is cross-cutting?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "pass",
+          "detail": "standalone_query='Which of the four AI RMF core functions is cross-cutting?'",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "2/2 facts found (need 2)",
+          "data": {
+            "found": [
+              "govern",
+              "cross-cutting"
+            ],
+            "missing": [],
+            "min_facts": 2,
+            "total": 2
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 21 words",
+          "data": {
+            "words": 21,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['ai_rmf_1_0 5', 'ai_rmf_1_0 5.1']",
+          "data": {
+            "matched": [
+              "ai_rmf_1_0 5",
+              "ai_rmf_1_0 5.1"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+              "NIST AI 100-1, §5.1 Govern, pp. 21–22"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "1 of 1 cited sentence(s) scored; min 0.9998",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "The cross‑cutting AI RMF core function is **GOVERN** – it is designed to be infused throughout the other three functions.",
+                "keys": [
+                  "C1",
+                  "C2"
+                ],
+                "score": 0.9998,
+                "by_key": {
+                  "C1": 0.9998,
+                  "C2": 0.998
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "1/1 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 1,
+            "total": 1,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "pass",
+          "detail": "0 uncited fact-stating sentence(s)",
+          "data": {
+            "count": 0,
+            "sentences": [],
+            "cited_sentences": 1
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4435 ms, 3855 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4435,
+            "client_ms": 4460,
+            "tokens": 3855,
+            "router_tokens": 1263,
+            "generation_tokens": 2592,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C1-T3",
+      "conversation": "C1",
+      "message": "What categories does it include?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "fail",
+          "detail": "outcome=insufficient; expected answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "pass",
+          "detail": "standalone_query='What categories are included in the GOVERN function of the AI RMF?'",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "fail",
+          "detail": "0/6 facts found (need 4); missing: ['GOVERN 1: policies, processes, procedures, practices', 'GOVERN 2: accountability structures', 'GOVERN 3: workforce diversity, equity, inclusion', 'GOVERN 4: culture that considers AI risk', 'GOVERN 5: engagement with relevant AI actors', 'GOVERN 6: third-party software, data, supply chain']",
+          "data": {
+            "found": [],
+            "missing": [
+              "GOVERN 1: policies, processes, procedures, practices",
+              "GOVERN 2: accountability structures",
+              "GOVERN 3: workforce diversity, equity, inclusion",
+              "GOVERN 4: culture that considers AI risk",
+              "GOVERN 5: engagement with relevant AI actors",
+              "GOVERN 6: third-party software, data, supply chain"
+            ],
+            "min_facts": 4,
+            "total": 6
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "fail",
+          "detail": "no [C#] marker and no source: an answered turn must cite",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "fail",
+          "detail": "no sources, so no expected section can be cited",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no sources or no key_map",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4736 ms, 4184 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4736,
+            "client_ms": 4762,
+            "tokens": 4184,
+            "router_tokens": 1309,
+            "generation_tokens": 2875,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C2-T1",
+      "conversation": "C2",
+      "message": "What is confabulation in generative AI?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "pass",
+          "detail": "2/2 facts found (need 1)",
+          "data": {
+            "found": [
+              "erroneous or false content",
+              "hallucinations"
+            ],
+            "missing": [],
+            "min_facts": 1,
+            "total": 2
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "na",
+          "detail": "no traps",
+          "data": {}
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "pass",
+          "detail": "English, 52 words",
+          "data": {
+            "words": 52,
+            "over_length": false,
+            "english": true
+          }
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "pass",
+          "detail": "2 marker(s) = 2 source key(s)",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "pass",
+          "detail": "matched ['genai_profile 2', 'genai_profile 2.2']",
+          "data": {
+            "matched": [
+              "genai_profile 2",
+              "genai_profile 2.2"
+            ],
+            "forbidden_cited": [],
+            "other_docs": [],
+            "labels": [
+              "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4",
+              "NIST AI 600-1, §2.2 Confabulation, p. 6"
+            ]
+          }
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "pass",
+          "detail": "2 cited chunk(s) open the right page",
+          "data": {
+            "explained": []
+          }
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "fail",
+          "detail": "fixes=[] warnings=['UNCITED_SENTENCE']",
+          "data": {
+            "fixes": [],
+            "warnings": [
+              "UNCITED_SENTENCE"
+            ],
+            "uncited_sentence_warnings": 1
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "pass",
+          "detail": "1 of 1 cited sentence(s) scored; min 0.9999",
+          "data": {
+            "sentences": [
+              {
+                "sentence": "It includes outputs that diverge from the input or contradict earlier statements, and is colloquially called “hallucinations” or “fabrications”.",
+                "keys": [
+                  "C1",
+                  "C3"
+                ],
+                "score": 0.9999,
+                "by_key": {
+                  "C1": 0.9999,
+                  "C3": 0.9839
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "pass",
+          "detail": "1/1 sentence(s) at or above 0.7",
+          "data": {
+            "supported": 1,
+            "total": 1,
+            "threshold": 0.7,
+            "unsupported": []
+          }
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "fail",
+          "detail": "2 uncited fact-stating sentence(s): ['Confabulation in generative AI is the production of confidently stated but erroneous or false content in response to prompts.', 'This phenomenon can mislead or deceive users by presenting inaccurate information as fact.']",
+          "data": {
+            "count": 2,
+            "sentences": [
+              "Confabulation in generative AI is the production of confidently stated but erroneous or false content in response to prompts.",
+              "This phenomenon can mislead or deceive users by presenting inaccurate information as fact."
+            ],
+            "cited_sentences": 1
+          }
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "4861 ms, 4127 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 4861,
+            "client_ms": 4892,
+            "tokens": 4127,
+            "router_tokens": 1229,
+            "generation_tokens": 2898,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C2-T2",
+      "conversation": "C2",
+      "message": "Hi again! Which trustworthy AI characteristics is it related to?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=nist_question, route_source=llm",
+          "data": {
+            "alternative": false,
+            "preferred_route": "nist_question"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "fail",
+          "detail": "outcome=insufficient; expected answered",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "na",
+          "detail": "no fixed text expected",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "pass",
+          "detail": "standalone_query='Which trustworthy AI characteristic is confabulation related to?'",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=2, expected 2",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "fail",
+          "detail": "0/4 facts found (need 3); missing: ['fair with harmful bias managed', 'safe', 'valid and reliable', 'explainable and interpretable']",
+          "data": {
+            "found": [],
+            "missing": [
+              "fair with harmful bias managed",
+              "safe",
+              "valid and reliable",
+              "explainable and interpretable"
+            ],
+            "min_facts": 3,
+            "total": 4
+          }
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "fail",
+          "detail": "no [C#] marker and no source: an answered turn must cite",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "fail",
+          "detail": "no sources, so no expected section can be cited",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no sources or no key_map",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "pass",
+          "detail": "no fixes, no warnings",
+          "data": {
+            "fixes": [],
+            "warnings": []
+          }
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "no answered response to score",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "5014 ms, 5055 tokens, 2 LLM call(s)",
+          "data": {
+            "latency_ms": 5014,
+            "client_ms": 5040,
+            "tokens": 5055,
+            "router_tokens": 1304,
+            "generation_tokens": 3751,
+            "llm_calls": 2,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "C2-T3",
+      "conversation": "C2",
+      "message": "What's the weather in Pune today?",
+      "checks": [
+        {
+          "id": "A1",
+          "name": "route",
+          "status": "pass",
+          "detail": "route=out_of_scope",
+          "data": {
+            "alternative": false,
+            "preferred_route": "out_of_scope"
+          }
+        },
+        {
+          "id": "A2",
+          "name": "outcome",
+          "status": "pass",
+          "detail": "outcome=out_of_scope",
+          "data": {}
+        },
+        {
+          "id": "A3",
+          "name": "fixed text",
+          "status": "pass",
+          "detail": "OUT_OF_SCOPE_TEXT matches exactly",
+          "data": {}
+        },
+        {
+          "id": "A4",
+          "name": "standalone query",
+          "status": "na",
+          "detail": "not a follow-up case",
+          "data": {}
+        },
+        {
+          "id": "A5",
+          "name": "llm calls",
+          "status": "pass",
+          "detail": "llm_calls=1, expected 1",
+          "data": {}
+        },
+        {
+          "id": "B1",
+          "name": "must-contain facts",
+          "status": "na",
+          "detail": "no must-contain facts",
+          "data": {}
+        },
+        {
+          "id": "B2",
+          "name": "traps",
+          "status": "pass",
+          "detail": "no trap hit",
+          "data": {
+            "hit": []
+          }
+        },
+        {
+          "id": "B3",
+          "name": "language and length",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "C1",
+          "name": "markers match sources",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C2",
+          "name": "expected sections",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C3",
+          "name": "link check",
+          "status": "na",
+          "detail": "no citations expected for this outcome",
+          "data": {}
+        },
+        {
+          "id": "C4",
+          "name": "fixes and warnings",
+          "status": "na",
+          "detail": "generation did not run",
+          "data": {}
+        },
+        {
+          "id": "D1",
+          "name": "sentence support scores",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D2",
+          "name": "supported sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "D3",
+          "name": "uncited sentences",
+          "status": "na",
+          "detail": "not an answered turn",
+          "data": {}
+        },
+        {
+          "id": "E1",
+          "name": "exact sentence",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E2",
+          "name": "sources empty",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E3",
+          "name": "related sections",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "E4",
+          "name": "reason recorded",
+          "status": "na",
+          "detail": "not an insufficient turn",
+          "data": {}
+        },
+        {
+          "id": "F1",
+          "name": "HTTP status",
+          "status": "pass",
+          "detail": "HTTP 200",
+          "data": {
+            "status": 200,
+            "retried": false
+          }
+        },
+        {
+          "id": "F2",
+          "name": "latency and tokens",
+          "status": "pass",
+          "detail": "661 ms, 1272 tokens, 1 LLM call(s)",
+          "data": {
+            "latency_ms": 661,
+            "client_ms": 681,
+            "tokens": 1272,
+            "router_tokens": 1272,
+            "generation_tokens": 0,
+            "llm_calls": 1,
+            "waited_s": 35.0
+          }
+        }
+      ]
+    }
+  ],
+  "stream": [
+    {
+      "id": "S1",
+      "message": "What are the four core functions of the NIST AI RMF?",
+      "checks": [
+        {
+          "id": "ST1",
+          "name": "event order",
+          "status": "pass",
+          "detail": "40 events, order valid",
+          "data": {
+            "events": 40
+          }
+        },
+        {
+          "id": "ST2",
+          "name": "nothing after error",
+          "status": "pass",
+          "detail": "no error event",
+          "data": {}
+        },
+        {
+          "id": "ST3",
+          "name": "same structure as /chat",
+          "status": "pass",
+          "detail": "outcome answered, citations consistent (wording is not compared: temperature 0.2)",
+          "data": {
+            "final_text_words": 16
+          }
+        },
+        {
+          "id": "ST4",
+          "name": "timing",
+          "status": "pass",
+          "detail": "first token 3560 ms, total 3612 ms",
+          "data": {
+            "first_token_ms": 3560,
+            "total_ms": 3612
+          }
+        }
+      ]
+    },
+    {
+      "id": "S7",
+      "message": "What penalties does the EU AI Act set for non-compliance?",
+      "checks": [
+        {
+          "id": "ST1",
+          "name": "event order",
+          "status": "pass",
+          "detail": "4 events, order valid",
+          "data": {
+            "events": 4
+          }
+        },
+        {
+          "id": "ST2",
+          "name": "nothing after error",
+          "status": "pass",
+          "detail": "no error event",
+          "data": {}
+        },
+        {
+          "id": "ST3",
+          "name": "same structure as /chat",
+          "status": "pass",
+          "detail": "outcome out_of_scope, citations consistent (wording is not compared: temperature 0.2)",
+          "data": {
+            "final_text_words": 6
+          }
+        },
+        {
+          "id": "ST4",
+          "name": "timing",
+          "status": "pass",
+          "detail": "first token 783 ms, total 783 ms",
+          "data": {
+            "first_token_ms": 783,
+            "total_ms": 783
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "The support score (group D) uses the same reranker model as retrieval, so it is not an independent judge; a sentence can score high on topic overlap with a subtle factual error. The gold facts (B) and the citation checks (C) complement it.",
+    "Temperature 0.2 means wording can differ between two runs of the same question; each case ran once, so single results carry variance.",
+    "Fact matching is lexical (case-insensitive, hyphen-insensitive, word-start prefix): a correct answer in other words can miss a fact, and a fact word in a wrong context can count.",
+    "Sixteen requests is a small sample: the percentages are descriptive, not statistically tight.",
+    "The English check is a heuristic (script and common English words)."
+  ]
+}

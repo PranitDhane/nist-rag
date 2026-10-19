@@ -1,0 +1,223 @@
+{
+  "id": "C2-T1",
+  "conversation": "C2",
+  "message": "What is confabulation in generative AI?",
+  "thread_id_sent": null,
+  "status": 200,
+  "body": {
+    "thread_id": "3c250c51-7a9d-49e2-82f9-e2a3ff187ee9",
+    "route": "nist_question",
+    "answer": "Confabulation in generative AI is the production of confidently stated but erroneous or false content in response to prompts. It includes outputs that diverge from the input or contradict earlier statements, and is colloquially called “hallucinations” or “fabrications” [C1][C3]. This phenomenon can mislead or deceive users by presenting inaccurate information as fact.",
+    "sources": [
+      {
+        "keys": [
+          "C3"
+        ],
+        "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=7",
+        "kind": "prose"
+      },
+      {
+        "keys": [
+          "C1"
+        ],
+        "label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=10",
+        "kind": "prose"
+      }
+    ],
+    "standalone_query": "What is confabulation in generative AI?",
+    "related_sections": [],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 4861,
+      "outcome": "answered",
+      "insufficient_reason": null,
+      "usage": {
+        "router": 1229,
+        "generation": 2898,
+        "total": 4127
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [
+        "UNCITED_SENTENCE"
+      ],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "attribute",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.5,
+          "rule_greeting_check": 0.5,
+          "classify_and_rewrite": 957.7,
+          "hybrid_search": 756.7,
+          "rerank": 1999.5,
+          "gate": 0.1,
+          "expand_context": 0.3,
+          "generate": 1101.7,
+          "attribute": 0.1,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "What is confabulation in generative AI?",
+        "retrieval": {
+          "candidate_count": 18,
+          "candidates": [
+            {
+              "chunk_id": "genai_profile:prose:0010:1",
+              "label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+              "rerank_score": 0.9991412162780762
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0012:1",
+              "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, footnote 9, p. 6",
+              "rerank_score": 0.9323205351829529
+            },
+            {
+              "chunk_id": "genai_profile:prose:0003:4",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4",
+              "rerank_score": 0.9096766710281372
+            },
+            {
+              "chunk_id": "genai_profile:prose:0010:2",
+              "label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+              "rerank_score": 0.8728643655776978
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0056:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.5, p. 31",
+              "rerank_score": 0.49793604016304016
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0013:1",
+              "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, footnote 10, p. 6",
+              "rerank_score": 0.17599928379058838
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0070:2",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 2.2, p. 41",
+              "rerank_score": 0.11020045727491379
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0075:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, p. 44",
+              "rerank_score": 0.10406061261892319
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0001:1",
+              "label": "NIST AI 600-1, §1 Introduction, footnote 1, p. 1",
+              "rerank_score": 0.02053811587393284
+            },
+            {
+              "chunk_id": "genai_profile:prose:0009:1",
+              "label": "NIST AI 600-1, §2.1 CBRN Information or Capabilities, p. 5",
+              "rerank_score": 0.011248257011175156
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0006:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 6, p. 4",
+              "rerank_score": 0.007557820528745651
+            },
+            {
+              "chunk_id": "genai_profile:prose:0015:1",
+              "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8",
+              "rerank_score": 0.0052695730701088905
+            },
+            {
+              "chunk_id": "genai_profile:prose:0016:2",
+              "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, pp. 8–9",
+              "rerank_score": 0.004294000566005707
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0004:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 3, p. 2",
+              "rerank_score": 0.004045769106596708
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0007:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 7, p. 4",
+              "rerank_score": 0.0035103638656437397
+            },
+            {
+              "chunk_id": "genai_profile:prose:0018:2",
+              "label": "NIST AI 600-1, §2.8 Information Integrity, p. 10",
+              "rerank_score": 0.0028833241667598486
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0008:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4",
+              "rerank_score": 0.0028714328072965145
+            },
+            {
+              "chunk_id": "genai_profile:prose:0020:2",
+              "label": "NIST AI 600-1, §2.9 Information Security, p. 11",
+              "rerank_score": 0.0027407973539084196
+            }
+          ],
+          "best_score": 0.9991412162780762,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": []
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 2578,
+            "completion": 320,
+            "reasoning": 236,
+            "total": 2898
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [
+            "UNCITED_SENTENCE"
+          ],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "genai_profile:prose:0010:1",
+          "C2": "genai_profile:footnote:0012:1",
+          "C3": "genai_profile:prose:0003:4",
+          "C4": "genai_profile:prose:0010:2",
+          "C5": "genai_profile:genai_action_table:0056:1"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 4892,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 35.0,
+  "elapsed_ms": 4892,
+  "recorded_at": "2026-10-19T05:32:58+00:00"
+}

@@ -15,6 +15,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 from eval import e2e_cases as cases_mod
+from eval import e2e_ground as ground
 from eval.e2e_cases import contains, fact_found, section_matches
 
 PASS, FAIL, NA = "pass", "fail", "na"
@@ -22,6 +23,8 @@ MARKER = re.compile(r"\[C(\d+)\]")
 GATE_REASONS = {"gate_low_score", "no_candidates"}          # insufficient answers that never reached the model
 MAX_WORDS = 150                                              # prompt rule; reported, not failed (plan B3)
 RELATED_COUNT = 5
+SHORT_TEXT_WORDS = 8
+MIN_STOPWORDS = 2          # was 3: the live answer 'The AI RMF Core comprises four functions: GOVERN, MAP, MEASURE, and MANAGE' has only 2
 EN_STOPWORDS = {"the", "and", "of", "is", "are", "to", "in", "a", "that", "for", "with", "by", "as", "it", "this", "be"}
 
 
@@ -49,6 +52,8 @@ class Context:
     chunks: dict[str, dict]                       # chunk_id -> chunk record (from chunks.jsonl)
     llm_calls: dict[str, int]                     # expected LLM calls per outcome (case file `defaults`)
     link: LinkContext | None = None
+    scorer: ground.Scorer | None = None           # group D: (sentence, [chunk text]) -> scores; None = D1/D2 are na
+    support_threshold: float | None = None        # chosen at V4 (Q2) from the calibration table; None = D2 is na
 
 
 # ------------------------------------------------------------------ reading one saved record
@@ -185,13 +190,15 @@ def strip_markers(text: str) -> str:
 
 
 def is_english(text: str) -> bool:
-    """Heuristic for plan B3: almost all letters are Latin and common English words are present. A Hindi answer fails."""
+    """Heuristic for plan B3: almost all letters are Latin and, for texts of 8+ words, common English words (at least MIN_STOPWORDS) are present.
+    A Hindi answer fails on the script alone; a Latin-script answer in another language fails on the stop words."""
     letters = [c for c in text if c.isalpha()]
     if not letters:
         return False
     latin = sum(("a" <= c.lower() <= "z") for c in letters)
     words = set(re.findall(r"[a-z']+", text.lower()))
-    return latin / len(letters) >= 0.95 and len(words & EN_STOPWORDS) >= 3
+    long_enough = len(text.split()) >= SHORT_TEXT_WORDS      # very short answers ('GOVERN.') have no stop words to count
+    return latin / len(letters) >= 0.95 and (not long_enough or len(words & EN_STOPWORDS) >= MIN_STOPWORDS)
 
 
 def check_b(case: dict, v: View, ctx: Context) -> list[Check]:
@@ -240,7 +247,10 @@ def cited_chunks(v: View, ctx: Context) -> tuple[dict[str, dict], list[str]]:
     found, missing = {}, []
     for k in cited_keys(v):
         chunk = ctx.chunks.get(v.key_map.get(k, ""))
-        (found.__setitem__(k, chunk) if chunk else missing.append(k))
+        if chunk:
+            found[k] = chunk
+        else:
+            missing.append(k)
     return found, missing
 
 
@@ -281,7 +291,7 @@ def _c2(case: dict, v: View, ctx: Context, name: str) -> Check:
                   if c["doc_id"] == s["doc"] and section_matches(c, s["section"])})
     wanted_docs = {s["doc"] for s in expected}
     other_docs = sorted({c["doc_id"] for c in found.values()} - wanted_docs)
-    labels = sorted({c["citation_label"] for c in found.values()})
+    labels = sorted({c.get("citation_label") or c["chunk_id"] for c in found.values()})
     ok = bool(matched) and not bad
     detail = (f"matched {matched}" if matched else f"none of {[s['section'] for s in expected]} cited") + \
              (f"; FORBIDDEN section cited: {bad}" if bad else "") + (f"; also cited from other document(s): {other_docs}" if other_docs else "")
@@ -330,6 +340,42 @@ def _c4(v: View, name: str) -> Check:
     return Check("C4", name, FAIL, f"fixes={fixes} warnings={warnings}", {"fixes": fixes, "warnings": warnings, "uncited_sentence_warnings": uncited})
 
 
+# ------------------------------------------------------------------ D. groundedness (V4)
+def check_d(case: dict, v: View, ctx: Context) -> list[Check]:
+    names = {"D1": "sentence support scores", "D2": "supported sentences", "D3": "uncited sentences"}
+    if case["expected_outcome"] != "answered":
+        return [_na(k, n, "not an answered turn") for k, n in names.items()]
+    if not v.ok or v.outcome != "answered":
+        return [_na(k, n, "no answered response to score") for k, n in names.items()]
+    units, uncited = ground.extract_units(v.answer)
+    d3 = Check("D3", names["D3"], FAIL if uncited else PASS, f"{len(uncited)} uncited fact-stating sentence(s)" + (f": {uncited}" if uncited else ""),
+               {"count": len(uncited), "sentences": uncited, "cited_sentences": len(units)})
+    if ctx.scorer is None:
+        return [_na("D1", names["D1"], "scorer not loaded"), _na("D2", names["D2"], "scorer not loaded"), d3]
+    if not v.key_map:
+        return [_na("D1", names["D1"], "debug.key_map missing"), _na("D2", names["D2"], "debug.key_map missing"), d3]
+    key_to_text = {k: ctx.chunks[cid]["display_text"] for k, cid in v.key_map.items() if cid in ctx.chunks}
+    scored = ground.score_units(units, key_to_text, ctx.scorer)
+    rows = [{"sentence": sc.unit.text, "keys": sc.unit.keys, "score": None if sc.best is None else round(sc.best, 4),
+             "by_key": {k: round(x, 4) for k, x in sc.scores.items()}} for sc in scored]
+    resolved = [r for r in rows if r["score"] is not None]
+    d1 = Check("D1", names["D1"], PASS if resolved else NA,
+               f"{len(resolved)} of {len(rows)} cited sentence(s) scored" + (f"; min {min(r['score'] for r in resolved)}" if resolved else ""),
+               {"sentences": rows})
+    if ctx.support_threshold is None:
+        d2 = _na("D2", names["D2"], "support threshold not chosen yet (Q2)")
+    elif not resolved:
+        d2 = _na("D2", names["D2"], "no sentence could be scored")
+    else:
+        weak = [r for r in resolved if r["score"] < ctx.support_threshold]
+        d2 = Check("D2", names["D2"], FAIL if weak else PASS,
+                   f"{len(resolved) - len(weak)}/{len(resolved)} sentence(s) at or above {ctx.support_threshold}" +
+                   (f"; below: {[(r['sentence'][:60], r['score']) for r in weak]}" if weak else ""),
+                   {"supported": len(resolved) - len(weak), "total": len(resolved), "threshold": ctx.support_threshold,
+                    "unsupported": [{"sentence": r["sentence"], "score": r["score"]} for r in weak]})
+    return [d1, d2, d3]
+
+
 # ------------------------------------------------------------------ E. insufficient path
 def check_e(case: dict, v: View, ctx: Context) -> list[Check]:
     names = {"E1": "exact sentence", "E2": "sources empty", "E3": "related sections", "E4": "reason recorded"}
@@ -374,7 +420,8 @@ def check_f(case: dict, record: dict, v: View) -> list[Check]:
 # ------------------------------------------------------------------ one turn, a whole run
 def run_turn_checks(case: dict, record: dict, ctx: Context) -> list[Check]:
     v = view(record)
-    return [*check_a(case, v, ctx), *check_b(case, v, ctx), *check_c(case, v, ctx), *check_e(case, v, ctx), *check_f(case, record, v)]
+    return [*check_a(case, v, ctx), *check_b(case, v, ctx), *check_c(case, v, ctx), *check_d(case, v, ctx), *check_e(case, v, ctx),
+            *check_f(case, record, v)]
 
 
 def run_checks(data: dict, records: list[dict], ctx: Context) -> list[dict]:
@@ -390,6 +437,88 @@ def run_checks(data: dict, records: list[dict], ctx: Context) -> list[dict]:
         rows.append({"id": rec["id"], "conversation": case.get("conversation"), "message": case["message"],
                      "checks": [asdict(c) for c in run_turn_checks(case, rec, ctx)]})
     return rows
+
+
+# ------------------------------------------------------------------ ST. streaming subset (plan Section 6)
+def stream_event_names(rec: dict) -> list[str]:
+    return [e["event"] for e in rec.get("events", [])]
+
+
+def streamed_text(rec: dict) -> str:
+    """What a client ends up showing: the correction text if one was sent, otherwise the tokens joined."""
+    events = rec.get("events", [])
+    corrections = [e["data"].get("text", "") for e in events if e["event"] == "correction" and isinstance(e["data"], dict)]
+    if corrections:
+        return corrections[-1]
+    return "".join(e["data"].get("text", "") for e in events if e["event"] == "token" and isinstance(e["data"], dict))
+
+
+def valid_event_order(names: list[str], outcome: str | None) -> tuple[bool, str]:
+    """meta -> token+ -> [correction] -> sources -> [related, only for an insufficient outcome] -> done; or an error
+    that is the LAST event (anything before it may be a partial stream)."""
+    if "error" in names:
+        return (names[-1] == "error" and names.count("error") == 1, "error must be the single, last event")
+    expected = ["meta", "token", "sources", "done"]
+    squeezed = [n for i, n in enumerate(names) if not (n == "token" and i > 0 and names[i - 1] == "token")]
+    if outcome == "insufficient":
+        expected.insert(3, "related")
+    if "correction" in squeezed:
+        squeezed.remove("correction")
+        if squeezed.index("sources") != squeezed.index("token") + 1 or names.index("correction") < names.index("token"):
+            return False, "correction must come after the tokens and before sources"
+    ok = squeezed == expected
+    return ok, f"events {squeezed}, expected {expected}"
+
+
+def check_stream(case: dict, rec: dict, chat_record: dict | None) -> list[Check]:
+    names = stream_event_names(rec)
+    done = next((e["data"] for e in rec.get("events", []) if e["event"] == "done" and isinstance(e["data"], dict)), {})
+    outcome = done.get("outcome")
+    if rec.get("status") != 200 or not names:
+        why = rec.get("error") or f"HTTP {rec.get('status')}"
+        return [Check("ST1", "event order", FAIL, f"no stream: {why}"), _na("ST2", "nothing after error", "no stream"),
+                _na("ST3", "same structure as /chat", "no stream"), _na("ST4", "timing", "no stream")]
+    ok, why = valid_event_order(names, outcome)
+    out = [Check("ST1", "event order", PASS if ok else FAIL, why if not ok else f"{len(names)} events, order valid", {"events": len(names)})]
+
+    errs = [i for i, n in enumerate(names) if n == "error"]
+    after = names[errs[0] + 1:] if errs else []
+    out.append(Check("ST2", "nothing after error", FAIL if after else PASS,
+                     f"events after error: {after}" if after else ("stream ended with an error event" if errs else "no error event")))
+
+    final = streamed_text(rec)
+    cv = view(chat_record) if chat_record else None
+    if cv is None or not cv.ok:
+        out.append(_na("ST3", "same structure as /chat", "no successful /chat run of the same case to compare with"))
+    elif errs:
+        out.append(Check("ST3", "same structure as /chat", FAIL, "stream ended in an error, /chat did not"))
+    else:
+        sources_ev = next((e["data"] for e in rec["events"] if e["event"] == "sources" and isinstance(e["data"], dict)), {})
+        src_keys = {k for s in sources_ev.get("sources", []) for k in s.get("keys", [])}
+        problems = []
+        if outcome != cv.outcome:
+            problems.append(f"outcome stream={outcome} /chat={cv.outcome}")
+        if outcome == "answered":
+            markers = {f"C{n}" for n in MARKER.findall(final)}
+            if not markers:
+                problems.append("streamed final text has no [C#] marker")
+            if markers != src_keys:
+                problems.append(f"markers {sorted(markers)} != sources keys {sorted(src_keys)}")
+        elif outcome == "insufficient" and src_keys:
+            problems.append("insufficient stream carried sources")
+        out.append(Check("ST3", "same structure as /chat", FAIL if problems else PASS, "; ".join(problems) or
+                         f"outcome {outcome}, citations consistent (wording is not compared: temperature 0.2)", {"final_text_words": len(final.split())}))
+    out.append(Check("ST4", "timing", PASS if rec.get("first_token_ms") is not None else NA,
+                     f"first token {rec.get('first_token_ms')} ms, total {rec.get('elapsed_ms')} ms",
+                     {"first_token_ms": rec.get("first_token_ms"), "total_ms": rec.get("elapsed_ms")}))
+    return out
+
+
+def run_stream_checks(stream_records: list[dict], chat_records: list[dict], data: dict) -> list[dict]:
+    by_id = {t["id"]: t for t in cases_mod.all_turns(data)}
+    chat = {r["id"]: r for r in chat_records}
+    return [{"id": r["id"], "message": r.get("message"), "checks": [asdict(c) for c in check_stream(by_id.get(r["id"], {}), r, chat.get(r["id"]))]}
+            for r in stream_records]
 
 
 # ------------------------------------------------------------------ context and command line

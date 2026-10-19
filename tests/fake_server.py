@@ -26,10 +26,13 @@ def greeting(thread_id: str) -> dict:
 class FakeServer:
     """`handler(path, payload, n)` returns a Reply; `n` counts POST /chat calls (1-based). Every request is logged."""
 
-    def __init__(self, handler: Callable[[str, dict, int], Reply] | None = None, health: Reply | None = None):
+    def __init__(self, handler: Callable[[str, dict, int], Reply] | None = None, health: Reply | None = None,
+                 stream_handler: Callable[[dict, int], tuple[int, list[tuple[str, dict]]]] | None = None):
         self.requests: list[dict] = []
         self.chat_calls = 0
         self.handler = handler or self.default_handler
+        self.stream_handler = stream_handler or self.default_stream
+        self.stream_calls = 0
         self.health = health or (200, {"status": "ok", "key_configured": True}, {})
         outer = self
 
@@ -53,12 +56,31 @@ class FakeServer:
 
             def do_POST(self):
                 payload = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                if self.path == "/chat/stream":
+                    outer.stream_calls += 1
+                    outer.requests.append({"method": "POST", "path": self.path, "payload": payload})
+                    status, frames = outer.stream_handler(payload, outer.stream_calls)
+                    raw = "".join(f"event: {e}\ndata: {json.dumps(d)}\n\n" for e, d in frames).encode()
+                    self.send_response(status)
+                    self.send_header("Content-Type", "text/event-stream")
+                    self.send_header("Content-Length", str(len(raw)))
+                    self.end_headers()
+                    self.wfile.write(raw)
+                    return
                 outer.chat_calls += 1
                 outer.requests.append({"method": "POST", "path": self.path, "payload": payload})
                 self._send(*outer.handler(self.path, payload, outer.chat_calls))
 
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), H)
         self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+
+    @staticmethod
+    def default_stream(payload: dict, n: int):
+        tid = str(uuid.uuid4())
+        return 200, [("meta", {"thread_id": tid, "route": "nist_question"}), ("token", {"text": "GOVERN is "}),
+                     ("token", {"text": "cross-cutting [C1]."}),
+                     ("sources", {"sources": [{"keys": ["C1"], "label": "x", "url": "u#page=25", "kind": "prose"}]}),
+                     ("done", {"llm_calls": 2, "outcome": "answered", "usage": {"router": 1200, "generation": 2800, "total": 4000}})]
 
     @staticmethod
     def default_handler(path: str, payload: dict, n: int) -> Reply:
@@ -79,4 +101,9 @@ class FakeServer:
 
     @property
     def posts(self) -> list[dict]:
-        return [r["payload"] for r in self.requests if r["method"] == "POST"]
+        """Payloads of POST /chat only (stream requests are in `stream_posts`)."""
+        return [r["payload"] for r in self.requests if r["method"] == "POST" and r["path"] == "/chat"]
+
+    @property
+    def stream_posts(self) -> list[dict]:
+        return [r["payload"] for r in self.requests if r["method"] == "POST" and r["path"] == "/chat/stream"]

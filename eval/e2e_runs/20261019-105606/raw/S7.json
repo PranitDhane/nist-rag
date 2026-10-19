@@ -1,0 +1,65 @@
+{
+  "id": "S7",
+  "conversation": null,
+  "message": "What penalties does the EU AI Act set for non-compliance?",
+  "thread_id_sent": null,
+  "status": 200,
+  "body": {
+    "thread_id": "e83374ea-f6b8-4c64-9db2-177a4c40b44e",
+    "route": "out_of_scope",
+    "answer": "Sorry, we don't have this answer.",
+    "sources": [],
+    "standalone_query": null,
+    "meta": {
+      "llm_calls": 1,
+      "route_source": "llm",
+      "latency_ms": 1264,
+      "outcome": "out_of_scope",
+      "insufficient_reason": null,
+      "usage": {
+        "router": 1178,
+        "generation": 0,
+        "total": 1178
+      },
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "out_of_scope_reply",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.6,
+          "rule_greeting_check": 0.5,
+          "classify_and_rewrite": 1236.8,
+          "out_of_scope_reply": 0.0,
+          "finalize": 0.1
+        },
+        "route": "out_of_scope",
+        "route_source": "llm",
+        "standalone_query": null,
+        "config_version": {
+          "retrieval": null,
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 1294,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 34.98,
+  "elapsed_ms": 1294,
+  "recorded_at": "2026-10-19T05:30:12+00:00"
+}

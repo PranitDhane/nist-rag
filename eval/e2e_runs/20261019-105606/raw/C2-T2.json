@@ -1,0 +1,226 @@
+{
+  "id": "C2-T2",
+  "conversation": "C2",
+  "message": "Hi again! Which trustworthy AI characteristics is it related to?",
+  "thread_id_sent": "3c250c51-7a9d-49e2-82f9-e2a3ff187ee9",
+  "status": 200,
+  "body": {
+    "thread_id": "3c250c51-7a9d-49e2-82f9-e2a3ff187ee9",
+    "route": "nist_question",
+    "answer": "The NIST documents provided do not contain this information.",
+    "sources": [],
+    "standalone_query": "Which trustworthy AI characteristic is confabulation related to?",
+    "related_sections": [
+      {
+        "doc": "NIST AI 600-1 (Generative AI Profile)",
+        "section": "2 Overview of Risks Unique to or Exacerbated by GAI > 2.2 Confabulation",
+        "pages": "p. 6",
+        "citation_label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=10",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 600-1 (Generative AI Profile)",
+        "section": "2 Overview of Risks Unique to or Exacerbated by GAI > 2.7 Human-AI Configuration",
+        "pages": "p. 9",
+        "citation_label": "NIST AI 600-1, §2.7 Human-AI Configuration, p. 9",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=13",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 600-1 (Generative AI Profile)",
+        "section": "3 Suggested Actions to Manage GAI Risks > MANAGE 3.2",
+        "pages": "pp. 43–44",
+        "citation_label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, pp. 43–44",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=47",
+        "kind": "table"
+      },
+      {
+        "doc": "NIST AI 600-1 (Generative AI Profile)",
+        "section": "3 Suggested Actions to Manage GAI Risks > MEASURE 2.3",
+        "pages": "pp. 30–31",
+        "citation_label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.3, pp. 30–31",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=34",
+        "kind": "table"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 1 > 3 AI Risks and Trustworthiness",
+        "pages": "p. 12",
+        "citation_label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=17",
+        "kind": "prose"
+      }
+    ],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 5014,
+      "outcome": "insufficient",
+      "insufficient_reason": "model_case_d",
+      "usage": {
+        "router": 1304,
+        "generation": 3751,
+        "total": 5055
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.2,
+          "rule_greeting_check": 0.2,
+          "classify_and_rewrite": 942.7,
+          "hybrid_search": 722.7,
+          "rerank": 1883.7,
+          "gate": 0.1,
+          "expand_context": 9.1,
+          "generate": 1418.1,
+          "finalize_model_refusal": 0.5,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "Which trustworthy AI characteristic is confabulation related to?",
+        "retrieval": {
+          "candidate_count": 14,
+          "candidates": [
+            {
+              "chunk_id": "genai_profile:prose:0010:2",
+              "label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+              "rerank_score": 0.996326744556427
+            },
+            {
+              "chunk_id": "genai_profile:prose:0017:1",
+              "label": "NIST AI 600-1, §2.7 Human-AI Configuration, p. 9",
+              "rerank_score": 0.993000864982605
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0074:2",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, pp. 43–44",
+              "rerank_score": 0.9437828660011292
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0055:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.3, pp. 30–31",
+              "rerank_score": 0.9418103694915771
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0010:1",
+              "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 12",
+              "rerank_score": 0.895916223526001
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:4",
+              "label": "NIST AI 100-1, Executive Summary, pp. 2–3",
+              "rerank_score": 0.856364905834198
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0010:3",
+              "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13",
+              "rerank_score": 0.6463679075241089
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0015:1",
+              "label": "NIST AI 100-1, §3.4 Accountable and Transparent, pp. 15–16",
+              "rerank_score": 0.5609880089759827
+            },
+            {
+              "chunk_id": "genai_profile:prose:0010:1",
+              "label": "NIST AI 600-1, §2.2 Confabulation, p. 6",
+              "rerank_score": 0.3872164785861969
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0010:2",
+              "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, pp. 12–13",
+              "rerank_score": 0.3352406620979309
+            },
+            {
+              "chunk_id": "genai_profile:prose:0003:4",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, pp. 3–4",
+              "rerank_score": 0.28294968605041504
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:figure:0011:1",
+              "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, Fig. 4, p. 12",
+              "rerank_score": 0.24251440167427063
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0012:1",
+              "label": "NIST AI 600-1, §2.3 Dangerous, Violent, or Hateful Content, footnote 9, p. 6",
+              "rerank_score": 0.11796502768993378
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0012:2",
+              "label": "NIST AI 100-1, §3.1 Valid and Reliable, p. 14",
+              "rerank_score": 0.08071693032979965
+            }
+          ],
+          "best_score": 0.996326744556427,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": [
+            "genai_profile:genai_action_table:0074:1"
+          ]
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 3179,
+            "completion": 572,
+            "reasoning": 552,
+            "total": 3751
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "genai_profile:prose:0010:2",
+          "C2": "genai_profile:prose:0017:1",
+          "C3": "genai_profile:genai_action_table:0074:1",
+          "C4": "genai_profile:genai_action_table:0074:2",
+          "C5": "genai_profile:genai_action_table:0055:1",
+          "C6": "ai_rmf_1_0:prose:0010:1"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 5040,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 35.0,
+  "elapsed_ms": 5040,
+  "recorded_at": "2026-10-19T05:33:38+00:00"
+}

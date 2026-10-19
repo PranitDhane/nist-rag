@@ -127,6 +127,79 @@ def send(client: Client, message: str, thread_id: str | None) -> dict:
             "waited_s": round(waited, 2), "elapsed_ms": sum(a["elapsed_ms"] for a in attempts)}
 
 
+# ------------------------------------------------------------------ streaming (/chat/stream)
+def parse_sse_frame(lines: list[str]) -> tuple[str, object] | None:
+    """One SSE frame ('event: x' + 'data: {json}') -> (event, data). None for an empty/comment-only frame."""
+    event, data = None, []
+    for line in lines:
+        if line.startswith("event:"):
+            event = line[6:].strip()
+        elif line.startswith("data:"):
+            data.append(line[5:].lstrip())
+    if event is None:
+        return None
+    raw = "\n".join(data)
+    try:
+        return event, json.loads(raw)
+    except ValueError:
+        return event, {"unparsed": raw[:200]}
+
+
+def send_stream(client: Client, message: str, thread_id: str | None = None) -> dict:
+    """POST /chat/stream and record every event with the time it arrived (ms since the request was sent). Same pacing
+    as send(); never raises for HTTP errors. Returns {status, events: [{event, data, t_ms}], first_token_ms, elapsed_ms,
+    waited_s, error}."""
+    payload: dict = {"message": message, "debug": True}
+    if thread_id:
+        payload["thread_id"] = thread_id
+    waited = pace(client)
+    started = client.clock()
+    events: list[dict] = []
+    status, error, first_token = None, None, None
+    try:
+        with client.session.post(client.url(cfg.STREAM_PATH), json=payload, stream=True, timeout=cfg.REQUEST_TIMEOUT_S) as r:
+            status = r.status_code
+            if status != 200:
+                events.append({"event": "http_error", "data": _json_or_text(r), "t_ms": round((client.clock() - started) * 1000)})
+            else:
+                frame: list[str] = []
+                for line in r.iter_lines(decode_unicode=True):
+                    if line:
+                        frame.append(line)
+                        continue
+                    parsed = parse_sse_frame(frame)
+                    frame = []
+                    if parsed:
+                        t_ms = round((client.clock() - started) * 1000)
+                        events.append({"event": parsed[0], "data": parsed[1], "t_ms": t_ms})
+                        if parsed[0] == "token" and first_token is None:
+                            first_token = t_ms
+                parsed = parse_sse_frame(frame)           # a final frame without the trailing blank line
+                if parsed:
+                    events.append({"event": parsed[0], "data": parsed[1], "t_ms": round((client.clock() - started) * 1000)})
+    except requests.RequestException as exc:
+        error = f"{type(exc).__name__}: {exc}"
+    done = next((e["data"] for e in events if e["event"] == "done" and isinstance(e["data"], dict)), {})
+    if reached_generation({"meta": done}):
+        client._last_generation_end = client.clock()
+    return {"status": status, "events": events, "first_token_ms": first_token, "waited_s": round(waited, 2),
+            "elapsed_ms": round((client.clock() - started) * 1000), "error": error}
+
+
+def run_stream_turns(client: Client, turns: list[dict], ids: tuple[str, ...], stream_dir: Path | None = None) -> list[dict]:
+    """Send the chosen single-turn cases again through /chat/stream (Q4). Only cases that are single turns and exist."""
+    chosen = [t for t in turns if t["id"] in ids and not t.get("conversation")]
+    records = []
+    for t in chosen:
+        rec = {"id": t["id"], "message": t["message"], **send_stream(client, t["message"])}
+        rec["recorded_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        records.append(rec)
+        if stream_dir is not None:
+            write_raw(stream_dir, rec)
+        log.info("e2e stream %s status=%s events=%d", t["id"], rec["status"], len(rec["events"]))
+    return records
+
+
 def _json_or_text(r: requests.Response) -> object:
     try:
         return r.json()
@@ -197,14 +270,21 @@ def load_run(run_dir: Path) -> dict:
         if not path.is_file():
             raise HarnessError(f"saved run {run_dir} is missing raw/{turn_id}.json listed in run.json.")
         records.append(json.loads(path.read_text(encoding="utf-8")))
-    return {"manifest": manifest, "records": records}
+    stream_records = []
+    for turn_id in manifest.get("stream_ids", []):
+        path = run_dir / "stream" / f"{turn_id}.json"
+        if not path.is_file():
+            raise HarnessError(f"saved run {run_dir} is missing stream/{turn_id}.json listed in run.json.")
+        stream_records.append(json.loads(path.read_text(encoding="utf-8")))
+    return {"manifest": manifest, "records": records, "stream_records": stream_records}
 
 
-def write_manifest(run_dir: Path, client: Client, cases_path: Path, records: list[dict], server: dict, started: str) -> dict:
+def write_manifest(run_dir: Path, client: Client, cases_path: Path, records: list[dict], server: dict, started: str,
+                   stream_records: list[dict] | None = None) -> dict:
     manifest = {"started_at": started, "finished_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "base_url": client.base_url, "pace_seconds": client.pace_seconds, "server_health": server,
                 "cases_file": str(cases_path.name), "cases_sha256": hashlib.sha256(cases_path.read_bytes()).hexdigest(),
-                "turn_ids": [r["id"] for r in records]}
+                "turn_ids": [r["id"] for r in records], "stream_ids": [r["id"] for r in stream_records or []]}
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "run.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
@@ -236,6 +316,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--from-run", type=Path, help="reload a saved run instead of calling the server")
     ap.add_argument("--warmup", action="store_true", help="send one throwaway NIST question first (cold models make the "
                     "first request slow); costs ~4,000 tokens and is not part of the results")
+    ap.add_argument("--stream", nargs="*", default=None, metavar="ID",
+                    help=f"also send these single-turn cases through /chat/stream (default: {' '.join(cfg.STREAM_TURNS)}; "
+                         "pass --stream with no ids, or --no-stream, to skip)")
+    ap.add_argument("--no-stream", action="store_true", help="skip the streaming subset")
     ap.add_argument("--pace", type=float, default=cfg.PACE_SECONDS, help="seconds to wait after a request that reached generation")
     args = ap.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -255,8 +339,12 @@ def main(argv: list[str] | None = None) -> int:
             log.info("e2e warm-up request (not recorded)")
             send(client, cfg.WARMUP_MESSAGE, None)
         records = run_turns(client, turns, run_dir / "raw")
-        write_manifest(run_dir, client, args.cases, records, server, started)
+        stream_ids = () if args.no_stream else tuple(args.stream) if args.stream else cfg.STREAM_TURNS
+        stream_records = run_stream_turns(client, turns, stream_ids, run_dir / "stream") if stream_ids else []
+        write_manifest(run_dir, client, args.cases, records, server, started, stream_records)
         print(summary_table(records))
+        if stream_records:
+            print("\nstreamed:", ", ".join(f"{r['id']} ({len(r['events'])} events, first token {r['first_token_ms']} ms)" for r in stream_records))
         print(f"\nsaved {len(records)} turns to {run_dir}")
         return 0
     except HarnessError as exc:

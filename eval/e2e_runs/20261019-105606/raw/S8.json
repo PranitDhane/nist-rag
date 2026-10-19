@@ -1,0 +1,233 @@
+{
+  "id": "S8",
+  "conversation": null,
+  "message": "What are the four functions of the AI RMF, and how much does an AI RMF certification cost?",
+  "thread_id_sent": null,
+  "status": 200,
+  "body": {
+    "thread_id": "80454584-3cf4-4091-a233-d1942b8e6cdc",
+    "route": "nist_question",
+    "answer": "The NIST documents provided do not contain this information.",
+    "sources": [],
+    "standalone_query": "What are the four functions of the AI RMF and how much does an AI RMF certification cost?",
+    "related_sections": [
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 2 > 5 AI RMF Core",
+        "pages": "pp. 20–21",
+        "citation_label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=25",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Executive Summary",
+        "pages": "p. 3",
+        "citation_label": "NIST AI 100-1, Executive Summary, p. 3",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=8",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Appendix C: AI Risk Management and Human-AI Interaction",
+        "pages": "p. 41",
+        "citation_label": "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=46",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Part 2 > 6 AI RMF Profiles",
+        "pages": "p. 33",
+        "citation_label": "NIST AI 100-1, §6 AI RMF Profiles, p. 33",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=38",
+        "kind": "prose"
+      },
+      {
+        "doc": "NIST AI 100-1 (AI RMF 1.0)",
+        "section": "Appendix D: Attributes of the AI RMF",
+        "pages": "p. 42",
+        "citation_label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+        "citation_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=47",
+        "kind": "prose"
+      }
+    ],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 5280,
+      "outcome": "insufficient",
+      "insufficient_reason": "model_case_d",
+      "usage": {
+        "router": 1300,
+        "generation": 3115,
+        "total": 4415
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "finalize_model_refusal",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.1,
+          "rule_greeting_check": 0.0,
+          "classify_and_rewrite": 873.5,
+          "hybrid_search": 688.9,
+          "rerank": 2026.3,
+          "gate": 0.1,
+          "expand_context": 0.5,
+          "generate": 1655.2,
+          "finalize_model_refusal": 2.0,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "What are the four functions of the AI RMF and how much does an AI RMF certification cost?",
+        "retrieval": {
+          "candidate_count": 16,
+          "candidates": [
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:1",
+              "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+              "rerank_score": 0.9985107779502869
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:5",
+              "label": "NIST AI 100-1, Executive Summary, p. 3",
+              "rerank_score": 0.9943863153457642
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0048:3",
+              "label": "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+              "rerank_score": 0.9670498371124268
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0045:1",
+              "label": "NIST AI 100-1, §6 AI RMF Profiles, p. 33",
+              "rerank_score": 0.9516578316688538
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0049:1",
+              "label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+              "rerank_score": 0.9174567461013794
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:4",
+              "label": "NIST AI 100-1, Executive Summary, pp. 2–3",
+              "rerank_score": 0.9143373370170593
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0047:3",
+              "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, p. 39",
+              "rerank_score": 0.9050318598747253
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0022:1",
+              "label": "NIST AI 100-1, §5.1 Govern, pp. 21–22",
+              "rerank_score": 0.8813924193382263
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0049:2",
+              "label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+              "rerank_score": 0.8404324650764465
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:2",
+              "label": "NIST AI 100-1, §5 AI RMF Core, p. 21",
+              "rerank_score": 0.8021520972251892
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0047:2",
+              "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+              "rerank_score": 0.7691739201545715
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0037:1",
+              "label": "NIST AI 100-1, §5.3 Measure, MEASURE 2, pp. 29–30",
+              "rerank_score": 0.6890775561332703
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0032:1",
+              "label": "NIST AI 100-1, §5.2 Map, MAP 3, p. 27",
+              "rerank_score": 0.6688598990440369
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0016:1",
+              "label": "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17",
+              "rerank_score": 0.6419200897216797
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0010:3",
+              "label": "NIST AI 100-1, §3 AI Risks and Trustworthiness, p. 13",
+              "rerank_score": 0.4103592336177826
+            },
+            {
+              "chunk_id": "genai_profile:prose:0015:1",
+              "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8",
+              "rerank_score": 0.000662819657009095
+            }
+          ],
+          "best_score": 0.9985107779502869,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": []
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 2840,
+            "completion": 275,
+            "reasoning": 255,
+            "total": 3115
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "ai_rmf_1_0:prose:0020:1",
+          "C2": "ai_rmf_1_0:prose:0000:5",
+          "C3": "ai_rmf_1_0:prose:0048:3",
+          "C4": "ai_rmf_1_0:prose:0045:1",
+          "C5": "ai_rmf_1_0:prose:0049:1"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 5286,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 0.0,
+  "elapsed_ms": 5286,
+  "recorded_at": "2026-10-19T05:30:18+00:00"
+}

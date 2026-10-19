@@ -254,3 +254,61 @@ def test_summary_table_shows_skipped_errors_and_retries():
             {"id": "C1-T2", "skipped": "no thread"}]
     table = e2e.summary_table(recs)
     assert "answered" in table and "internal_error" in table and "SKIPPED" in table and "retried" in table
+
+
+# ---- streaming subset (V5 / Q4)
+def test_sse_frame_parsing():
+    assert e2e.parse_sse_frame(["event: token", 'data: {"text":"hi"}']) == ("token", {"text": "hi"})
+    assert e2e.parse_sse_frame([": comment"]) is None
+    assert e2e.parse_sse_frame(["event: x", "data: not json"])[1] == {"unparsed": "not json"}
+
+
+def test_send_stream_records_events_in_order_with_timing_and_paces():
+    ft = FakeTime()
+    with FakeServer() as srv:
+        c = client_for(srv, ft)
+        res = e2e.send_stream(c, "What is GOVERN?")
+        assert srv.stream_posts == [{"message": "What is GOVERN?", "debug": True}]
+        assert [e["event"] for e in res["events"]] == ["meta", "token", "token", "sources", "done"]
+        assert res["status"] == 200 and res["first_token_ms"] is not None and res["error"] is None
+        res["events"][0]["data"]["route"] == "nist_question"
+        e2e.send_stream(c, "again")                              # generation ran, so the next stream request must wait
+    assert ft.sleeps and ft.sleeps[0] > 0
+
+
+def test_send_stream_http_error_and_connection_failure_are_recorded():
+    ft = FakeTime()
+    with FakeServer(stream_handler=lambda p, n: (422, [("error", {"code": "bad"})])) as srv:
+        res = e2e.send_stream(client_for(srv, ft), "q")
+    assert res["status"] == 422 and res["events"][0]["event"] == "http_error"
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+    res = e2e.send_stream(e2e.Client(base_url=f"http://127.0.0.1:{port}", sleep=ft.sleep, clock=ft.clock), "q")
+    assert res["status"] is None and "Error" in res["error"] and res["events"] == []
+
+
+def test_stream_subset_runs_only_the_chosen_single_turns_and_is_saved_and_reloaded(tmp_path):
+    with FakeServer() as srv:
+        code = e2e.main(["--base-url", srv.url, "--out-dir", str(tmp_path), "--pace", "0", "--only", "S1", "S7", "C1"])
+        assert code == 0
+        assert [p["message"][:12] for p in srv.stream_posts] == ["What are the", "What penalti"]       # default STREAM_TURNS = S1, S7
+    (run_dir,) = list(tmp_path.iterdir())
+    manifest = json.loads((run_dir / "run.json").read_text())
+    assert manifest["stream_ids"] == ["S1", "S7"] and sorted(p.stem for p in (run_dir / "stream").iterdir()) == ["S1", "S7"]
+    run = e2e.load_run(run_dir)
+    assert [r["id"] for r in run["stream_records"]] == ["S1", "S7"] and run["stream_records"][0]["events"][0]["event"] == "meta"
+
+
+def test_stream_subset_can_be_skipped_or_chosen(tmp_path):
+    with FakeServer() as srv:
+        e2e.main(["--base-url", srv.url, "--out-dir", str(tmp_path / "a"), "--pace", "0", "--only", "S1", "--no-stream"])
+        assert srv.stream_calls == 0
+        e2e.main(["--base-url", srv.url, "--out-dir", str(tmp_path / "b"), "--pace", "0", "--only", "S1", "S2", "--stream", "S2"])
+        assert [p["message"][:12] for p in srv.stream_posts] == ["What charact"]
+
+
+def test_conversation_turns_are_never_streamed(tmp_path):
+    with FakeServer() as srv:
+        e2e.main(["--base-url", srv.url, "--out-dir", str(tmp_path), "--pace", "0", "--only", "C1", "--stream", "C1-T1"])
+        assert srv.stream_calls == 0

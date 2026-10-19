@@ -1,0 +1,494 @@
+{
+  "seed": 20261019,
+  "negatives_per_sentence": 3,
+  "turns": 8,
+  "positives": {
+    "n": 11,
+    "min": 0.9433879852294922,
+    "p10": 0.990151584148407,
+    "median": 0.9998490810394287,
+    "p90": 0.9999464750289917,
+    "max": 0.999964714050293
+  },
+  "negatives": {
+    "n": 33,
+    "min": 3.731928882189095e-05,
+    "p10": 0.00014754975563846529,
+    "median": 0.0052337972447276115,
+    "p90": 0.3550792336463928,
+    "max": 0.6921888589859009
+  },
+  "negatives_best_of_3": {
+    "n": 11,
+    "min": 0.0022533058654516935,
+    "p10": 0.003274479415267706,
+    "median": 0.02027159370481968,
+    "p90": 0.424701452255249,
+    "max": 0.6921888589859009
+  },
+  "sanity": {
+    "n": 16,
+    "min": 0.9995254278182983,
+    "p10": 0.9995917677879333,
+    "median": 0.99992835521698,
+    "p90": 0.9999666213989258,
+    "max": 0.9999666213989258
+  },
+  "overlap": {
+    "positives_at_or_below_negative_p90_pct": 0.0,
+    "negatives_at_or_above_positive_p10_pct": 0.0,
+    "max_negative": 0.6921888589859009,
+    "min_positive": 0.9433879852294922,
+    "separable": true
+  },
+  "threshold_table": [
+    {
+      "threshold": 0.0,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 100.0
+    },
+    {
+      "threshold": 0.05,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 15.2
+    },
+    {
+      "threshold": 0.1,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 15.2
+    },
+    {
+      "threshold": 0.15,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 12.1
+    },
+    {
+      "threshold": 0.2,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 12.1
+    },
+    {
+      "threshold": 0.25,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 12.1
+    },
+    {
+      "threshold": 0.3,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 12.1
+    },
+    {
+      "threshold": 0.35,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 12.1
+    },
+    {
+      "threshold": 0.4,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 9.1
+    },
+    {
+      "threshold": 0.45,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 3.0
+    },
+    {
+      "threshold": 0.5,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 3.0
+    },
+    {
+      "threshold": 0.55,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 3.0
+    },
+    {
+      "threshold": 0.6,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 3.0
+    },
+    {
+      "threshold": 0.65,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 3.0
+    },
+    {
+      "threshold": 0.7,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 0.0
+    },
+    {
+      "threshold": 0.75,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 0.0
+    },
+    {
+      "threshold": 0.85,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "positives_supported_pct": 100.0,
+      "negatives_supported_pct": 0.0
+    },
+    {
+      "threshold": 0.95,
+      "positives_supported_pct": 90.9,
+      "negatives_supported_pct": 0.0
+    }
+  ],
+  "unresolved_keys": [],
+  "sentences": [
+    {
+      "turn": "S1",
+      "sentence": "The four core functions of the NIST AI RMF are **GOVERN, MAP, MEASURE,** and **MANAGE**.",
+      "keys": [
+        "C1",
+        "C2"
+      ],
+      "positive": 0.9998,
+      "negatives": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0075:2",
+          "score": 0.0108
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0008:1",
+          "score": 0.0014
+        },
+        {
+          "chunk_id": "genai_profile:prose:0080:2",
+          "score": 0.046
+        }
+      ]
+    },
+    {
+      "turn": "S2",
+      "sentence": "The AI RMF defines trustworthy AI systems as those that exhibit the following characteristics: “valid and reliable,” “safe,” “secure and resilient,” “accountable and transparent,” “explainable and interpretable,” “privacy‑enhanced,” and “fair with harmful bias managed”.",
+      "keys": [
+        "C1",
+        "C2"
+      ],
+      "positive": 0.9999,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0020:2",
+          "score": 0.3551
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0049:1",
+          "score": 0.6922
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0052:2",
+          "score": 0.1034
+        }
+      ]
+    },
+    {
+      "turn": "S2",
+      "sentence": "Valid & Reliable is identified as a necessary condition for trustworthiness, forming the base for the other characteristics.",
+      "keys": [
+        "C4"
+      ],
+      "positive": 0.9985,
+      "negatives": [
+        {
+          "chunk_id": "genai_profile:genai_action_table:0068:1",
+          "score": 0.0012
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0044:1",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0037:1",
+          "score": 0.043
+        }
+      ]
+    },
+    {
+      "turn": "S4",
+      "sentence": "It also includes outputs that diverge from the prompts or other input or that contradict previously generated statements in the same context, and is colloquially referred to as “hallucinations” or “fabrications”.",
+      "keys": [
+        "C1"
+      ],
+      "positive": 1.0,
+      "negatives": [
+        {
+          "chunk_id": "genai_profile:prose:0020:2",
+          "score": 0.0052
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:3",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0006:1",
+          "score": 0.4247
+        }
+      ]
+    },
+    {
+      "turn": "S4",
+      "sentence": "GAI outputs may further contain confabulated logic or citations that purport to justify the answer, potentially misleading humans into inappropriately trusting the system’s output.",
+      "keys": [
+        "C3"
+      ],
+      "positive": 0.9999,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0017:1",
+          "score": 0.0012
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:figure:0009:1",
+          "score": 0.0005
+        },
+        {
+          "chunk_id": "genai_profile:prose:0023:1",
+          "score": 0.0123
+        }
+      ]
+    },
+    {
+      "turn": "S5",
+      "sentence": "The Generative AI Profile recommends that organizations put in place protocols that allow GAI systems to be deactivated when necessary and that, when decommissioning, they consider factors such as data‑retention requirements, data security and leakage, dependencies with other systems, use of open‑source data or models, and users’ emotional entanglement with the GAI functions.",
+      "keys": [
+        "C1"
+      ],
+      "positive": 0.9902,
+      "negatives": [
+        {
+          "chunk_id": "genai_profile:prose:0086:2",
+          "score": 0.0048
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0033:1",
+          "score": 0.0054
+        },
+        {
+          "chunk_id": "genai_profile:prose:0015:1",
+          "score": 0.0203
+        }
+      ]
+    },
+    {
+      "turn": "S5",
+      "sentence": "It also advises establishing policies, procedures and oversight functions that span the entire GAI lifecycle, from problem formulation and supply chains to system decommission, to ensure safe and risk‑aware phasing out of GAI systems.",
+      "keys": [
+        "C2"
+      ],
+      "positive": 0.9434,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0026:1",
+          "score": 0.006
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0039:1",
+          "score": 0.0035
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0006:1",
+          "score": 0.0063
+        }
+      ]
+    },
+    {
+      "turn": "S6",
+      "sentence": "Protocols are put in place to ensure GAI systems are able to be deactivated when necessary.",
+      "keys": [
+        "C1"
+      ],
+      "positive": 0.9996,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0006:2",
+          "score": 0.0012
+        },
+        {
+          "chunk_id": "genai_profile:prose:0003:1",
+          "score": 0.0033
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0049:1",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "turn": "C1-T1",
+      "sentence": "The AI RMF Core comprises four functions: **GOVERN**, **MAP**, **MEASURE**, and **MANAGE**.",
+      "keys": [
+        "C1",
+        "C2"
+      ],
+      "positive": 0.9999,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:rmf_core_table:0024:1",
+          "score": 0.4159
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0049:1",
+          "score": 0.0292
+        },
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0010:3",
+          "score": 0.0012
+        }
+      ]
+    },
+    {
+      "turn": "C1-T2",
+      "sentence": "The cross‑cutting AI RMF core function is **GOVERN** – it is designed to be infused throughout the other three functions.",
+      "keys": [
+        "C1",
+        "C2"
+      ],
+      "positive": 0.9998,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0046:2",
+          "score": 0.0014
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0041:2",
+          "score": 0.0154
+        },
+        {
+          "chunk_id": "genai_profile:footnote:0028:1",
+          "score": 0.0071
+        }
+      ]
+    },
+    {
+      "turn": "C2-T1",
+      "sentence": "It includes outputs that diverge from the input or contradict earlier statements, and is colloquially called “hallucinations” or “fabrications”.",
+      "keys": [
+        "C1",
+        "C3"
+      ],
+      "positive": 0.9999,
+      "negatives": [
+        {
+          "chunk_id": "ai_rmf_1_0:prose:0000:1",
+          "score": 0.0019
+        },
+        {
+          "chunk_id": "genai_profile:genai_action_table:0066:1",
+          "score": 0.0001
+        },
+        {
+          "chunk_id": "genai_profile:prose:0018:2",
+          "score": 0.0023
+        }
+      ]
+    }
+  ],
+  "sanity_rows": [
+    {
+      "turn": "S1",
+      "chunk_id": "ai_rmf_1_0:prose:0000:5",
+      "sentence": "Part 2 comprises the “Core” of the Framework.",
+      "score": 0.9996
+    },
+    {
+      "turn": "S1",
+      "chunk_id": "ai_rmf_1_0:prose:0020:1",
+      "sentence": "The AI RMF Core provides outcomes and actions that enable dialogue, understanding, and activities to manage AI risks and responsibly develop trustworthy AI systems.",
+      "score": 0.9999
+    },
+    {
+      "turn": "S2",
+      "chunk_id": "ai_rmf_1_0:figure:0011:1",
+      "sentence": "Valid & Reliable is a necessary condition of trustworthiness and is shown as the base for other trustworthiness characteristics.",
+      "score": 0.9996
+    },
+    {
+      "turn": "S2",
+      "chunk_id": "ai_rmf_1_0:prose:0000:4",
+      "sentence": "The Framework is designed to equip organizations and individuals – referred to here as AI actors – with approaches that increase the trustworthiness of AI systems, and to help foster the responsible design, development, deployment, and use of AI systems over time.",
+      "score": 1.0
+    },
+    {
+      "turn": "S2",
+      "chunk_id": "ai_rmf_1_0:prose:0010:1",
+      "sentence": "For AI systems to be trustworthy, they often need to be responsive to a multiplicity of criteria that are of value to interested parties.",
+      "score": 0.9999
+    },
+    {
+      "turn": "S4",
+      "chunk_id": "genai_profile:prose:0010:1",
+      "sentence": "“Confabulation” refers to a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts.",
+      "score": 0.9999
+    },
+    {
+      "turn": "S4",
+      "chunk_id": "genai_profile:prose:0010:2",
+      "sentence": "Risks of confabulated content may be especially important to monitor when integrating GAI into applications involving consequential decision making.",
+      "score": 0.9995
+    },
+    {
+      "turn": "S5",
+      "chunk_id": "genai_profile:genai_action_table:0034:1",
+      "sentence": "GOVERN 1.7: Processes and procedures are in place for decommissioning and phasing out AI systems safely and in a manner that does not increase risks or decrease the organization’s trustworthiness.",
+      "score": 1.0
+    },
+    {
+      "turn": "S5",
+      "chunk_id": "genai_profile:genai_action_table:0037:1",
+      "sentence": "GOVERN 4.1: Organizational policies and practices are in place to foster a critical thinking and safety-first mindset in the design, development, deployment, and uses of AI systems to minimize potential negative impacts.",
+      "score": 0.9999
+    },
+    {
+      "turn": "S6",
+      "chunk_id": "genai_profile:genai_action_table:0034:1",
+      "sentence": "GOVERN 1.7: Processes and procedures are in place for decommissioning and phasing out AI systems safely and in a manner that does not increase risks or decrease the organization’s trustworthiness.",
+      "score": 1.0
+    },
+    {
+      "turn": "C1-T1",
+      "chunk_id": "ai_rmf_1_0:prose:0000:5",
+      "sentence": "Part 2 comprises the “Core” of the Framework.",
+      "score": 0.9996
+    },
+    {
+      "turn": "C1-T1",
+      "chunk_id": "ai_rmf_1_0:prose:0020:1",
+      "sentence": "The AI RMF Core provides outcomes and actions that enable dialogue, understanding, and activities to manage AI risks and responsibly develop trustworthy AI systems.",
+      "score": 0.9999
+    },
+    {
+      "turn": "C1-T2",
+      "chunk_id": "ai_rmf_1_0:prose:0020:1",
+      "sentence": "The AI RMF Core provides outcomes and actions that enable dialogue, understanding, and activities to manage AI risks and responsibly develop trustworthy AI systems.",
+      "score": 0.9999
+    },
+    {
+      "turn": "C1-T2",
+      "chunk_id": "ai_rmf_1_0:prose:0022:1",
+      "sentence": "- cultivates and implements a culture of risk management within organizations designing, developing, deploying, evaluating, or acquiring AI systems;",
+      "score": 0.9998
+    },
+    {
+      "turn": "C2-T1",
+      "chunk_id": "genai_profile:prose:0003:4",
+      "sentence": "5 These risks can be further categorized by organizations depending on their unique approaches to risk definition and management.",
+      "score": 1.0
+    },
+    {
+      "turn": "C2-T1",
+      "chunk_id": "genai_profile:prose:0010:1",
+      "sentence": "“Confabulation” refers to a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts.",
+      "score": 0.9999
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "id": "S5",
+  "conversation": null,
+  "message": "What does the Generative AI Profile suggest for decommissioning GAI systems?",
+  "thread_id_sent": null,
+  "status": 200,
+  "body": {
+    "thread_id": "ff4547fb-619c-47f6-9950-564d8d97bc06",
+    "route": "nist_question",
+    "answer": "The Generative AI Profile recommends that organizations put in place protocols that allow GAI systems to be deactivated when necessary and that, when decommissioning, they consider factors such as data‑retention requirements, data security and leakage, dependencies with other systems, use of open‑source data or models, and users’ emotional entanglement with the GAI functions [C1]. It also advises establishing policies, procedures and oversight functions that span the entire GAI lifecycle, from problem formulation and supply chains to system decommission, to ensure safe and risk‑aware phasing out of GAI systems [C2].",
+    "sources": [
+      {
+        "keys": [
+          "C1"
+        ],
+        "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=21",
+        "kind": "table"
+      },
+      {
+        "keys": [
+          "C2"
+        ],
+        "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 4.1, pp. 18–19",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf#page=22",
+        "kind": "table"
+      }
+    ],
+    "standalone_query": "What does the Generative AI Profile suggest for decommissioning GAI systems?",
+    "related_sections": [],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 4556,
+      "outcome": "answered",
+      "insufficient_reason": null,
+      "usage": {
+        "router": 1251,
+        "generation": 3191,
+        "total": 4442
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "attribute",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.3,
+          "rule_greeting_check": 0.3,
+          "classify_and_rewrite": 931.3,
+          "hybrid_search": 543.6,
+          "rerank": 2014.4,
+          "gate": 0.0,
+          "expand_context": 0.4,
+          "generate": 1014.4,
+          "attribute": 0.2,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "What does the Generative AI Profile suggest for decommissioning GAI systems?",
+        "retrieval": {
+          "candidate_count": 18,
+          "candidates": [
+            {
+              "chunk_id": "genai_profile:genai_action_table:0034:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 1.7, p. 17",
+              "rerank_score": 0.9839746356010437
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0037:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, GOVERN 4.1, pp. 18–19",
+              "rerank_score": 0.9347776770591736
+            },
+            {
+              "chunk_id": "genai_profile:prose:0015:1",
+              "label": "NIST AI 600-1, §2.5 Environmental Impacts, p. 8",
+              "rerank_score": 0.8983666300773621
+            },
+            {
+              "chunk_id": "genai_profile:prose:0000:2",
+              "label": "NIST AI 600-1, §1 Introduction, pp. 1–2",
+              "rerank_score": 0.8684764504432678
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0068:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 4.2, p. 39",
+              "rerank_score": 0.854142963886261
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0075:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, p. 44",
+              "rerank_score": 0.8354464173316956
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0075:2",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 4.1, pp. 44–45",
+              "rerank_score": 0.8353829979896545
+            },
+            {
+              "chunk_id": "genai_profile:prose:0000:1",
+              "label": "NIST AI 600-1, §1 Introduction, p. 1",
+              "rerank_score": 0.8105340003967285
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0074:2",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, pp. 43–44",
+              "rerank_score": 0.695069432258606
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0057:2",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.6, p. 32",
+              "rerank_score": 0.5769833326339722
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0057:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.6, p. 32",
+              "rerank_score": 0.5655843615531921
+            },
+            {
+              "chunk_id": "genai_profile:prose:0016:2",
+              "label": "NIST AI 600-1, §2.6 Harmful Bias and Homogenization, pp. 8–9",
+              "rerank_score": 0.5163549184799194
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0058:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.7, p. 33",
+              "rerank_score": 0.499014288187027
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0008:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4",
+              "rerank_score": 0.36884310841560364
+            },
+            {
+              "chunk_id": "genai_profile:prose:0018:2",
+              "label": "NIST AI 600-1, §2.8 Information Integrity, p. 10",
+              "rerank_score": 0.33458077907562256
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0074:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MANAGE 3.2, p. 43",
+              "rerank_score": 0.2880382835865021
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0045:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MAP 2.1, p. 24",
+              "rerank_score": 0.10079062730073929
+            },
+            {
+              "chunk_id": "genai_profile:genai_action_table:0065:1",
+              "label": "NIST AI 600-1, §3 Suggested Actions to Manage GAI Risks, MEASURE 2.13, p. 38",
+              "rerank_score": 0.09297836571931839
+            }
+          ],
+          "best_score": 0.9839746356010437,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": []
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 2705,
+            "completion": 486,
+            "reasoning": 353,
+            "total": 3191
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "genai_profile:genai_action_table:0034:1",
+          "C2": "genai_profile:genai_action_table:0037:1",
+          "C3": "genai_profile:prose:0015:1",
+          "C4": "genai_profile:prose:0000:2",
+          "C5": "genai_profile:genai_action_table:0068:1"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 4575,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 35.0,
+  "elapsed_ms": 4575,
+  "recorded_at": "2026-10-19T05:28:56+00:00"
+}

@@ -1,0 +1,35 @@
+{
+  "started_at": "2026-10-19T05:26:06+00:00",
+  "finished_at": "2026-10-19T05:34:53+00:00",
+  "base_url": "http://127.0.0.1:8000",
+  "pace_seconds": 35.0,
+  "server_health": {
+    "status": "ok",
+    "model": "openai/gpt-oss-120b",
+    "key_configured": true
+  },
+  "cases_file": "e2e_cases.yaml",
+  "cases_sha256": "f486542cfb83644d80039e1153e80d62746b9f950da61d3624056be6b805a259",
+  "turn_ids": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "C1-T1",
+    "C1-T2",
+    "C1-T3",
+    "C2-T1",
+    "C2-T2",
+    "C2-T3"
+  ],
+  "stream_ids": [
+    "S1",
+    "S7"
+  ]
+}

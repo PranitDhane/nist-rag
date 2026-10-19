@@ -1,0 +1,219 @@
+{
+  "id": "C1-T1",
+  "conversation": "C1",
+  "message": "What are the four functions of the AI RMF?",
+  "thread_id_sent": null,
+  "status": 200,
+  "body": {
+    "thread_id": "bd1aced0-dcf4-4c4a-b57b-2e86b6c5a89f",
+    "route": "nist_question",
+    "answer": "The AI RMF Core comprises four functions: **GOVERN**, **MAP**, **MEASURE**, and **MANAGE** [C1][C2].",
+    "sources": [
+      {
+        "keys": [
+          "C2"
+        ],
+        "label": "NIST AI 100-1, Executive Summary, p. 3",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=8",
+        "kind": "prose"
+      },
+      {
+        "keys": [
+          "C1"
+        ],
+        "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+        "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf#page=25",
+        "kind": "prose"
+      }
+    ],
+    "standalone_query": "What are the four functions of the AI RMF?",
+    "related_sections": [],
+    "meta": {
+      "llm_calls": 2,
+      "route_source": "llm",
+      "latency_ms": 5115,
+      "outcome": "answered",
+      "insufficient_reason": null,
+      "usage": {
+        "router": 1221,
+        "generation": 2968,
+        "total": 4189
+      },
+      "model": "openai/gpt-oss-20b",
+      "prompt_version": "v1",
+      "fixes": [],
+      "warnings": [],
+      "debug": {
+        "path": [
+          "reset_turn",
+          "rule_greeting_check",
+          "classify_and_rewrite",
+          "hybrid_search",
+          "rerank",
+          "gate",
+          "expand_context",
+          "generate",
+          "attribute",
+          "finalize"
+        ],
+        "timings_ms": {
+          "reset_turn": 0.1,
+          "rule_greeting_check": 0.0,
+          "classify_and_rewrite": 1569.1,
+          "hybrid_search": 469.4,
+          "rerank": 2222.0,
+          "gate": 0.1,
+          "expand_context": 0.5,
+          "generate": 824.7,
+          "attribute": 0.2,
+          "finalize": 0.1
+        },
+        "route": "nist_question",
+        "route_source": "llm",
+        "standalone_query": "What are the four functions of the AI RMF?",
+        "retrieval": {
+          "candidate_count": 18,
+          "candidates": [
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:1",
+              "label": "NIST AI 100-1, §5 AI RMF Core, pp. 20–21",
+              "rerank_score": 0.9988296627998352
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:5",
+              "label": "NIST AI 100-1, Executive Summary, p. 3",
+              "rerank_score": 0.9863908290863037
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0045:1",
+              "label": "NIST AI 100-1, §6 AI RMF Profiles, p. 33",
+              "rerank_score": 0.9534407258033752
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0049:1",
+              "label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+              "rerank_score": 0.9194779396057129
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0048:3",
+              "label": "NIST AI 100-1, Appendix C: AI Risk Management and Human-AI Interaction, p. 41",
+              "rerank_score": 0.9083455801010132
+            },
+            {
+              "chunk_id": "genai_profile:prose:0000:1",
+              "label": "NIST AI 600-1, §1 Introduction, p. 1",
+              "rerank_score": 0.8550968766212463
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0000:4",
+              "label": "NIST AI 100-1, Executive Summary, pp. 2–3",
+              "rerank_score": 0.8382304310798645
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0049:2",
+              "label": "NIST AI 100-1, Appendix D: Attributes of the AI RMF, p. 42",
+              "rerank_score": 0.8208519816398621
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0016:1",
+              "label": "NIST AI 100-1, §3.5 Explainable and Interpretable, pp. 16–17",
+              "rerank_score": 0.7553297281265259
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0047:2",
+              "label": "NIST AI 100-1, Appendix B: How AI Risks Differ from Traditional Software Risks, pp. 38–39",
+              "rerank_score": 0.6865504384040833
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0020:2",
+              "label": "NIST AI 100-1, §5 AI RMF Core, p. 21",
+              "rerank_score": 0.5470950603485107
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0035:2",
+              "label": "NIST AI 100-1, §5.3 Measure, pp. 28–29",
+              "rerank_score": 0.5305957794189453
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:prose:0029:2",
+              "label": "NIST AI 100-1, §5.2 Map, p. 25",
+              "rerank_score": 0.4200063943862915
+            },
+            {
+              "chunk_id": "ai_rmf_1_0:rmf_core_table:0037:1",
+              "label": "NIST AI 100-1, §5.3 Measure, MEASURE 2, pp. 29–30",
+              "rerank_score": 0.3381997048854828
+            },
+            {
+              "chunk_id": "genai_profile:prose:0000:2",
+              "label": "NIST AI 600-1, §1 Introduction, pp. 1–2",
+              "rerank_score": 0.15866519510746002
+            },
+            {
+              "chunk_id": "genai_profile:prose:0009:1",
+              "label": "NIST AI 600-1, §2.1 CBRN Information or Capabilities, p. 5",
+              "rerank_score": 0.0012540657771751285
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0008:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 8, p. 4",
+              "rerank_score": 0.0008300680201500654
+            },
+            {
+              "chunk_id": "genai_profile:footnote:0007:1",
+              "label": "NIST AI 600-1, §2 Overview of Risks Unique to or Exacerbated by GAI, footnote 7, p. 4",
+              "rerank_score": 0.0008148051565513015
+            }
+          ],
+          "best_score": 0.9988296627998352,
+          "threshold": 0.15,
+          "relevant": true,
+          "siblings_added": []
+        },
+        "generation": {
+          "model": "openai/gpt-oss-20b",
+          "prompt_version": "v1",
+          "reasoning_effort": "medium",
+          "temperature": 0.2,
+          "usage": {
+            "prompt": 2830,
+            "completion": 138,
+            "reasoning": 96,
+            "total": 2968
+          },
+          "finish_reason": "stop",
+          "fixes": [],
+          "warnings": [],
+          "corrected": false
+        },
+        "key_map": {
+          "C1": "ai_rmf_1_0:prose:0020:1",
+          "C2": "ai_rmf_1_0:prose:0000:5",
+          "C3": "ai_rmf_1_0:prose:0045:1",
+          "C4": "ai_rmf_1_0:prose:0049:1",
+          "C5": "ai_rmf_1_0:prose:0048:3"
+        },
+        "config_version": {
+          "retrieval": "a6665bdc7673",
+          "indexing": {
+            "embedding_model": "BAAI/bge-small-en-v1.5",
+            "embedding_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+            "chunks_file_sha256": "f793b5609a74",
+            "chunk_count": 208
+          }
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "status": 200,
+      "elapsed_ms": 5131,
+      "error_code": null
+    }
+  ],
+  "retried": false,
+  "waited_s": 0.0,
+  "elapsed_ms": 5131,
+  "recorded_at": "2026-10-19T05:30:59+00:00"
+}
