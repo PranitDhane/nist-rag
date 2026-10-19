@@ -1,0 +1,195 @@
+{
+  "what": "Fresh-clone acceptance test (deliverables stage D7): a copy of exactly the committable files (no data/, no .venv/, no .env), a new virtual environment, no pip cache, a fresh Hugging Face model cache, the NIST PDFs downloaded, then the README followed literally.",
+  "date": "2026-10-19",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "python": "3.12.12",
+  "device": "mps (Apple GPU), selected automatically",
+  "steps": [
+    {
+      "step": "1 venv",
+      "exit_code": 0,
+      "seconds": 2
+    },
+    {
+      "step": "2 make install",
+      "exit_code": 0,
+      "seconds": 131
+    },
+    {
+      "step": "3 make build",
+      "exit_code": 0,
+      "seconds": 159
+    },
+    {
+      "step": "4 make test",
+      "exit_code": 0,
+      "seconds": 364
+    },
+    {
+      "step": "5 make serve ready",
+      "exit_code": 0,
+      "seconds": 13
+    },
+    {
+      "step": "6a make download",
+      "exit_code": 0,
+      "seconds": 1
+    },
+    {
+      "step": "6b make ingest FROM_DIR",
+      "exit_code": 0,
+      "seconds": 42
+    },
+    {
+      "step": "6c make rebuild",
+      "exit_code": 0,
+      "seconds": 82
+    },
+    {
+      "step": "6d make eval-retrieval",
+      "exit_code": 0,
+      "seconds": 175
+    },
+    {
+      "step": "6e make results",
+      "exit_code": 0,
+      "seconds": 0
+    },
+    {
+      "step": "6f make e2e-report",
+      "exit_code": 0,
+      "seconds": 13
+    },
+    {
+      "step": "6g make clean-all (answer no)",
+      "exit_code": 0,
+      "seconds": 0
+    },
+    {
+      "step": "6h make clean",
+      "exit_code": 0,
+      "seconds": 0
+    },
+    {
+      "step": "6i make build after clean",
+      "exit_code": 0,
+      "seconds": 79
+    },
+    {
+      "step": "7a make eval-routing",
+      "exit_code": 0,
+      "seconds": 372
+    },
+    {
+      "step": "7b make e2e",
+      "exit_code": 0,
+      "seconds": 499
+    }
+  ],
+  "tests_in_clone": {
+    "passed": 1062,
+    "skipped": 1,
+    "summary": "1062 passed, 1 skipped in 358.91s (0:05:58)"
+  },
+  "readme_examples": {
+    "blocks_run": 5,
+    "all_exit_zero": true,
+    "covers": [
+      "first assignment question",
+      "3-turn conversation",
+      "streaming call",
+      "insufficient answer with related sections",
+      "out of scope",
+      "greeting"
+    ]
+  },
+  "sizes_mb_note": "data/ after make build is regenerated and git-ignored",
+  "reproduction": {
+    "retrieval_quality_identical": true,
+    "retrieval_latency_ms": {
+      "committed_run": {
+        "p50": 755.1,
+        "p95": 934.5
+      },
+      "fresh_clone": {
+        "p50": 1732.5,
+        "p95": 2030.3
+      }
+    },
+    "end_to_end_first_run": {
+      "run": "20261019-105606",
+      "route_accuracy": {
+        "passed": 15,
+        "applicable": 16
+      },
+      "outcome_accuracy": {
+        "passed": 13,
+        "applicable": 16
+      },
+      "key_fact_coverage": {
+        "found": 29,
+        "total": 45
+      },
+      "citation_consistency": {
+        "passed": 8,
+        "applicable": 11
+      },
+      "link_check": {
+        "passed": 8,
+        "applicable": 8
+      },
+      "support": {
+        "supported": 11,
+        "total": 11
+      },
+      "failed_checks": 19
+    },
+    "end_to_end_fresh_clone_run": {
+      "run": "20261019-123905",
+      "route_accuracy": {
+        "passed": 15,
+        "applicable": 16
+      },
+      "outcome_accuracy": {
+        "passed": 13,
+        "applicable": 16
+      },
+      "key_fact_coverage": {
+        "found": 27,
+        "total": 45
+      },
+      "citation_consistency": {
+        "passed": 8,
+        "applicable": 11
+      },
+      "link_check": {
+        "passed": 8,
+        "applicable": 8
+      },
+      "support": {
+        "supported": 8,
+        "total": 10
+      },
+      "failed_checks": 24
+    }
+  },
+  "log": [
+    "1 venv | exit 0 | 2 s",
+    "2 make install | exit 0 | 131 s",
+    "3 make build | exit 0 | 159 s",
+    "4 make test | exit 0 | 364 s",
+    "5 make serve ready | 13 s",
+    "6a make download | exit 0 | 1 s",
+    "6b make ingest FROM_DIR | exit 0 | 42 s",
+    "6c make rebuild | exit 0 | 82 s",
+    "6d make eval-retrieval | exit 0 | 175 s",
+    "6e make results | exit 0 | 0 s",
+    "6f make e2e-report | exit 0 | 13 s",
+    "6g make clean-all (answer no) | exit 0 | 0 s",
+    "6h make clean | exit 0 | 0 s",
+    "6i make build after clean | exit 0 | 79 s",
+    "7a make eval-routing | exit 0 | 372 s",
+    "7b make e2e | exit 0 | 499 s",
+    "driver finished"
+  ]
+}

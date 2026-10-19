@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 RESULTS_PATH = ROOT / "docs" / "RESULTS.md"
 README_PATH = ROOT / "README.md"
 START, END = "<!-- RESULTS:START -->", "<!-- RESULTS:END -->"
+T_START, T_END = "<!-- TIMINGS:START -->", "<!-- TIMINGS:END -->"
+ACCEPTANCE = ("eval/acceptance_report.json", "the fresh-clone acceptance test (deliverables stage D7)")
 
 REPORTS = {
     "retrieval": ("eval/retrieval_report.json", "make eval-retrieval"),
@@ -294,6 +296,54 @@ def sec_e2e(e: dict, rel: str, sha: str) -> list[str]:
     return L
 
 
+def secs(n_: int | float) -> str:
+    n_ = int(round(n_))
+    return f"{n_ // 60} min {n_ % 60} s" if n_ >= 60 else f"{n_} s"
+
+
+def step_seconds(acc: dict, prefix: str) -> int | None:
+    return next((s["seconds"] for s in acc["steps"] if s["step"].startswith(prefix)), None)
+
+
+def sec_acceptance(acc: dict, rel: str, sha: str) -> list[str]:
+    t, rp = acc["tests_in_clone"], acc["reproduction"]
+    L = ["## Fresh-clone acceptance test", "", source(rel, sha, f"; {acc['date']}, {acc['platform']}, Python {acc['python']}, device {acc['device']}"), "",
+         acc["what"], ""]
+    L += table(["Step", "Exit code", "Time"], [[s["step"], s["exit_code"], secs(s["seconds"])] for s in acc["steps"]])
+    L += [f"Tests inside the clone: {t['passed']} passed, {t['skipped']} skipped ({t['summary']}). The README's example blocks ({acc['readme_examples']['blocks_run']}) were run verbatim against the "
+          f"server and covered: " + ", ".join(acc["readme_examples"]["covers"]) + ".", ""]
+    lat = rp["retrieval_latency_ms"]
+    L += [f"**Reproduction.** Retrieval quality in the clone is " + ("identical" if rp["retrieval_quality_identical"] else "**not identical**") +
+          f" to the committed report (same Hit@5, MRR, threshold table and configuration). Retrieval latency is machine- and load-dependent: p50 {n(lat['committed_run']['p50'], 1, ' ms')} / "
+          f"p95 {n(lat['committed_run']['p95'], 1, ' ms')} in the committed run against p50 {n(lat['fresh_clone']['p50'], 1, ' ms')} / p95 {n(lat['fresh_clone']['p95'], 1, ' ms')} in the clone.", "",
+          "The end-to-end evaluation was run a second time in the clone. Wording and some outcomes vary between runs (temperature 0.2, strict refusals), so single-run figures are not exact:", ""]
+    a, b = rp["end_to_end_first_run"], rp["end_to_end_fresh_clone_run"]
+
+    def fr(x: dict) -> str:
+        return f"{x['passed']}/{x['applicable']}"
+    rows = [["Route accuracy", fr(a["route_accuracy"]), fr(b["route_accuracy"])], ["Outcome accuracy", fr(a["outcome_accuracy"]), fr(b["outcome_accuracy"])],
+            ["Key-fact coverage", f"{a['key_fact_coverage']['found']}/{a['key_fact_coverage']['total']}", f"{b['key_fact_coverage']['found']}/{b['key_fact_coverage']['total']}"],
+            ["`[C#]` markers match sources", fr(a["citation_consistency"]), fr(b["citation_consistency"])], ["Links open the cited text", fr(a["link_check"]), fr(b["link_check"])],
+            ["Sentences supported", f"{a['support']['supported']}/{a['support']['total']}", f"{b['support']['supported']}/{b['support']['total']}"],
+            ["Failed checks", a["failed_checks"], b["failed_checks"]]]
+    L += table(["Metric", f"Run `{a['run']}` (reported above)", f"Run `{b['run']}` (in the clone)"], rows)
+    return L
+
+
+def timings_block(acc: dict | None) -> str:
+    """README Quickstart timings, from the acceptance report (never typed by hand)."""
+    if acc is None:
+        return "Timings are generated after the fresh-clone acceptance test (`eval/acceptance_report.json` was not found).\n"
+    rows = [("make install", step_seconds(acc, "2 make install"), "downloads PyTorch and the other pinned packages"),
+            ("make build", step_seconds(acc, "3 make build"), "downloads the two PDFs and the embedding model, then ingest, chunk, index"),
+            ("make serve", step_seconds(acc, "5 make serve"), "time until `/health` answers; includes the one-time download of the reranker model"),
+            ("make test", step_seconds(acc, "4 make test"), "offline tests; live tests skip without the data or a key")]
+    L = [f"Measured in the fresh-clone acceptance test ({acc['date']}; {acc['platform']}, Python {acc['python']}, device {acc['device']}; a new virtual environment, no pip cache, an empty Hugging Face "
+         f"cache, PDFs downloaded). Your times will differ with your connection and hardware:", "", "| Step | Time | Includes |", "|---|---|---|"]
+    L += [f"| `{c}` | {secs(t)} | {note} |" for c, t, note in rows if t is not None]
+    return "\n".join(L) + "\n"
+
+
 # ------------------------------------------------------------------ assemble
 def build(root: Path = ROOT) -> tuple[str, str]:
     """(docs/RESULTS.md text, README block text) from the reports under `root`."""
@@ -326,6 +376,9 @@ def build(root: Path = ROOT) -> tuple[str, str]:
     put("link_check", "Citation links", sec_links)
     put("integration", "Graph integration (live paths and memory)", sec_integration)
     out.extend(sec_e2e(e2e, e2e_rel, e2e_sha) if e2e is not None else not_run("End-to-end evaluation", E2E_GLOB, "make e2e && make e2e-report RUN=eval/e2e_runs/<run>"))
+    acc, acc_sha = load(root, ACCEPTANCE[0])
+    out.extend(sec_acceptance(acc, ACCEPTANCE[0], acc_sha) if acc is not None else
+               ["## Fresh-clone acceptance test", "", f"_Not run: `{ACCEPTANCE[0]}` was not found; it is written by {ACCEPTANCE[1]}._", ""])
     return "\n".join(out).rstrip() + "\n", readme_block(loaded, e2e)
 
 
@@ -529,6 +582,9 @@ def main(root: Path = ROOT) -> int:
     readme = root / "README.md"
     if readme.is_file():
         new = update_readme(readme.read_text(encoding="utf-8"), block)
+        if new is not None:
+            timed = replace_block(new, T_START, T_END, timings_block(load(root, ACCEPTANCE[0])[0]))
+            new = new if timed is None else timed
         if new is None:
             print(f"note: {readme.name} has no {START} ... {END} pair, so its results block was not updated")
         elif new != readme.read_text(encoding="utf-8"):

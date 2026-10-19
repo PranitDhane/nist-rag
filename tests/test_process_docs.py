@@ -121,3 +121,18 @@ def test_every_problem_row_cites_an_existing_progress_entry():
 def test_the_log_cross_check_catches_a_made_up_citation():
     fields = log_fields()
     assert any("Stage 4" in c for c in fields["10-17"]) and not any("Stage 99" in c for c in fields["10-17"])
+
+
+# ---------------------------------------------------------------- the submission checklist points at things that exist
+def test_every_path_in_the_submission_checklist_exists():
+    import glob
+    text = (PROCESS / "SUBMISSION_CHECKLIST.md").read_text(encoding="utf-8")
+    code_paths = set(re.findall(r"`((?:tests|eval|ingest|chunking|indexing|retrieval|augmentation|generation|insufficient|attribution|graph|app|llm|docs)/[\w./*-]+)`", text))
+    assert len(code_paths) > 10
+    for rel in sorted(code_paths):
+        assert glob.glob(str(ROOT / rel)), f"checklist names a path that does not exist: {rel}"
+    for target in re.findall(r"\]\(([^)#\s]+)(?:#[^)]*)?\)", text):
+        assert (PROCESS / target).resolve().exists(), f"broken link in the checklist: {target}"
+    for criterion in ("Understanding of RAG", "LangGraph implementation", "Retrieval strategy", "Handling of insufficient or irrelevant context",
+                      "Source attribution", "Conversation handling", "Code quality", "Technical reasoning and trade-offs"):
+        assert criterion in text, criterion

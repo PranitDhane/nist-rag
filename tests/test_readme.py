@@ -21,6 +21,7 @@ def slug(heading: str) -> str:
 
 def prose(text: str) -> str:
     text = re.sub(r"<!-- RESULTS:START -->.*?<!-- RESULTS:END -->", "", text, flags=re.S)
+    text = re.sub(r"<!-- TIMINGS:START -->.*?<!-- TIMINGS:END -->", "", text, flags=re.S)
     text = re.sub(r"```.*?```", "", text, flags=re.S)
     text = re.sub(r"^#+ .*$", "", text, flags=re.M)
     text = re.sub(r"\]\([^)]*\)", "]", text)
@@ -29,8 +30,14 @@ def prose(text: str) -> str:
 
 # ---------------------------------------------------------------- generated parts
 def test_markers_exist_exactly_once():
-    for marker in (br.START, br.END):
+    for marker in (br.START, br.END, br.T_START, br.T_END):
         assert README.count(marker) == 1
+
+
+def test_timings_block_is_current():
+    import json
+    acc = json.loads((ROOT / br.ACCEPTANCE[0]).read_text()) if (ROOT / br.ACCEPTANCE[0]).is_file() else None
+    assert br.replace_block(README, br.T_START, br.T_END, br.timings_block(acc)) == README, "README timings block is out of date: run `make results`"
 
 
 @pytest.mark.skipif(not (ROOT / "eval/retrieval_report.json").is_file(), reason="needs the committed reports")

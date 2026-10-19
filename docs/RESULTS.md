@@ -288,3 +288,44 @@ _Source: `eval/e2e_runs/20261019-105606/report.json` (sha256 `fa46ef0a6fd5`); ru
 Support-score calibration: 11 cited sentences scored 0.943-1.000; 33 random other-section chunks scored up to 0.692; 16 verbatim sentences scored at least 0.9995. Threshold chosen: 0.7.
 
 19 failed checks are listed in full in `docs/E2E_RESULTS.md`; none were filtered out.
+
+## Fresh-clone acceptance test
+
+_Source: `eval/acceptance_report.json` (sha256 `2a3161b79a75`); 2026-10-19, macOS-26.5.2-arm64-arm-64bit, Python 3.12.12, device mps (Apple GPU), selected automatically_
+
+Fresh-clone acceptance test (deliverables stage D7): a copy of exactly the committable files (no data/, no .venv/, no .env), a new virtual environment, no pip cache, a fresh Hugging Face model cache, the NIST PDFs downloaded, then the README followed literally.
+
+| Step | Exit code | Time |
+|---|---|---|
+| 1 venv | 0 | 2 s |
+| 2 make install | 0 | 2 min 11 s |
+| 3 make build | 0 | 2 min 39 s |
+| 4 make test | 0 | 6 min 4 s |
+| 5 make serve ready | 0 | 13 s |
+| 6a make download | 0 | 1 s |
+| 6b make ingest FROM_DIR | 0 | 42 s |
+| 6c make rebuild | 0 | 1 min 22 s |
+| 6d make eval-retrieval | 0 | 2 min 55 s |
+| 6e make results | 0 | 0 s |
+| 6f make e2e-report | 0 | 13 s |
+| 6g make clean-all (answer no) | 0 | 0 s |
+| 6h make clean | 0 | 0 s |
+| 6i make build after clean | 0 | 1 min 19 s |
+| 7a make eval-routing | 0 | 6 min 12 s |
+| 7b make e2e | 0 | 8 min 19 s |
+
+Tests inside the clone: 1062 passed, 1 skipped (1062 passed, 1 skipped in 358.91s (0:05:58)). The README's example blocks (5) were run verbatim against the server and covered: first assignment question, 3-turn conversation, streaming call, insufficient answer with related sections, out of scope, greeting.
+
+**Reproduction.** Retrieval quality in the clone is identical to the committed report (same Hit@5, MRR, threshold table and configuration). Retrieval latency is machine- and load-dependent: p50 755.1 ms / p95 934.5 ms in the committed run against p50 1732.5 ms / p95 2030.3 ms in the clone.
+
+The end-to-end evaluation was run a second time in the clone. Wording and some outcomes vary between runs (temperature 0.2, strict refusals), so single-run figures are not exact:
+
+| Metric | Run `20261019-105606` (reported above) | Run `20261019-123905` (in the clone) |
+|---|---|---|
+| Route accuracy | 15/16 | 15/16 |
+| Outcome accuracy | 13/16 | 13/16 |
+| Key-fact coverage | 29/45 | 27/45 |
+| `[C#]` markers match sources | 8/11 | 8/11 |
+| Links open the cited text | 8/8 | 8/8 |
+| Sentences supported | 11/11 | 8/10 |
+| Failed checks | 19 | 24 |

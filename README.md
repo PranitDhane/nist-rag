@@ -20,7 +20,14 @@ make ask Q="What are the four core functions of the NIST AI RMF?"
 ```
 
 <!-- TIMINGS:START -->
-Timings for each step are added after the fresh-clone acceptance test.
+Measured in the fresh-clone acceptance test (2026-10-19; macOS-26.5.2-arm64-arm-64bit, Python 3.12.12, device mps (Apple GPU), selected automatically; a new virtual environment, no pip cache, an empty Hugging Face cache, PDFs downloaded). Your times will differ with your connection and hardware:
+
+| Step | Time | Includes |
+|---|---|---|
+| `make install` | 2 min 11 s | downloads PyTorch and the other pinned packages |
+| `make build` | 2 min 39 s | downloads the two PDFs and the embedding model, then ingest, chunk, index |
+| `make serve` | 13 s | time until `/health` answers; includes the one-time download of the reranker model |
+| `make test` | 6 min 4 s | offline tests; live tests skip without the data or a key |
 <!-- TIMINGS:END -->
 
 No `make`? Section 6 pairs every target with its Python command.
@@ -367,6 +374,7 @@ Numbers below are generated from the evaluation reports by `make results`; detai
 - **Thresholds and weights are tuned on small sets** (the relevance threshold on a small number of unanswerable questions), so they are sensible defaults rather than optima.
 - **Reranker input limit.** Long chunks are truncated at 512 tokens when scored; `EnsembleRetriever` hides the fusion scores (a diagnostic mode reproduces them).
 - **Documents.** Figure 2's text cannot be extracted (curved text, no usable OCR), and figure text depends on Tesseract; footnote markers are not linked to the sentences that use them; the References appendix is not retrievable; the cleaning and table rules are tuned to these two PDFs.
+- **Results vary between runs.** Generation uses a low but non-zero temperature and a strict prompt, so the same question can be answered in one run and refused in another. The end-to-end evaluation was run twice (once on the author's machine, once in the fresh-clone test); route and outcome accuracy matched, but individual turns differed, and retrieval latency depends on the machine (both runs are in [`docs/RESULTS.md`](docs/RESULTS.md#fresh-clone-acceptance-test)). Treat single-run figures as indicative.
 - **English answers only.**
 - **Free-tier throughput is low:** an answered question costs thousands of tokens against a per-minute token limit (the measured figures are in [`DESIGN.md`](DESIGN.md#4-free-tier-constraints)); the end-to-end harness paces its requests for this reason.
 - **The local support score** used in the end-to-end evaluation uses the same reranker as retrieval, so it is not an independent judge.

@@ -12,7 +12,7 @@ spec = importlib.util.spec_from_file_location("build_results", ROOT / "docs" / "
 br = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(br)
 
-REPORT_FILES = [rel for rel, _ in br.REPORTS.values()]
+REPORT_FILES = [rel for rel, _ in br.REPORTS.values()] + [br.ACCEPTANCE[0]]
 have_reports = all((ROOT / f).is_file() for f in REPORT_FILES) and bool(list(ROOT.glob(br.E2E_GLOB)))
 needs_reports = pytest.mark.skipif(not have_reports, reason="needs the committed report files")
 have_build = all((ROOT / f).is_file() for f in br.BUILD_FILES.values())
@@ -100,7 +100,7 @@ def test_every_section_names_its_source_file_and_hash(repo):
     results, _ = br.build(repo)
     for rel in REPORT_FILES:
         assert f"`{rel}`" in results
-    assert results.count("(sha256 `") == len(REPORT_FILES) + 1                  # + the end-to-end report
+    assert results.count("(sha256 `") == len(REPORT_FILES) + 1                  # the reports, the acceptance report + the end-to-end report
     import hashlib
     sha = hashlib.sha256((repo / "eval/link_check_report.json").read_bytes()).hexdigest()[:12]
     assert sha in results
@@ -123,7 +123,7 @@ def test_a_corrupt_report_is_treated_as_missing(repo):
 
 def test_with_no_reports_at_all_every_section_says_not_run(tmp_path):
     results, block = br.build(tmp_path)
-    assert results.count("_Not run:") == 8 and "End-to-end evaluation" in results and "not run" in block
+    assert results.count("_Not run:") == 9 and "End-to-end evaluation" in results and "not run" in block
     assert "_Not built: run `make build`" in results
     assert br.main(tmp_path) == 0 and (tmp_path / "docs" / "RESULTS.md").is_file()
 
@@ -267,3 +267,46 @@ def test_one_missing_build_report_makes_the_whole_section_say_not_built(built):
     (built / br.BUILD_FILES["index"]).unlink()
     results, _ = br.build(built)
     assert "_Not built: run `make build`" in results and "## Retrieval" in results
+
+
+# ---------------------------------------------------------------- acceptance report: RESULTS section and README timings block
+@needs_reports
+def test_acceptance_section_and_timings_use_the_report_values(repo):
+    def change(d):
+        for st in d["steps"]:
+            if st["step"].startswith("2 make install"):
+                st["seconds"] = 9001
+            if st["step"].startswith("3 make build"):
+                st["seconds"] = 9002
+            if st["step"].startswith("5 make serve"):
+                st["seconds"] = 9003
+            if st["step"].startswith("4 make test"):
+                st["seconds"] = 9004
+        d["tests_in_clone"].update(passed=9005, skipped=9006)
+        d["reproduction"]["retrieval_latency_ms"]["fresh_clone"]["p50"] = 9007.5
+        d["platform"] = "SENTINEL-OS"
+    edit(repo, br.ACCEPTANCE[0], change)
+    results, _ = br.build(repo)
+    for text in ("9005 passed, 9006 skipped", "9007.5 ms", "SENTINEL-OS", "150 min 1 s", "150 min 2 s", "150 min 3 s", "150 min 4 s"):
+        assert text in results, text
+    block = br.timings_block(json.loads((repo / br.ACCEPTANCE[0]).read_text()))
+    for text in ("150 min 1 s", "150 min 2 s", "150 min 3 s", "150 min 4 s", "SENTINEL-OS"):
+        assert text in block, text
+
+
+def test_timings_block_without_a_report_says_so():
+    assert "not found" in br.timings_block(None)
+
+
+@needs_reports
+def test_main_fills_the_timings_markers_in_the_readme(repo):
+    (repo / "README.md").write_text(f"top\n{br.START}\nx\n{br.END}\nmid\n{br.T_START}\nplaceholder\n{br.T_END}\nend\n", encoding="utf-8")
+    br.main(repo)
+    text = (repo / "README.md").read_text()
+    acc = json.loads((repo / br.ACCEPTANCE[0]).read_text())
+    assert "placeholder" not in text and br.timings_block(acc) in text and text.startswith("top\n") and text.endswith("end\n")
+    assert br.main(repo) == 0 and (repo / "README.md").read_text() == text            # idempotent
+
+
+def test_seconds_formatting():
+    assert br.secs(2) == "2 s" and br.secs(59.6) == "1 min 0 s" and br.secs(131) == "2 min 11 s"
