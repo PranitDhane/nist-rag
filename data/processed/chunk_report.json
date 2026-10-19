@@ -610,7 +610,7 @@
       "repeated_header_rows": []
     }
   },
-  "build_seconds": 10.1,
+  "build_seconds": 8.9,
   "counts": {
     "ai_rmf_1_0": {
       "figure": 5,
