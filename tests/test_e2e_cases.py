@@ -169,7 +169,7 @@ REAL_DATA = ec.ROOT / "data" / "processed" / "chunks.jsonl"
 @pytest.mark.skipif(not (REAL_DATA.exists() and (ec.ROOT / "data" / "raw").exists()), reason="needs data/raw and data/processed")
 def test_the_real_case_file_is_verified_against_the_real_pdfs():
     result = ec.run()
-    assert result["turns"] == 18
+    assert result["turns"] == 16
     for name, rep in result["reports"].items():
         assert rep.errors == [], (name, rep.errors)
     assert result["reports"]["gold_locations"].checked["quotes"] >= 15

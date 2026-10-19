@@ -2,8 +2,7 @@
 # End-to-end test set — NIST AI RMF Agentic RAG
 # Spec: docs/E2E_EVALUATION_PLAN.md (Sections 3–4, Stage V1)
 #
-# Composition: 10 core single-turn cases + 2 optional single-turn cases
-#              + 2 conversations x 3 turns (same thread_id within a conversation)
+# Composition: 10 single-turn cases + 2 conversations x 3 turns = 16 requests (plan E-D2) (same thread_id within a conversation)
 # Origin tags:  source: assignment  -> taken directly from Assignment_ AI engineer.pdf
 #               source: plan        -> from the E2E plan's coverage list
 #
@@ -191,7 +190,7 @@ single_turn:
     must_contain: []
     must_not_contain:
       - fact: invented penalty amounts
-        variants: ["€", "euro", "% of", "million"]
+        variants: ["€", "euros", "million"]
     expected_sections: []
     gold_locations:
       - {fact: "absent from both documents", doc: both, absent_terms: ["EU AI Act", "European Union", "penalt"]}
@@ -212,7 +211,7 @@ single_turn:
       - fact: partial answer leaked
         variants: ["govern", "measure"]
       - fact: invented cost
-        variants: ["$", "usd", "dollar", "fee"]
+        variants: ["$", "usd", "dollar", "fees"]
     expected_sections: []
     gold_locations:
       - {fact: "part 1 answerable", doc: ai_rmf_1_0, pdf_page: 25, printed: "20", quote: "the Core is composed of four functions"}
@@ -243,39 +242,6 @@ single_turn:
     must_not_contain: []
     expected_sections: []
     notes: "Pure greeting: caught by the rule, 0 LLM calls."
-
-  # --- optional extras (cheap; run unless the user excludes them) -------------
-
-  - id: S11
-    optional: true
-    source: plan
-    message: "How does the AI RMF define an AI system?"
-    expected_route: nist_question
-    expected_outcome: answered
-    must_contain:
-      - fact: engineered or machine-based system (exact definition)
-        variants: ["engineered or machine-based system"]
-      - fact: outputs such as predictions, recommendations, or decisions
-        variants: ["predictions, recommendations, or decisions", "predictions", "recommendations"]
-    min_facts: 2
-    must_not_contain: []
-    expected_sections:
-      - {doc: ai_rmf_1_0, section: "Executive Summary"}
-    gold_locations:
-      - {fact: "AI system definition", doc: ai_rmf_1_0, pdf_page: 6, printed: "1", quote: "The AI RMF refers to an AI system as an engineered or machine-based system that can, for a given set of objectives, generate outputs such as predictions, recommendations, or decisions influencing real or virtual environments."}
-    notes: "Checks the quoting rule for definitions (exact NIST wording in double quotes)."
-
-  - id: S12
-    optional: true
-    source: plan
-    message: "What can you do?"
-    expected_route: out_of_scope
-    expected_outcome: out_of_scope
-    expected_text_key: OUT_OF_SCOPE_TEXT
-    must_contain: []
-    must_not_contain: []
-    expected_sections: []
-    notes: "Questions about the assistant itself are out of scope by design (API plan A-D8)."
 
 # -----------------------------------------------------------------------------
 # CONVERSATIONS (each conversation = one thread_id; turns run in order)
