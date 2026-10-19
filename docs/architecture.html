@@ -95,7 +95,7 @@ svg .dash{stroke-dasharray:5 4}
   <a href="#overview">1 Overview</a><a href="#offline">2 Offline pipeline</a><a href="#runtime">3 Runtime map</a>
   <a href="#main">4 Main graph</a><a href="#rag">5 RAG subgraph</a><a href="#retrieval">6 Retrieval</a>
   <a href="#generation">7 Prompt → answer</a><a href="#stream">8 Streaming</a><a href="#examples">9 Worked examples</a>
-  <a href="#rules">10 Invariants</a><a href="#e2e">11 E2E evaluation</a><a href="#status">12 Status</a>
+  <a href="#rules">10 Invariants</a><a href="#e2e">11 E2E evaluation</a><a href="#status">12 Status</a><a href="#delivery">13 Delivery</a>
 </nav>
 <main>
 
@@ -477,7 +477,7 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
 <!-- 11 -->
 <section id="e2e">
   <h2>11 · End-to-end evaluation (phase 11)</h2>
-  <p class="lead">Checks the finished system <i>as a user sees it</i>: a running server, real HTTP, real Groq. The evaluation only observes and reports (no pass/fail gate, exit code 0 unless the harness itself breaks) and makes no LLM calls of its own. All stages V0–V6 are built and one live run has been made (run <code>20261019-105606</code>); the Markdown report format (Q7) is awaiting approval.</p>
+  <p class="lead">Checks the finished system <i>as a user sees it</i>: a running server, real HTTP, real Groq. The evaluation only observes and reports (no pass/fail gate, exit code 0 unless the harness itself breaks) and makes no LLM calls of its own. All stages V0–V6 are built and one live run has been made (run <code>20261019-105606</code>); the Markdown report format was approved. A second run in the fresh-clone acceptance test is described in section 13.</p>
   <div class="legend">
     <span><i class="i-green"></i>built and tested</span><span><i class="i-blue"></i>files on disk</span>
   </div>
@@ -567,9 +567,46 @@ NIST AI 100-1, §1.2.3 Risk Prioritization, p. 8</pre></li>
     <tr><td>8–9</td><td>Insufficient path, attribution</td><td class="ok">built · related-section quality flagged</td></tr>
     <tr><td>10</td><td>Graph integration</td><td class="ok">built · live end-to-end run passes</td></tr>
     <tr><td>11</td><td>End-to-end evaluation</td><td class="ok">V0 debug <code>key_map</code>, V1 case file, V2 harness built</td></tr>
-    <tr><td></td><td>&nbsp;&nbsp;V3 checks, V4 groundedness, V5 live run + streaming, V6 report</td><td class="ok">built · Q7 (report format) awaiting approval</td></tr>
-    <tr><td>12</td><td>Deliverables (README, DESIGN, Makefile, packaging)</td><td class="bad">not built</td></tr>
+    <tr><td></td><td>&nbsp;&nbsp;V3 checks, V4 groundedness, V5 live run + streaming, V6 report</td><td class="ok">built · report format approved</td></tr>
+    <tr><td>12</td><td>Deliverables: Makefile, repository hygiene, generated results, DESIGN.md, README, process documents, fresh-clone acceptance test</td><td class="ok">built · see section 13</td></tr>
+    <tr><td></td><td>&nbsp;&nbsp;packaging: commit, push and the final zip are done by the author from the final commit</td><td class="bad">pending (author)</td></tr>
   </table>
+</section>
+<!-- 13 -->
+<section id="delivery">
+  <h2>13 · Delivery: build, documents and packaging (phase 12)</h2>
+  <p class="lead">Everything a reviewer touches: one command to build, documents whose numbers are generated from the reports, and a test that a fresh clone follows the README.</p>
+  <h3>From clone to first answer</h3>
+  <div class="flow">
+    <div class="node"><b>git clone</b><small>only committed files: no <code>data/</code>, no <code>.env</code></small></div><div class="arrow">→</div>
+    <div class="node violet"><b>make install</b><small>pinned requirements in a new venv</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>make build</b><small>download PDFs → ingest → chunk → index (each step validated; stops at the first failure)</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>make serve</b><small>loads models once; checks key and indexes first</small></div><div class="arrow">→</div>
+    <div class="node green"><b>make ask / curl</b><small><code>/chat</code>, <code>/chat/stream</code></small></div>
+  </div>
+  <p>Every <code>make</code> target prints the Python command it runs, and the README pairs them for systems without <code>make</code>. <code>data/</code> is git-ignored and regenerated; the PDFs are downloaded and checked against pinned SHA-256 hashes.</p>
+  <h3>Documents and where their numbers come from</h3>
+  <div class="flow">
+    <div class="node blue"><b>eval/*_report.json</b><small>retrieval, routing, generation, prompt size, insufficient path, link check, integration, acceptance, end-to-end run</small></div><div class="arrow">→</div>
+    <div class="node violet"><b>docs/build_results.py</b><small>standard library only; deterministic</small></div><div class="arrow">→</div>
+    <div>
+      <div class="node blue" style="margin-bottom:6px"><b>docs/RESULTS.md</b><small>one section per report, with the report's sha256</small></div>
+      <div class="node blue" style="margin-bottom:6px"><b>README blocks</b><small>results and quickstart timings</small></div>
+      <div class="node blue"><b>DESIGN.md evidence</b><small>ten generated paragraphs</small></div>
+    </div>
+  </div>
+  <table>
+    <tr><th>Guard</th><th>What a test fails on</th></tr>
+    <tr><td>Hand-typed metrics</td><td>a number in the README or DESIGN prose that is not a design parameter or an identifier on an allow-list; design parameters are compared with the code's own configuration</td></tr>
+    <tr><td>Stale generated text</td><td><code>RESULTS.md</code>, the README blocks or the DESIGN evidence differing from what the reports produce</td></tr>
+    <tr><td>Drift</td><td>an undocumented environment variable, a <code>make</code> target or Python module the README names that does not exist, a diagram that differs from <code>docs/graph.md</code>, a broken link or anchor</td></tr>
+    <tr><td>Process documents</td><td>a reference to the old locations; a problem entry citing a progress-log line that does not exist</td></tr>
+  </table>
+  <h3>Repository layout of the documents</h3>
+  <p><code>README.md</code>, <code>DESIGN.md</code> and <code>CLAUDE.md</code> at the root; generated results, the graph diagrams and this page in <code>docs/</code>; plans, the progress log, the problems-and-solutions record and the submission checklist in <code>docs/process/</code>.</p>
+  <h3>Fresh-clone acceptance test</h3>
+  <p>A copy of exactly the committable files was set up in an empty folder with a new virtual environment, no pip cache and an empty model cache, and the README was followed literally: install, build, the full test suite, start the server, every example block, then the remaining README commands, the routing evaluation and the end-to-end run. All steps exited 0 (timings and details in the generated <code>docs/RESULTS.md</code> section "Fresh-clone acceptance test").</p>
+  <div class="note">What the second end-to-end run showed: route accuracy 15/16 and outcome accuracy 13/16 matched the first run, but different turns passed (key-fact coverage 27/45 against 29/45; two of the first run's answerable questions swapped between answered and refused). Retrieval quality reproduced exactly; retrieval latency was about twice as high on the clone, so it depends on machine and load. Single-run figures are indicative, not exact.</div>
 </section>
 </main>
 <script>
